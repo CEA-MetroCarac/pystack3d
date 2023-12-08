@@ -27,8 +27,8 @@ An additonal step named `cropping_final` can be used to eliminate artefacts prod
 
 <p align="center" width="100%">
     <img align="center" width=100%" src=doc/_static/process_steps.png> <br>
-    <em>Y and Z-cutplanes of a non-serialized <b>PyStack3D</b> workflow applied to an analytical case to illustrate each process step individually.
-    Input images are the result of shifting, background and stripes addition with periodically altered intensities. The central 'bend-shape' pattern is the consequence of the shifting and non-uniform frame increments. (See examples/ex_pystack3d_synth.py).</em>
+    <em>Y and Z-cutplanes of a stack considering a non-serialized <b>PyStack3D</b> workflow applied to an analytical case to illustrate each process step individually.
+    Input images are the result of shifting, background and stripes addition with periodically altered intensities. The 'bend-shape' central pattern is the consequence of the shifting and non-uniform frame increments. (See examples/ex_pystack3d_synth.py).</em>
 </p>
 
 # Install and examples execution
@@ -46,13 +46,13 @@ To be executed a **PyStack3D** workflow requires:
 
  - 1/ an input directory with the ``.tif`` images annoted with their respective ``z``-position
  
- - 2/ a ``prop.toml`` file defining all the process steps parameters.
+ - 2/ a ``params.toml`` file defining all the process steps parameters.
 
 Once executed, the output directories related to each process step take place inside the input directory as follows:
 
 <pre>
 input_dir
-    |-- prop.toml
+    |-- params.toml
     |-- slice_0000_z=0.0000um.tif
     |-- slice_0001_z=0.0100um.tif
     |   ...
@@ -79,13 +79,13 @@ stack.eval(process_steps=process_steps, nproc=16, show_pbar=True)
 ```
 where `input_name` refers:
 
-- EITHER to the input directory path (as a `str` or a `Path` object) that contains the `.tif` images AND the `prop.toml` file 
+- EITHER to the input directory path (as a `str` or a `Path` object) that contains the `.tif` images AND the `params.toml` file 
 
-- OR the `prop.toml` with the `input_dir` defined as parameter.
+- OR the `params.toml` with the `input_dir` defined as parameter.
 
-All the process steps defined in the `prop.toml` or some of them can be executed as follows: 
+All the process steps defined in the `params.toml` or some of them can be executed as follows: 
 ```
-# execute all the process steps defined in the 'prop.toml' file
+# execute all the process steps defined in the 'params.toml' file
 stack.eval(nproc=16)
 
 # execute only the 'cropping' processing
