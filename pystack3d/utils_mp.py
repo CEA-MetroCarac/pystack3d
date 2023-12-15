@@ -1,11 +1,10 @@
 """
-module description
+utilities functions related to multiprocessing
 """
 from importlib import import_module
-from pathlib import Path
-import numpy as np
-from multiprocessing import Barrier, Queue
+from multiprocessing import Barrier
 from multiprocessing.sharedctypes import Array
+import numpy as np
 
 
 def shared_array_init(arr):
@@ -19,6 +18,7 @@ def shared_array_init(arr):
 def worker_init(queue_incr, barrier,
                 shared_stats, shape_stats, dtype_stats,
                 shared_array, shape_array, dtype_array):
+    """ Initialize the workers """
     global QUEUE_INCR, BARRIER  # pylint:disable=W0601
     global SHARED_STATS_PTR, SHARED_STATS  # pylint:disable=W0601
     global SHARED_ARRAY_PTR, SHARED_ARRAY  # pylint:disable=W0601
@@ -88,6 +88,7 @@ def initialize_args(process_step, params, nproc, nslices):
 
 
 def send_shared_array(arr, kmin=0, kmax=0, is_stats=False):
+    """ Collect the array partition sent by workers """
     if kmax == 0:
         kmax = arr.size
 
@@ -100,6 +101,7 @@ def send_shared_array(arr, kmin=0, kmax=0, is_stats=False):
 
 
 def receive_shared_array(is_stats=False):
+    """ Return the shared array resulting from the arrays collect """
     BARRIER.wait()
     if is_stats:
         return SHARED_STATS

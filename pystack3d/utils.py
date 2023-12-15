@@ -1,12 +1,12 @@
 """
-module description
+utilities functions
 """
-from pathlib import Path
 import numpy as np
 from tifffile import imread, imwrite
 
 
 def outputs_saving(output_dirname, fname, img, img_res, stats):
+    """ Append stats and Write img_res after reformatting """
     img_res2 = img_reformatting(img_res, img.dtype)
 
     stats.append([[img.min(), img.max(), img.mean()],
