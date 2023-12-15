@@ -11,15 +11,14 @@ setup(
         "numpy",
         "matplotlib",
         "scipy",
-        "skimage",
+        "scikit-image",
         "statsmodels",
         "pystackreg",
-        "PIL",
-        "tiffile",
+        "Pillow",
+        "tifffile",
         "tomli",
         "tomlkit",
-        "parse",
-        "multiprocessing"
+        "parse"
     ],
     packages=find_packages(where='.', include=['pystack3d*']),
 
@@ -28,8 +27,10 @@ setup(
     url="https://github.com/CEA-MetroCarac/pystack3d",
     author_email="patrick.quemere@cea.fr",
     author="Patrick Quéméré",
-    keywords="PyStack3D, stack, images, FIB-SEM, processing, correction, cropping, background removal, registration, intensity rescaling, "
-             "destripping, curtains, resampling, multithreading, multiprocessing",
+    keywords="PyStack3D, stack, images, FIB-SEM, processing, correction, "
+             "cropping, background removal, registration, intensity rescaling, "
+             "destripping, curtains, resampling, multithreading, "
+             "multiprocessing",
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.10',
