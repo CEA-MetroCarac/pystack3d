@@ -55,18 +55,22 @@ class Stack3d:
     def __init__(self, input_name=None):
 
         if str(input_name).endswith('.toml'):
-            fname = input_name
-            with open(fname, 'rb') as fid:
+            self.fname_toml = input_name
+            with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
                 self.pathdir = self.pathdir["dirname"]
 
         elif os.path.isdir(input_name) or input_name is None:
             input_name = input_name or '.'
             self.pathdir = Path(input_name)
-            fname = self.pathdir / "params.toml"
-            if not os.path.exists(fname):
-                raise IOError(f"there is no 'params.toml' in {input_name}")
-            with open(fname, 'rb') as fid:
+            fnames = self.pathdir.glob("*.toml")
+            if len(fnames) == 0:
+                raise IOError(f"there is no '.toml' file in {input_name}")
+            elif len(fnames) > 1:
+                raise IOError(f"there is too much '.toml' file in {input_name}")
+            else:
+                self.fname_toml = fnames[0]
+            with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
                 print("\n***************************************************")
                 print("WARNING: 'dirname' from the .toml file is NOT USED")
@@ -130,7 +134,8 @@ class Stack3d:
 
         return fnames_part, inds_part, nslices
 
-    def eval(self, process_steps=None, nproc=None, serial=True, show_pbar=True):
+    def eval(self, process_steps=None, nproc=None, serial=True,
+             show_pbar=True, show_plots=True):
         """
         Method to apply a process step to the stack object
 
@@ -148,6 +153,8 @@ class Stack3d:
             process takes data located in the 'input' data folder
         show_pbar: bool, optional
             Activation key to display the progress bar during the processing
+        show_plots: bool, optional
+            Activation key to display/save plots during the processing
         """
         dir_process = self.pathdir / 'process'
         history = self.params['history']
@@ -247,12 +254,13 @@ class Stack3d:
                         results.wait()
                     results.get()
 
-                plot(process_step, output_dirname)
+                if show_plots:
+                    plot(process_step, output_dirname)
 
-            # parameters updating and saving
+            # 'history' parameter updating and saving
             if serial:
                 self.params['history'] = self.params['history'] + [process_step]
-                with open(self.pathdir / "params.toml", 'w') as fid:
+                with open(self.fname_toml, 'w') as fid:
                     dump(self.params, fid)
 
 
