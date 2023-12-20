@@ -27,6 +27,8 @@ PROCESS_STEPS = ['cropping', 'bkg_removal', 'intensity_rescaling',
                  'destriping', 'resampling', 'cropping_final']
 CMAP = plt.get_cmap("tab10")
 
+VERSION = "1.0"
+
 
 class Stack3d:
     """
