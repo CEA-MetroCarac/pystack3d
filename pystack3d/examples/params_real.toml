@@ -27,25 +27,15 @@ inversion = 0
 
 [intensity_rescaling]
 nbins = 256
-#range_bins = [0, 6]
+#range_bins = [0, 255]
 filter_size = 100
 
-#[destriping.vsnr_kwargs]
-#algo = "cuda"
-#maxit = 200
-#nbfilters = 2
-#
-#[destriping.vsnr_kwargs.filter_0]
-#noise_level = 30
-#name = "Gabor"
-#sigma = [0.5, 80]
-#theta = 0
-#
-#[destriping.vsnr_kwargs.filter_1]
-#noise_level = 80
-#name = "Gabor"
-#sigma = [0.5, 200]
-#theta = 0
+[destriping]
+algo = "cupy"
+maxit = 100
+filters = [
+    { name = "Gabor", noise_level = 30, sigma = [0.5, 80], theta = 0 },
+    { name = "Gabor", noise_level = 80, sigma = [0.5, 200], theta = 0 }]
 
 [registration_calculation]
 area = [500, 1000, 500, 1000]

@@ -14,10 +14,8 @@ process_steps = [
 ]
 history = []
 
-
 [cropping]
 area = [5, 45, 2, 42]
-
 
 [bkg_removal]
 dim = 3
@@ -29,44 +27,15 @@ threshold = 0.5
 #inversion = 0
 #weight_func = "HuberT"
 
-
 [intensity_rescaling]
 nbins = 256
 #range_bins = [0, 6]
 filter_size = -1
 
-
 [destriping]
-
-#[destriping.vsnr_kwargs]
-#algo = "cupy"
-#maxit = 200
-#nbfilters = 1
-#cvg_threshold = 1e-8
-#
-#[destriping.vsnr_kwargs.filter_0]
-#alpha = 0.4
-#name = "Gabor"
-#sigma = [0.5, 50]
-#theta = 90
-
-[destriping.vsnr_kwargs]
-algo = "cuda"
+algo = "cupy"
 maxit = 100
-nbfilters = 1
-
-[destriping.vsnr_kwargs.filter_0]
-noise_level = 200
-name = "Gabor"
-sigma = [0.5, 10]
-theta = -45
-
-#[destriping.vsnr_kwargs.filter_1]
-#noise_level = 80
-#name = "Gabor"
-#sigma = [0.5, 200]
-#theta = 0
-
+filters = [{ name = "Gabor", noise_level = 200, sigma = [0.5, 10], theta = -45 }]
 
 [registration_calculation]
 #area = [5, 35, 5, 35]
@@ -74,18 +43,15 @@ threshold = 0.5
 nb_blocks = [1, 1]
 transformation = "TRANSLATION"
 
-
 [registration_transformation]
 #constant_drift = [-0.3, 1.2]
 #box_size_averaging = 1
 mode = "edge"
 #cropping = false
 
-
 [resampling]
 policy = "slice_{slice_nb}_z={z_coord}um.tif"
 dz = 0.5
-
 
 [cropping_final]
 area = [2, 38, 4, 30]
