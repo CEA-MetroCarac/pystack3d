@@ -63,7 +63,7 @@ class Stack3d:
         elif os.path.isdir(input_name) or input_name is None:
             input_name = input_name or '.'
             self.pathdir = Path(input_name)
-            fnames = self.pathdir.glob("*.toml")
+            fnames = list(self.pathdir.glob("*.toml"))
             if len(fnames) == 0:
                 raise IOError(f"there is no '.toml' file in {input_name}")
             elif len(fnames) > 1:
