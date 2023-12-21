@@ -31,8 +31,8 @@ nbins = 256
 filter_size = 100
 
 [destriping]
-algo = "cupy"
 maxit = 100
+#cvg_threshold = 1.e-2
 filters = [
     { name = "Gabor", noise_level = 30, sigma = [0.5, 80], theta = 0 },
     { name = "Gabor", noise_level = 80, sigma = [0.5, 200], theta = 0 }]
