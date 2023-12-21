@@ -3,16 +3,14 @@ Functions related to the destriping processing
 """
 import numpy as np
 from tifffile import imread
-from pyvsnr import vsnr2d, vsnr2d_cuda
+from pyvsnr import vsnr2d
 
 from pystack3d.utils import outputs_saving
 from pystack3d.utils_mp import send_shared_array, receive_shared_array
 
-ALGOS = ['numpy', 'cupy', 'cuda']
-
 
 def destriping(fnames=None, inds_partition=None, queue_incr=None,
-               algo='numpy', maxit=100, filters=None,
+               maxit=100, filters=None,
                output_dirname=None):
     """
     Function dedicated to destriping from vsnr 'cupy' or 'cuda' algorithm
@@ -26,8 +24,6 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
         working in multiprocessing
     queue_incr: multiprocessing.Queue, optional
         Queue passed to the function to interact with the progress bar
-    algo: str, optional
-        Name of the package used by the VSNR algorithm: 'numpy', 'cupy', 'cuda'
     maxit: int, optional
         Number of maximum iterations used by the VSNR algorithm
     filters: list of dict
@@ -44,20 +40,11 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
     """
     pid_0 = inds_partition[0] == 0  # first thread
 
-    assert algo in ALGOS, f"'algo' should be in {ALGOS}"
-    if algo == "cupy":
-        import cupy as cp
-
     stats = []
     for fname in fnames:
         img = imread(fname)
 
-        if algo == 'numpy':
-            img_res = vsnr2d(img, filters, maxit, xp=np)
-        elif algo == 'cupy':
-            img_res = vsnr2d(img, filters, maxit, xp=cp).get()
-        else:
-            img_res = vsnr2d_cuda(img, filters, maxit)
+        img_res = vsnr2d(img, filters, maxit)
 
         outputs_saving(output_dirname, fname, img, img_res, stats)
 
