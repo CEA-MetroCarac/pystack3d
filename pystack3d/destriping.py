@@ -13,7 +13,8 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
                maxit=100, filters=None,
                output_dirname=None):
     """
-    Function dedicated to destriping from vsnr 'cupy' or 'cuda' algorithm
+    Function dedicated to destriping from the VSNR algorithm.
+    For more details, see: https://github.com/CEA-MetroCarac/pyvsnr
 
     Parameters
     ----------
