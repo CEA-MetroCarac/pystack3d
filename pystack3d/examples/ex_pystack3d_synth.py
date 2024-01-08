@@ -1,6 +1,7 @@
 """
 Examples with synthetic images
 """
+import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import numpy as np
@@ -29,7 +30,7 @@ def ex_pystack3d_synth(process_steps=None, dirfunc=None, nproc=None,
         # processing
         stack = Stack3d(input_name=dirname)
         stack.eval(process_steps=process_steps, nproc=nproc, serial=serial,
-                   show_pbar=show_pbar)
+                   show_pbar=show_pbar, show_plots=show_plots)
 
         # post-processing
         if process_steps is None:
