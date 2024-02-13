@@ -106,7 +106,11 @@ def resampling(fnames=None, inds_partition=None, queue_incr=None,
         else:
             z_interp = zpos_out[(zpos_out > z_km1) * (zpos_out <= z_k)]
 
-        slope = 0. if z_k - z_km1 == 0. else (img_k - img_km1) / (z_k - z_km1)
+        if z_k - z_km1 == 0.:
+            slope = 0.
+        else:
+            delta = img_k.astype(float) - img_km1.astype(float)
+            slope = delta / (z_k - z_km1)
 
         for z_int in z_interp:
             img_int = img_km1 + (z_int - z_km1) * slope
