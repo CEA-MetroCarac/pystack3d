@@ -197,7 +197,10 @@ def bkg_saving(bkg_dirname, fname, bkg):
     skip_factor = max(min(shape[0] // 100, shape[1] // 100), 1)
     bkg_red = bkg[::skip_factor, ::skip_factor]
     # image rescaling into [0, 255]
-    bkg_res = (255 / (vmax - vmin)) * (bkg_red - vmin)
+    if vmax == vmin:
+        bkg_res = np.zeros_like(bkg_red)
+    else:
+        bkg_res = (255 / (vmax - vmin)) * (bkg_red - vmin)
     img = Image.fromarray(bkg_res.astype(np.uint8)).convert('RGB')
     img1 = ImageDraw.Draw(img, 'RGB')
     img1.text((1, 1), f"vmin={vmin:.1f}\nvmax={vmax:.1f}", fill=(255, 0, 0))
@@ -525,6 +528,13 @@ def bkg_calculation(arr, powers,
         arr = arr.flatten()
         mask = np.isnan([arr])[0]
         arr_clean = arr[~mask]
+
+        # check arr_clean has valid values for coefs calculation
+        if arr_clean.size == 0 or arr_clean.min() == arr_clean.max():
+            bkg = np.zeros(shape)
+            coefs = np.zeros(poly_basis.shape[1])
+            return bkg, coefs, poly_basis
+
         kernels = []
         for i in range(poly_basis.shape[1]):
             kernel = poly_basis[:, i]
