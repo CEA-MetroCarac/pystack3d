@@ -362,7 +362,7 @@ def eval(arr, powers,
             mask = arr >= threshold
         elif inversion == 2:
             threshold_sym = np.max(arr) - threshold
-            mask = not ((arr > threshold) * (arr < threshold_sym))
+            mask = (arr <= threshold) | (arr >= threshold_sym)
         arr_bkg[mask] = np.nan
     else:
         mask = None
