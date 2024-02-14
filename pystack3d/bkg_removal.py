@@ -50,6 +50,10 @@ def init_args(params, nslices):
     else:
         raise IOError("'poly_basis' or 'orders' should be defined")
 
+    if 'threshold_min' in params.keys() and 'threshold_max' in params.keys():
+        msg = "threshold_min must be strictly less than threshold_max"
+        assert params['threshold_min'] < params['threshold_max'], msg
+
     # kwargs updating
     params.update({'powers': powers})
     for key in ['poly_basis', 'orders', 'cross_terms', 'dim']:
@@ -62,7 +66,7 @@ def init_args(params, nslices):
 
 def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
                 powers=None, skip_factors=(10, 10), skip_averaging=False,
-                threshold=None, inversion=0, weight_func="HuberT",
+                threshold_min=None, threshold_max=None, weight_func="HuberT",
                 output_dirname=None):
     """
     Function dedicated to the background removal processing
@@ -82,12 +86,9 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
     skip_factors: tuple of 2 or 3 ints, optional
         Skipping factors in each direction to perform polynomial fitting on
         a reduced image
-    threshold: float, optional
-        Threshold to separate 'material' from 'vacuum' that is considered to be
-        not sensitive to the background
-    inversion: int, optional
-        Activation key to apply threshold on bright values instead of dark
-        ones (or both)
+    threshold_min, threshold_max: floats, optional
+        Relative thresholds used to exclude low and high values in the
+        background removal processing
     skip_averaging: bool, optional
         Activation key for averaging when skip_factors is used
     weight_func: str, optional
@@ -129,8 +130,8 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
 
             _, _, coefs_3d = eval(arr_3d, powers_3d,
                                   skip_factors=None,
-                                  threshold=threshold,
-                                  inversion=inversion,
+                                  threshold_min=threshold_min,
+                                  threshold_max=threshold_max,
                                   skip_averaging=skip_averaging,
                                   weight_func=weight_func,
                                   poly_basis_precalc=poly_basis_skip)
@@ -163,8 +164,8 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
                                   skip_factors=skip_factors,
                                   poly_basis_precalc=poly_basis,
                                   poly_basis_precalc_skip=poly_basis_skip,
-                                  threshold=threshold,
-                                  inversion=inversion,
+                                  threshold_min=threshold_min,
+                                  threshold_max=threshold_max,
                                   skip_averaging=skip_averaging,
                                   weight_func=weight_func,
                                   kwargs_3d=kwargs_3d)
@@ -301,8 +302,8 @@ def expr_from_powers(powers, variables=['x', 'y', 'z']):
 
 def eval(arr, powers,
          skip_factors=(10, 10),
-         threshold=None,
-         inversion=0,
+         threshold_min=None,
+         threshold_max=None,
          skip_averaging=False,
          weight_func="HuberT",
          poly_basis_precalc=None,
@@ -321,12 +322,9 @@ def eval(arr, powers,
     skip_factors: tuple of 2 or 3 ints, optional
         Skipping factors in each direction to perform polynomial fitting on
         a reduced image
-    threshold: float, optional
-        Threshold to separate 'material' from 'vacuum' that is considered to be
-        not sensitive to the background
-    inversion: int, optional
-        Activation key to apply threshold on bright values instead of dark
-        ones (or both)
+    threshold_min, threshold_max: floats, optional
+        Thresholds used to exclude low and high values in the background removal
+         processing
     skip_averaging: bool, optional
         Activation key for averaging when skip_factors is used.
     weight_func: str, optional
@@ -353,19 +351,13 @@ def eval(arr, powers,
         Polynomial coefficients resulting from the fit
     """
     arr_bkg = arr.copy().astype(float)
+    mask = np.ones_like(arr, dtype=bool)
 
-    # applied mask to work on 'material' only
-    if threshold is not None:
-        if inversion == 0:
-            mask = arr <= threshold
-        elif inversion == 1:
-            mask = arr >= threshold
-        elif inversion == 2:
-            threshold_sym = np.max(arr) - threshold
-            mask = (arr <= threshold) | (arr >= threshold_sym)
-        arr_bkg[mask] = np.nan
-    else:
-        mask = None
+    if threshold_min is not None:
+        mask *= arr > threshold_min
+    if threshold_max is not None:
+        mask *= arr < threshold_max
+    arr_bkg[~mask] = np.nan
 
     # background calculation
     if kwargs_3d is not None:
@@ -386,11 +378,9 @@ def eval(arr, powers,
                                         poly_basis_precalc=poly_basis_precalc,
                                         poly_basis_precalc_skip=poly_basis_precalc_skip)
 
-    bkg -= coefs[0]  # not consider the cst component in the bkg (=mean value)
+    bkg -= coefs[0]  # to not consider the cst compo. (=mean value) in the bkg
     arr_bkg -= bkg
-
-    if mask is not None:
-        arr_bkg[mask] = arr[mask]
+    arr_bkg[~mask] = arr[~mask]
 
     return arr_bkg, bkg, coefs
 
