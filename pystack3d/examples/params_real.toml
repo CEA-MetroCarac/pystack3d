@@ -22,8 +22,7 @@ orders = [2, 2, 0]
 cross_terms = false
 #poly_basis = "1 + x + y + x*y + x**2 + y**2 + x*y**2 + y*x**2 + z"
 skip_factors = [5, 5, 5]
-threshold = 64
-inversion = 0
+threshold_min = 64
 
 [intensity_rescaling]
 nbins = 256

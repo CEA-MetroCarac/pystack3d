@@ -23,8 +23,8 @@ poly_basis = "1 + x + y + x*y + x**2 + z"
 #orders = [2, 1, 1]
 #cross_terms = false
 skip_factors = [5, 5, 5]
-threshold = 0.5
-#inversion = 0
+threshold_min = 0.5
+#threshold_max = 10.
 #weight_func = "HuberT"
 
 [intensity_rescaling]
