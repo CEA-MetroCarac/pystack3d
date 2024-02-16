@@ -13,7 +13,8 @@ from tifffile import imread
 
 from pystack3d.registration_calculation import registration_plot
 from pystack3d.utils import cumdot, outputs_saving
-from pystack3d.utils_mp import send_shared_array, receive_shared_array
+from pystack3d.utils_multiprocessing import (send_shared_array,
+                                             receive_shared_array)
 
 
 def init_args(params, nslices):

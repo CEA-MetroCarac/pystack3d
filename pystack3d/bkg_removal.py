@@ -15,7 +15,8 @@ from PIL import Image, ImageDraw
 
 from pystack3d.utils import (imread_3d_skipping, skipping, division,
                              outputs_saving, )
-from pystack3d.utils_mp import send_shared_array, receive_shared_array
+from pystack3d.utils_multiprocessing import (send_shared_array,
+                                             receive_shared_array)
 
 WEIGHTS = [None, "HuberT", "Hampel"]
 

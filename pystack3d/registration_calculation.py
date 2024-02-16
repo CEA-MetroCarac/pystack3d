@@ -9,9 +9,10 @@ from tifffile import imread
 from skimage.util.shape import view_as_blocks
 from skimage.transform import AffineTransform
 
-from pystack3d.utils import cumdot, division
-from pystack3d.utils_mp import send_shared_array, receive_shared_array
 from pystack3d.cropping import inds_from_area
+from pystack3d.utils import cumdot, division
+from pystack3d.utils_multiprocessing import (send_shared_array,
+                                             receive_shared_array)
 
 
 def init_args(params, nslices):

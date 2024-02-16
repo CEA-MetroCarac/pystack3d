@@ -8,7 +8,8 @@ from parse import Parser
 from tifffile import imread, imwrite
 
 from pystack3d.utils import img_reformatting
-from pystack3d.utils_mp import send_shared_array, receive_shared_array
+from pystack3d.utils_multiprocessing import (send_shared_array,
+                                             receive_shared_array)
 
 
 def init_args(params, nslices):

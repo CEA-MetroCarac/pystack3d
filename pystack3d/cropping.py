@@ -5,7 +5,8 @@ import numpy as np
 from tifffile import imread
 
 from pystack3d.utils import outputs_saving
-from pystack3d.utils_mp import send_shared_array, receive_shared_array
+from pystack3d.utils_multiprocessing import (send_shared_array,
+                                             receive_shared_array)
 
 
 def cropping(fnames=None, inds_partition=None, queue_incr=None,

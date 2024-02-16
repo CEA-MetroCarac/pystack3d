@@ -20,7 +20,8 @@ from tifffile import imread
 from tomli import load
 from tomlkit import dump
 
-from pystack3d.utils_mp import worker_init, step_wrapper, initialize_args
+from pystack3d.utils_multiprocessing import (worker_init, step_wrapper,
+                                             initialize_args)
 
 PROCESS_STEPS = ['cropping', 'bkg_removal', 'intensity_rescaling',
                  'registration_calculation', 'registration_transformation',
@@ -301,3 +302,9 @@ def pbar_update(queue_incr, nslices, nproc):
             t1 = time.time()
         sys.stdout.write(pbar.format("*" * int(percent), 100, percent, t1 - t0))
     print()
+
+
+process_step = "resampling"
+dirname = Path(r"\\kiev\share_nfs\200-Science_et_Technique\200.4-PFNC-DATA" \
+               r"\td209393\Pour_article\process\resampling\ESB")
+plot(process_step, dirname)
