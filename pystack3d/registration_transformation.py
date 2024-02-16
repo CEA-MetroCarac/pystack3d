@@ -100,9 +100,10 @@ def registration_transformation(fnames=None,
         box_size = box_size_averaging
         tmats_cumul = running_avg_removal(tmats_cumul, box_size=box_size)
 
-    shape = imread(fnames[0]).shape
-    inds_crop, img_crop = inner_rectangle(shape, tmats_cumul, nb_blocks)
-    imin, imax, jmin, jmax = inds_crop
+    if cropping:
+        shape = imread(fnames[0]).shape
+        inds_crop, img_crop = inner_rectangle(shape, tmats_cumul, nb_blocks)
+        imin, imax, jmin, jmax = inds_crop
 
     if pid_0:
         np.save(output_dirname / 'outputs' / 'tmats_cumul.npy', tmats_cumul)
