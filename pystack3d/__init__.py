@@ -70,12 +70,13 @@ class Stack3d:
                 raise IOError(f"there is too much '.toml' file in {input_name}")
             else:
                 self.fname_toml = fnames[0]
+
             with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
+                fname = self.fname_toml.name
                 print("\n***************************************************")
-                print("WARNING: 'dirname' from the .toml file is NOT USED")
+                print(f"WARNING: 'dirname' from {fname} is NOT USED")
                 print("***************************************************\n")
-
         else:
             raise IOError(f"'input_name' {input_name} is not a valid input")
 
@@ -134,8 +135,7 @@ class Stack3d:
 
         return fnames_part, inds_part, nslices
 
-    def eval(self, process_steps=None, nproc=None, serial=True,
-             show_pbar=True, show_plots=True):
+    def eval(self, process_steps=None, nproc=None, serial=True, show_pbar=True):
         """
         Method to apply a process step to the stack object
 
@@ -153,8 +153,6 @@ class Stack3d:
             process takes data located in the 'input' data folder
         show_pbar: bool, optional
             Activation key to display the progress bar during the processing
-        show_plots: bool, optional
-            Activation key to display/save plots during the processing
         """
         dir_process = self.pathdir / 'process'
         history = self.params['history']
@@ -254,8 +252,7 @@ class Stack3d:
                         results.wait()
                     results.get()
 
-                if show_plots:
-                    plot(process_step, output_dirname)
+                plot(process_step, output_dirname)
 
             # 'history' parameter updating and saving
             if serial:
