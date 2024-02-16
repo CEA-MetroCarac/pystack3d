@@ -107,8 +107,9 @@ def registration_transformation(fnames=None,
 
     if pid_0:
         np.save(output_dirname / 'outputs' / 'tmats_cumul.npy', tmats_cumul)
-        np.savetxt(output_dirname / 'outputs' / 'inds_crop.txt', inds_crop)
-        np.save(output_dirname / 'outputs' / 'img_crop.npy', img_crop)
+        if cropping:
+            np.savetxt(output_dirname / 'outputs' / 'inds_crop.txt', inds_crop)
+            np.save(output_dirname / 'outputs' / 'img_crop.npy', img_crop)
 
     # transformation matrices application
     stats = []
@@ -147,18 +148,19 @@ def plot(output_dirname):
     registration_plot(tmats_cumul, title='Registration (cumul.)')
     plt.savefig(output_dirname / 'outputs' / 'tmats_cumul_evol.png')
 
-    inds_crop = np.loadtxt(output_dirname / 'outputs' / 'inds_crop.txt')
-    img_crop = np.load(output_dirname / 'outputs' / 'img_crop.npy')
+    if os.path.exists(output_dirname / 'outputs' / 'inds_crop.txt'):
+        inds_crop = np.loadtxt(output_dirname / 'outputs' / 'inds_crop.txt')
+        img_crop = np.load(output_dirname / 'outputs' / 'img_crop.npy')
 
-    imin, imax, jmin, jmax = inds_crop
-    rect = patches.Rectangle((jmin - 0.5, imin - 0.5),
-                             jmax - jmin, imax - imin,
-                             lw=1, ec='r', fc='none')
-    fig, ax = plt.subplots()
-    fig.canvas.manager.set_window_title('registration_transformation')
-    ax.imshow(img_crop, cmap='gray', origin='lower')
-    ax.add_patch(rect)
-    plt.savefig(output_dirname / 'outputs' / 'registration_area.png')
+        imin, imax, jmin, jmax = inds_crop
+        rect = patches.Rectangle((jmin - 0.5, imin - 0.5),
+                                 jmax - jmin, imax - imin,
+                                 lw=1, ec='r', fc='none')
+        fig, ax = plt.subplots()
+        fig.canvas.manager.set_window_title('registration_transformation')
+        ax.imshow(img_crop, cmap='gray', origin='lower')
+        ax.add_patch(rect)
+        plt.savefig(output_dirname / 'outputs' / 'registration_area.png')
 
 
 def img_transformation(img, tmats, nb_blocks=None,
