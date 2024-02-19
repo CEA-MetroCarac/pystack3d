@@ -9,6 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tifffile import imread
 
+ASSETS = Path(__file__).parents[1] / 'assets'
+
 
 class UserTempDirectory:
     """ Class to call user temp via the 'with' statement """
@@ -29,7 +31,7 @@ def init_dir(dirpath, case):
     for fname in dirname.glob("*.tif"):
         os.remove(fname)
 
-    src = Path(__file__).parent / f'params_{case}.toml'
+    src = ASSETS / 'toml' / f'params_{case}_stack.toml'
     dst = dirname / 'params.toml'
     shutil.copy(src, dst)
     return dirname

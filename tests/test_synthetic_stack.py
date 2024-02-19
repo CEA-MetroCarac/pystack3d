@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 import numpy as np
 from pytest import mark, approx
 
-from pystack3d.examples.ex_pystack3d_synth import ex_pystack3d_synth as ex_synth
+from examples.ex_synthetic_stack import ex_synthetic_stack as ex_synth
 
 DIRFUNC = TemporaryDirectory
 NPROC = [1, 2]

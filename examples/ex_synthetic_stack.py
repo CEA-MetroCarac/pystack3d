@@ -1,5 +1,5 @@
 """
-Examples with synthetic images
+Examples with a synthetic stack
 """
 import os
 from pathlib import Path
@@ -10,13 +10,14 @@ from scipy.ndimage import shift
 from tifffile import imwrite
 from skimage.draw import line
 
+from examples.utils import init_dir, postpro, plot_results, UserTempDirectory
+
 from pystack3d import Stack3d
-import utils
 
 POLICY = "slice_{slice_nb}_z={z_coord}um.tif"
 
 
-def ex_pystack3d_synth(process_steps=None, dirfunc=None, nproc=None,
+def ex_synthetic_stack(process_steps=None, dirfunc=None, nproc=None,
                        serial=True, verbosity=True, show_pbar=True,
                        show_plots=True):
     """ Example with synthetic data """
@@ -24,7 +25,7 @@ def ex_pystack3d_synth(process_steps=None, dirfunc=None, nproc=None,
     with dirfunc() as dirpath:  # open user temp or TemporaryDirectory dirpath
 
         # project directory creation with input data
-        dirname = utils.init_dir(dirpath, case='synth')
+        dirname = init_dir(dirpath, case='synthetic')
         synthetic_images_generation(dirname)
 
         # processing
@@ -36,10 +37,10 @@ def ex_pystack3d_synth(process_steps=None, dirfunc=None, nproc=None,
         if process_steps is None:
             process_steps = stack.params['process_steps']
         channel = stack.params['channels'][0]
-        dirnames, labels, stats = utils.postpro(process_steps, dirname, channel,
-                                                verbosity=verbosity)
+        dirnames, labels, stats = postpro(process_steps, dirname, channel,
+                                          verbosity=verbosity)
         if show_plots:
-            utils.plot_results(dirnames, labels, stats.min(), stats.max())
+            plot_results(dirnames, labels, stats.min(), stats.max())
             plt.savefig(f"{labels[-1]}.png")
             plt.show()
 
@@ -105,22 +106,22 @@ def plot_input_synth(dirfunc):
         dirnames = [dirname / 'no_def', dirname]
         labels = ['no defect', 'with defects']
         vmin, vmax = 0, 6
-        utils.plot_results(dirnames, labels, vmin, vmax)
+        plot_results(dirnames, labels, vmin, vmax)
         plt.savefig("synth_use_case.png")
 
 
 if __name__ == '__main__':
-    # DIRFUNC = utils.UserTempDirectory  # use user temp location
-    DIRFUNC = TemporaryDirectory  # use TemporaryDirectory
+    # DIRFUNC = UserTempDirectory  # use the user temp location
+    DIRFUNC = TemporaryDirectory  # use a TemporaryDirectory
     NPROC = 1
     REGISTRATION = ['registration_calculation', 'registration_transformation']
 
-    # ex_pystack3d_synth('cropping', DIRFUNC, NPROC)
-    # ex_pystack3d_synth('bkg_removal', DIRFUNC, NPROC)
-    # ex_pystack3d_synth('intensity_rescaling', DIRFUNC, NPROC)
-    # ex_pystack3d_synth('destriping', DIRFUNC, NPROC)
-    # ex_pystack3d_synth(REGISTRATION, DIRFUNC, NPROC)
-    # ex_pystack3d_synth('resampling', DIRFUNC, NPROC)
+    # ex_synthetic_stack('cropping', DIRFUNC, NPROC)
+    # ex_synthetic_stack('bkg_removal', DIRFUNC, NPROC)
+    # ex_synthetic_stack('intensity_rescaling', DIRFUNC, NPROC)
+    # ex_synthetic_stack('destriping', DIRFUNC, NPROC)
+    # ex_synthetic_stack(REGISTRATION, DIRFUNC, NPROC)
+    # ex_synthetic_stack('resampling', DIRFUNC, NPROC)
 
     # Launch all process steps (independently)
-    ex_pystack3d_synth(dirfunc=DIRFUNC, nproc=NPROC, serial=False)
+    ex_synthetic_stack(dirfunc=DIRFUNC, nproc=NPROC, serial=False)
