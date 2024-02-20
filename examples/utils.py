@@ -22,7 +22,7 @@ class UserTempDirectory:
         pass
 
 
-def init_dir(dirpath, case):
+def init_dir(dirpath, case, copy_params_toml=True):
     """ Initialize the project directory """
     dirname = Path(dirpath) / f'pystack3d_{case}'
     os.makedirs(dirname, exist_ok=True)
@@ -31,9 +31,11 @@ def init_dir(dirpath, case):
     for fname in dirname.glob("*.tif"):
         os.remove(fname)
 
-    src = ASSETS / 'toml' / f'params_{case}_stack.toml'
-    dst = dirname / 'params.toml'
-    shutil.copy(src, dst)
+    if copy_params_toml:
+        src = ASSETS / 'toml' / f'params_{case}_stack.toml'
+        dst = dirname / 'params.toml'
+        shutil.copy(src, dst)
+        
     return dirname
 
 

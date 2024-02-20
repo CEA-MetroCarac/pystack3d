@@ -7,9 +7,11 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import matplotlib.pyplot as plt
 
-from examples.utils import init_dir, postpro, plot_results, UserTempDirectory
-
 from pystack3d import Stack3d
+from pystack3d.utils_metadata_fibics import params_from_metadata
+
+from examples.utils import init_dir, postpro, plot_results
+from examples.utils import UserTempDirectory  # pylint: disable=unused-import
 
 ASSETS = Path(__file__).parents[1] / 'assets'
 DATA = ASSETS / 'stacks' / 'stack_1'
@@ -20,14 +22,24 @@ def ex_real_stack(process_steps=None, dirfunc=None, nproc=None,
                   show_plots=True):
     """ Example with real data """
 
+    toml_from_metadata = False
+
     with dirfunc() as dirpath:  # open user temp or TemporaryDirectory dirpath
 
-        # project directory creation (copy) with input data
-        dirname = init_dir(dirpath, case='real')
+        # Initialize the project directory in the temporary folder
+        dirname = init_dir(dirpath, case='real',
+                           copy_params_toml=not toml_from_metadata)
+
+        # copy the slices in the project directory
         for channel in ["ESB", "SE2"]:
             os.makedirs(dirname / channel, exist_ok=True)
             for src in (DATA / channel).glob('*.tif'):
                 shutil.copy(src, dirname / channel)
+
+        if toml_from_metadata:
+            shutil.copy(DATA / 'Atlas3D.a3d-setup', dirname)
+            fname_toml = ASSETS / 'toml' / 'params_real_stack.toml'
+            params_from_metadata(dirname, fname_toml_ref=fname_toml, save=True)
 
         # processing
         stack = Stack3d(input_name=dirname)
