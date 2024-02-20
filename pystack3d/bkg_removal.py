@@ -625,7 +625,8 @@ def plot(output_dirname):
 
     nrows, ncols = division(len(powers))
 
-    plt.subplots(nrows=nrows, ncols=ncols)
+    fig, _ = plt.subplots(nrows=nrows, ncols=ncols)
+    fig.canvas.manager.set_window_title('background removal (coef.)')
     plt.suptitle(f"polynomial basis:\n{expr_from_powers(powers)}")
     for k, (coef, power) in enumerate(zip(coefs, powers)):
         plt.subplot(nrows, ncols, k + 1)
