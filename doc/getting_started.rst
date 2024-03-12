@@ -7,11 +7,12 @@ Project directory
 
 To be executed a **PyStack3D** workflow requires both:
 
- * a project directory including the ``.tif`` images annotated with their respective **z**-positions
+* a ``params.toml`` file defining all the process steps parameters
 
- * a ``params.toml`` file defining all the process steps parameters
+* a project directory including the ``.tif`` images annotated with their respective **z**-positions either in the root directory or in sub-folders for a multi-channels acquisition.
 
-Once executed, the output directories related to each process step take place inside the ``process`` directory as follows::
+
+Once executed, the **outputs** directories related to each process step take place inside the ``process`` directory as follows::
 
     project_dir
         |-- params.toml
@@ -31,7 +32,7 @@ Once executed, the output directories related to each process step take place in
         |       |           ...
         |        ...
 
-or for a multiple channels::
+or for a multi-channels acquisition::
 
     project_dir
         |-- params.toml
@@ -67,8 +68,32 @@ or for a multiple channels::
         |        ...
 
 
-Workflows execution
--------------------
+Workflow initialization
+-----------------------
+
+All the workflow instructions are provided in a ``params.toml``.
+
+A **raw** ``params.toml`` is given `here <https://github.com/CEA-MetroCarac/pystack3d/blob/main/assets/toml/params.toml>`_ (to be adapted according to needs).
+
+
+Fibics
+~~~~~~
+
+In the frame of **Fibics** (FIB-SEM) acquisitions, **metadata** can be extracted from the .tif files and the ``Atlas3D.a3d-setup`` file as follows::
+
+   from pystack3d.utils_metadata_fibics import params_from_metadata
+
+   params_from_metadata(project_dir, save=True)
+
+where ``project_dir`` refers to the project directory pathname containing the .tif files and the ``Atlas3D.a3d-setup`` file (mandatory file).
+
+By default, the reference ``params.toml`` file considered, modified and saved in the project directory is the **raw** one. But the user can provide another reference .toml file through the ``fname_toml_ref`` argument::
+
+   params_from_metadata(project_dir, save=True, fname_toml_ref=my_toml_ref)
+
+
+Workflow execution
+------------------
 
 A **PyStack3D** workflow execution is obtained with the following instructions::
 
@@ -114,9 +139,6 @@ Each process steps returns **specific** and **standard** outputs (data and figur
     :align: center
 
     Example of statistics returned by the **bkg_removal** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_.
-
-
-
 
 
 Examples
