@@ -1,24 +1,26 @@
 Parameters settings
 ===================
 
-The PyStack3D workflow parameters are defined in the ``params.toml`` file.
+The PyStack3D workflow parameters are defined in a ``params.toml`` file that is structured as follows:
 
-The non encapsulated parameters are related to the "general" parameters that specify the conditions of the **workflow** execution.
+* The first parameters are related to the **general** parameters that specify the conditions of the **workflow** execution.
 
-The encapsulated parameters are related to the conditions of each **process step** execution.
+* The following 'encapsulated' parameters are related to the conditions of each **process step** execution.
 
-To illustrate each of the process step we will consider hereafter a centered square-section pattern imaged with 100 frames and the following defects:
+To illustrate each of the process step hereafter we will consider the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_ corresponding to a centered square-section pattern imaged with 100 frames and the following defects:
 
     - an additional background (defined from a polynom),
 
     - a drift along the x-axis,
 
-    - a non-uniform sampling according to the z-axis which, coupled with the x-drift, gives the corresponding curved shape
+    - a non-uniform sampling according to the transverse directon (z-axis) which, coupled with the x-drift, gives the corresponding curved shape of the central square pattern
 
     - 2 oblique stripes
 
-    - and periodically, a change in the gray levels distribution
+    - and a periodic change in the gray levels distribution (occurring all the 11 slices)
 
-.. image:: _static/synth_use_case.png
+.. figure:: _static/synth_use_case.png
     :width: 400px
     :align: center
+
+    Front and top views related to the Z=50 and Y=25 cross sections.

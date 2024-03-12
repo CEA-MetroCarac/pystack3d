@@ -8,6 +8,7 @@ Welcome to PyStack3D's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :titlesonly:
    :caption: User Guide
 
    intro.rst
@@ -16,6 +17,11 @@ Welcome to PyStack3D's documentation!
    general.rst
    cropping.rst
    bkg_removal.rst
+   intensity_rescaling.rst
+   registration.rst
+   destriping.rst
+   resampling.rst
+   cropping_final.rst
 
 
 .. toctree::

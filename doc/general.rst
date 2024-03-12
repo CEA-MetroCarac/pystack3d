@@ -19,14 +19,14 @@ General Parameters
     ]
     history = ["cropping", "bkg_removal"]
 
-``input_dirname`` specifies where the input .tif files are stored (if not provided when creating the pystack3d.Stack() object).
+``input_dirname`` specifies where the input .tif files are stored. (**Optional**: to be defined if not passed in pystack3d.Stack3d(``input_name``)).
 
-``ind_min`` and ``ind_max`` are related to the frames indices to start and end the workflow. (If not specified, consider the first and the last frame)
+``ind_min`` and ``ind_max`` are related to the frames (slices) indices where to start and end the processing. (**Optional**. If not specified, consider the first and the last frame).
 
-``channels`` is used to indicate the channels names in the case of a multiple channels acquisition. In the case of a single channel acquisition, `.tif` files can be directly put at the root, equivalent to  ```channels = ["."]``` (default value)
+``channels`` is used to indicate the channels names in the case of a multiple channels acquisition. In the case of a single channel acquisition, `.tif` files can be directly put at the root, equivalent to  ```channels = ["."]``` (default value).
 
-``nproc`` allows to define the number of processors to work with
+``nproc`` allows to define the number of processors to work with. (Mandatory parameter).
 
-``process_steps`` is the list of the process steps to handle
+``process_steps`` is the list of the process steps to handle. (Mandatory parameter).
 
-``history`` is a list that can be used to specify the process steps that has already been handled when restarting. Note that during the workflow execution this list is automatically updated after each process step.
+``history`` is a list that can be used to specify the process steps that have already been handled when restarting. Note that during the workflow execution this list is automatically updated after each process step.

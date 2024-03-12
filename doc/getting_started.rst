@@ -2,23 +2,23 @@ Getting started
 ===============
 
 
-The project directory
----------------------
+Project directory
+-----------------
 
-To be executed a **PyStack3D** workflow requires:
+To be executed a **PyStack3D** workflow requires both:
 
- - 1/ a project directory with the ``.tif`` images annotated with their respective **z**-positions
+ * a project directory including the ``.tif`` images annotated with their respective **z**-positions
 
- - 2/ a ``params.toml`` file defining all the process steps parameters.
+ * a ``params.toml`` file defining all the process steps parameters
 
-Once executed, the output directories related to each process step take place inside the process directory as follows::
+Once executed, the output directories related to each process step take place inside the ``process`` directory as follows::
 
     project_dir
         |-- params.toml
         |-- slice_0000_z=0.0000um.tif
         |-- slice_0001_z=0.0100um.tif
         |   ...
-        |-- process (ouputs)
+        |-- process
         |       |-- cropping
         |       |       |-- outputs
         |       |       |-- slice_0000_z=0.0000um.tif
@@ -31,7 +31,7 @@ Once executed, the output directories related to each process step take place in
         |       |           ...
         |        ...
 
-Or for a multiple channels::
+or for a multiple channels::
 
     project_dir
         |-- params.toml
@@ -43,7 +43,7 @@ Or for a multiple channels::
         |       |-- slice_0000_z=0.0000um.tif
         |       |-- slice_0001_z=0.0100um.tif
         |           ...
-        |-- process (outputs)
+        |-- process
         |       |-- cropping
         |       |       |-- outputs
         |       |       |-- channel_1
@@ -74,16 +74,18 @@ A **PyStack3D** workflow execution is obtained with the following instructions::
 
     from pystack3d import Stack3d
 
-    stack = Stack3d(input_name=input_name)
-    stack.eval(process_steps=process_steps, nproc=16, show_pbar=True)
+    stack = Stack3d(input_name)
+    stack.eval(process_steps, nproc=16, show_pbar=True)
 
-where ```input_name``` refers to:
+``process_steps`` refers to a list of process to be executed
 
-- **EITHER** the project directory path (as a ```str``` or a ```Path``` object) that contains the `.tif` images **AND** the ```params.toml``` file
+``input_name`` corresponds:
 
-- **OR** the ```params.toml``` in which the project directory is defined via the ```input_dir``` parameter.
+- either to the **project directory pathname** that contains the ``.tif`` images and the ``params.toml`` file
 
-All the process steps defined in the `params.toml` or some of them can be executed as follows::
+- or to the ``params.toml`` in which the project directory pathname is defined via the ``input_dir`` parameter.
+
+All the process steps defined in the ``params.toml`` or some of them can be executed as follows::
 
     # execute all the process steps defined in the 'params.toml' file
     stack.eval(nproc=16)
@@ -94,26 +96,39 @@ All the process steps defined in the `params.toml` or some of them can be execut
     # execute the 'cropping' and the 'background removal' process steps
     stack.eval(process_steps=["cropping", "bkg_removal"], nproc=16)
 
-Note that an additional boolean keyword named ```serial``` allows to realize non-seralized calculations when setting to `False`.
+Note that an additional boolean keyword named ``serial`` allows to realize non-serialized calculations when setting to ``False``(said differently, with ``serial = False`` the workflow is executed considering the original input data for each process step).
 
 
 Outputs
 -------
 
-stats et autres
+Each process steps returns **specific** and **standard** outputs (data and figures) in the related process step **outputs** directory.
+
+**Specific** outputs are related to the each process steps. They are described in each of the process steps sections, if existing.
+
+**Standard** outputs consist in the statistics (min, max, mean) values evolution along the stack axis (z-axis, by convention) before and after the related process step, considering for these last ones the statistics before and after a data reformatting compatible with the input data format. Indeed, some process steps may modify the data type (typically from integer to float) or generate data outside the range of authorized data values. *(This could happen for instance in the **bkg_removal** process step when subtracting the background that could generate negative or positive overflowed values)*.
 
 
-Examples execution
-------------------
+.. figure:: _static/stats_bkg_removal.png
+    :width: 80%
+    :align: center
 
-Two examples can be launched.
+    Example of statistics returned by the **bkg_removal** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_.
 
-THe first one with synthetic stack composed of small images::
+
+
+
+
+Examples
+--------
+
+Two examples are provided with the pystack3d package github repository.
+
+The first one corresponds to a synthetic stack composed of small images. It aims at providing quick overviews of the process steps outcomes::
 
     cd pystack3d
-    python examples/ex_pystack3d_synth.py
+    python examples/ex_synthetic_stack.py
 
+The second one is based on a real but reduced stack (8 slices) issued from a FIB-SEM images acquisition. Although reduced, its execution is longer than the previous one::
 
-The seconde one based on a real but reduced stack issued from FIB-SEM images::
-
-    python examples/ex_pystack3d_real.py
+    python examples/ex_real_stack.py
