@@ -1,6 +1,6 @@
 """
 utilities functions to extract metadata from FIB-SEM acquisitions in the
-.a3d-setup parameters file and a .tif file (correspondning to the first slice)
+.a3d-setup parameters file and a .tif file (corresponding to the first slice)
 """
 import pprint
 from pathlib import Path
