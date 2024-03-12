@@ -28,7 +28,7 @@ PROCESS_STEPS = ['cropping', 'bkg_removal', 'intensity_rescaling',
                  'destriping', 'resampling', 'cropping_final']
 CMAP = plt.get_cmap("tab10")
 
-VERSION = "1.0"
+VERSION = "2024.1"
 
 
 class Stack3d:
@@ -268,8 +268,8 @@ def plot(process_step, output_dirname):
     if os.path.isfile(fname):
         stats = np.load(fname)
         labels = ['Min', 'Max', 'Mean']
-        sfx = [' (input)', ' (output)', ' (output-reformat.)']
-        fig, ax = plt.subplots(3, 1, figsize=(8, 3 * 2))
+        sfx = [' (input)', ' (output)', ' (reformatted output)']
+        fig, ax = plt.subplots(3, 1, figsize=(8, len(labels) * 2))
         fig.canvas.manager.set_window_title(process_step)
         fig.tight_layout()
         for k, label in enumerate(labels):
@@ -277,6 +277,7 @@ def plot(process_step, output_dirname):
             ax[k].plot(stats[:, 1, k], c=CMAP(1), label=label + sfx[1], ls='--')
             ax[k].plot(stats[:, 2, k], c=CMAP(1), label=label + sfx[2])
             ax[k].legend(loc=9, ncols=3)
+        ax[-1].set_xlabel('# Frames', labelpad=-1)
         plt.savefig(output_dirname / 'outputs' / 'stats.png')
 
     if process_step == 'cropping_final':

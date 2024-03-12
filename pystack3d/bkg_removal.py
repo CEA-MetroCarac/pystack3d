@@ -632,4 +632,5 @@ def plot(output_dirname):
         plt.subplot(nrows, ncols, k + 1)
         plt.plot(coef, label=expr_from_powers([power]))
         plt.legend(loc=1)
+        plt.xlabel('# Frames')
     plt.savefig(output_dirname / 'outputs' / 'coefs.png')

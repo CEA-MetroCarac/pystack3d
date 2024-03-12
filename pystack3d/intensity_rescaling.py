@@ -5,7 +5,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from tifffile import imread
-from scipy import ndimage
+from scipy.ndimage import uniform_filter1d
 
 from pystack3d.utils import outputs_saving
 from pystack3d.utils_multiprocessing import (send_shared_array,
@@ -103,7 +103,7 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
         histos_ref = np.mean(histos_orig, axis=0)
         histos_ref = np.vstack([histos_ref] * histos_orig.shape[0])
     else:
-        histos_ref = ndimage.uniform_filter1d(histos_orig, filter_size, axis=0)
+        histos_ref = uniform_filter1d(histos_orig, filter_size, axis=0)
     if pid_0:
         np.save(output_dirname / 'outputs' / 'histos_ref.npy', histos_ref)
 
@@ -218,6 +218,8 @@ def plot(output_dirname):
     plt.subplot(131)
     plt.title("Original histograms")
     plt.imshow(histos_orig)
+    plt.xlabel('Bins')
+    plt.ylabel('# Frames')
     plt.colorbar()
     plt.axis("auto")
     plt.subplot(132)
@@ -237,6 +239,8 @@ def plot(output_dirname):
     plt.subplot(131)
     plt.title("Original histograms")
     plt.plot(histos_orig.T[:])
+    plt.xlabel('Bins')
+    plt.ylabel('Occurrences')
     plt.subplot(132)
     plt.title("Reference histograms")
     plt.plot(histos_ref.T[:])

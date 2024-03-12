@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import patches
 from skimage.transform import PiecewiseAffineTransform, AffineTransform, warp
-from scipy.ndimage import convolve1d
+from scipy.ndimage import uniform_filter1d
 from tifffile import imread
 
 from pystack3d.registration_calculation import registration_plot
@@ -298,9 +298,8 @@ def running_avg_removal(tmats, box_size=20):
     if box_size in [0, 1]:
         return tmats
 
-    weights = np.ones((box_size,)) / box_size
-    tmats_new = tmats - convolve1d(tmats, weights, axis=0) + np.identity(3)
-
+    identity = np.identity(3)
+    tmats_new = tmats + identity - uniform_filter1d(tmats, box_size, axis=0)
     return tmats_new
 
 

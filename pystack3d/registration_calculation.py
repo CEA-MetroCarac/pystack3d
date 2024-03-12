@@ -257,6 +257,7 @@ def registration_plot(tmats, nb_blocks=None, transformation='RIGID_BODY',
             ax1.legend(loc=2)
             if transf_index > 0:
                 ax2.legend(loc=1)
+        ax1.set_xlabel('# Frames')
 
     return fig
 
