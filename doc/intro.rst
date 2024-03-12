@@ -1,8 +1,8 @@
 Introduction
 ============
 
-What is PyStack3D
------------------
+What is PyStack3D ?
+-------------------
 
 PyStack3D is an open source library written in Python which provides tools to do
 images stacks corrections, typically before image segmentation for images issued from FIB-SEM 3D acquisition.
