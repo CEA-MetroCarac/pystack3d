@@ -24,3 +24,16 @@ To illustrate each of the process step hereafter we will consider the `synthetic
     :align: center
 
     Front and top views related to the Z=50 and Y=25 cross sections.
+
+
+.. toctree::
+    :titlesonly:
+
+    general.rst
+    cropping.rst
+    bkg_removal.rst
+    intensity_rescaling.rst
+    registration.rst
+    destriping.rst
+    resampling.rst
+    cropping_final.rst

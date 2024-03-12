@@ -3,25 +3,16 @@ contain the root `toctree` directive.
 
 .. _user_guide-label:
 
-Welcome to PyStack3D's documentation!
-====================================
+Welcome to the PyStack3D documentation !
+========================================
 
 .. toctree::
    :maxdepth: 2
-   :titlesonly:
    :caption: User Guide
 
    intro.rst
    getting_started.rst
    params.rst
-   general.rst
-   cropping.rst
-   bkg_removal.rst
-   intensity_rescaling.rst
-   registration.rst
-   destriping.rst
-   resampling.rst
-   cropping_final.rst
 
 
 .. toctree::
