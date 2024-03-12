@@ -45,7 +45,7 @@ transformation = "TRANSLATION"
 
 [registration_transformation]
 #constant_drift = [-0.3, 1.2]
-#box_size_averaging = 1
+#box_size_averaging = 100
 mode = "edge"
 #cropping = false
 
