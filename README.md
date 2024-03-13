@@ -1,9 +1,6 @@
-[![PyPI](https://img.shields.io/pypi/v/pystack3d?label=pypi%20package)](
-https://pypi.org/project/pystack3d/)
-[![Github](https://img.shields.io/badge/GitHub-GPL--3.0-informational)](
-https://github.dev/CEA-MetroCarac/pystack3d)
-[![Doc](https://img.shields.io/badge/%F0%9F%95%AE-docs-green.svg)](
-https://cea-metrocarac.github.io/pystack3d/doc/index.html)
+[![PyPI](https://img.shields.io/pypi/v/pystack3d?label=pypi%20package)](https://pypi.org/project/pystack3d/)
+[![Github](https://img.shields.io/badge/GitHub-GPL--3.0-informational)](https://github.dev/CEA-MetroCarac/pystack3d)
+[![Doc](https://img.shields.io/badge/%F0%9F%95%AE-docs-green.svg)](https://cea-metrocarac.github.io/pystack3d/doc/index.html)
 
 
 <p align="center" width="100%">
@@ -52,7 +49,11 @@ python examples/ex_synthetic_stack.py
 python examples/ex_real_stack.py
 ```
 
-### Authors information
+## Acknowledgements
+
+This work, carried out on the CEA - Platform for Nanocharacterisation (PFNC), was supported by the “Recherche Technologique de Base” program of the French National Research Agency (ANR).
+
+## Authors information
 
 In case you use the results of this code in an article, please cite:
 
