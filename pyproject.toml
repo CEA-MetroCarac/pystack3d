@@ -1,0 +1,62 @@
+[build-system]
+requires = ['setuptools>=42']
+build-backend = 'setuptools.build_meta'
+
+
+[project]
+name = "pystack3d"
+dynamic = ["version"]
+authors = [{ name = "Patrick Quéméré", email = "patrick.quemere@cea.fr" }]
+description = "Pystack3D: A Python package for fast image stack correction"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["PyStack3D", "stack", "images", "FIB-SEM", "processing",
+    "correction", "cropping", "background removal", "registration",
+    "intensity rescaling", "destriping", "curtains", "resampling",
+    "multithreading", "multiprocessing"]
+license = { text = "GPL v3" }
+classifiers = [
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX :: Linux',
+    'Operating System :: MacOS :: MacOS X',
+    'Environment :: Console',
+]
+dependencies = [
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "scikit-image",
+    "statsmodels",
+    "pystackreg",
+    "pyvsnr",
+    "Pillow",
+    "tifffile",
+    "tomli",
+    "tomlkit",
+    "parse"
+]
+
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.dynamic]
+version = { attr = "pystack3d.VERSION" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pystack3d*"]
+namespaces = false
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+
+[project.urls]
+Homepage = "https://github.dev/CEA-MetroCarac/pystack3d"
+Documentation = "https://cea-metrocarac.github.io/pystack3d/doc/index.html"
+
