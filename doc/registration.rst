@@ -31,23 +31,23 @@ This process occurs in two steps.
     mode = "edge"
     #cropping = false
 
-``area`` is an **optional** keyword used to calculate the transformation matrices with cropped images. This allows to reduce the CPU time dedicated.
-Note that the area should be sufficiently large to encompass relevant "features" required by the registration.
+``area`` is an **optional** keyword used to calculate the transformation matrices with cropped images in the aim to reduce the CPU time.
+Note that the area should be sufficiently large to encompass "features" relevant for the registration processing.
 
 ``threshold`` is employed to binarize the images during the registration_calculation processing.
 
 
 ``nb_blocks`` allows decomposing the image into patches (according to a grid defined by the number of blocks in the x and y directions). This spatial division of the images thus enables accounting for non-uniform alignment effects on very large images that could not be captured by a single transformation matrix.
 
-``transformation`` sets the type of the transformation to consider (to choose among 'TRANSLATION', 'RIGID_BODY', 'SCALED_ROTATION', 'AFFINE', 'BILINEAR'. See the `pystackreg <https://pystackreg.readthedocs.io/en/latest/readme.html>`_ documentation for more details.)
+``transformation`` sets the type of the transformation to be considered (to choose among 'TRANSLATION', 'RIGID_BODY', 'SCALED_ROTATION', 'AFFINE', 'BILINEAR'). See the `pystackreg <https://pystackreg.readthedocs.io/en/latest/readme.html>`_ documentation for more details.
 
-During the image acquisition, it is not uncommon for drift to occur (visibile in the 'cumulative' transformation matrix resulting from the calculation step). ``constant_drift`` allows the user to remove the effect of a **constant** drift between each slide according to the values defined for each of the x and y directions.
+During the image acquisition, it is not uncommon for drift to occur (visible in the 'cumulative' transformation matrix resulting from the calculation step). ``constant_drift`` allows the user to remove the effect of a **constant** drift between each slide according to the values defined for each of the x and y directions.
 
-In the case of a large-scale fluctuating drift, the user has the possibility to subtract the resulting mean component from a running average of a size defined by the ``box_size_averaging`` parameter.
+In the case of a large-scale fluctuating drift, the user has the possibility to subtract the resulting mean component from a running average of a size (number of slices) defined by the ``box_size_averaging`` parameter.
 
-``mode`` is associated to the extrapolation method to consider when appyling the transformation matrices (to choose among 'constant', 'edge', 'symmetric', 'reflect', 'wrap' - see `numpy.pad <https://numpy.org/doc/stable/reference/generated/numpy.pad.html>`_ for more details. (Note that if 'constant' is selected, the corresponding value (cval) associated to the extrapolation is by default NaN (np.nan)).
+``mode`` is associated to the extrapolation method to be considered when applying the transformation matrices (to choose among 'constant', 'edge', 'symmetric', 'reflect', 'wrap' - see `numpy.pad <https://numpy.org/doc/stable/reference/generated/numpy.pad.html>`_ for more details. Note that if 'constant' is selected, the corresponding value (cval) associated to the extrapolation is by default NaN (np.nan)).
 
-``cropping`` is an activation key to perform cropping on the entire stack according to the area of aligned images preserved from any extrapolation effects.(Default value is false).
+``cropping`` is an activation key to perform cropping on the entire stack according to the area of aligned images preserved from any extrapolation effects.(Default value is ``false``).
 
 
 Plotting

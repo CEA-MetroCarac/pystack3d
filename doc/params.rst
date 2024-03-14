@@ -23,7 +23,7 @@ To illustrate each of the process step hereafter we will consider the `synthetic
     :width: 400px
     :align: center
 
-    Front and top views related to the Z=50 and Y=25 cross sections.
+    Front and top views related to the Z=50 and Y=25 cross sections without and with the additional defects.
 
 
 .. toctree::

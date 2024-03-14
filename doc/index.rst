@@ -1,7 +1,14 @@
-.. PyStack3D documentation master file, created by sphinx-quickstart on Mon Oct 18 11:10:55 2010. You can adapt this file completely to your liking, but it should at least
-contain the root `toctree` directive.
+|docs|_  |github|_  |pypi|_
 
-.. _user_guide-label:
+.. |docs| image:: https://img.shields.io/badge/%F0%9F%95%AE-docs-green.svg
+.. _docs: https://cea-metrocarac.github.io/pystack3d/doc/index.html
+
+.. |github| image:: https://img.shields.io/badge/GitHub-GPL--3.0-informational
+.. _github: https://github.dev/CEA-MetroCarac/pystack3d
+
+.. |pypi| image:: https://img.shields.io/pypi/v/pystack3d?label=pypi%20package
+.. _pypi: https://pypi.org/project/pystack3d
+
 
 Welcome to the PyStack3D documentation !
 ========================================
@@ -21,17 +28,3 @@ Welcome to the PyStack3D documentation !
 
    api/modules.rst
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Credits and citation
-
-   credits.rst
-   citing.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
