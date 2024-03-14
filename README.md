@@ -4,7 +4,7 @@
 
 
 <p align="center" width="100%">
-    <img align="center" width=250 src=https://cea-metrocarac.github.io/pystack3d/logo.png>
+    <img align="center" width=400 src=https://cea-metrocarac.github.io/pystack3d/logo.png>
 </p>
 
 ## Introduction
