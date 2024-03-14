@@ -156,7 +156,7 @@ Each process steps returns **specific** and **standard** outputs (data and figur
     :width: 80%
     :align: center
 
-    Example of statistics returned by the **bkg_removal** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_.
+    Example of statistics returned by the **bkg_removal** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_.
 
 
 Examples

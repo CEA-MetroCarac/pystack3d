@@ -14,7 +14,7 @@ This process occurs in two steps.
     :width: 400px
     :align: center
 
-    Illustration of the **registration** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_.
+    Illustration of the **registration** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_.
 
 
 ::

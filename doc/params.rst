@@ -7,7 +7,7 @@ The PyStack3D workflow parameters are defined in a ``params.toml`` file that is 
 
 * The following 'encapsulated' parameters are related to the conditions of each **process step** execution.
 
-To illustrate each of the process step hereafter we will consider the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_ corresponding to a centered square-section pattern imaged with 100 frames and the following defects:
+To illustrate each of the process step hereafter we will consider the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_ corresponding to a centered square-section pattern imaged with 100 frames and the following defects:
 
     - an additional background (defined from a polynom),
 

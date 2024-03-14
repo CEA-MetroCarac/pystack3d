@@ -9,7 +9,7 @@ To achieve this, a reference histogram is defined, corresponding either to the a
     :width: 400px
     :align: center
 
-    Illustration of the **intensity_rescaling** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/pystack3d/examples/ex_pystack3d_synth.py>`_.
+    Illustration of the **intensity_rescaling** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_.
     In the present case, the reference histogram has been defined from all the slices. This leads to values after intensity rescaling that are nearly **constant** along the z-axis.
 
 
