@@ -4,7 +4,7 @@
 .. _docs: https://cea-metrocarac.github.io/pystack3d/doc/index.html
 
 .. |github| image:: https://img.shields.io/badge/GitHub-GPL--3.0-informational
-.. _github: https://github.dev/CEA-MetroCarac/pystack3d
+.. _github: https://github.com/CEA-MetroCarac/pystack3d
 
 .. |pypi| image:: https://img.shields.io/pypi/v/pystack3d?label=pypi%20package
 .. _pypi: https://pypi.org/project/pystack3d
