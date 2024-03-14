@@ -7,7 +7,7 @@
     <img align="center" width=250 src=https://cea-metrocarac.github.io/pystack3d/logo.png>
 </p>
 
-# Introduction
+## Introduction
 
 **PyStack3D** is a package dedicated to images correction intended -for instance- to FIB-SEM stack images postprocessing before image segmentation.
 
@@ -29,7 +29,7 @@ An additional step named `cropping_final` can be used to eliminate artefacts pro
 
 <p align="center" width="100%">
     <img align="center" width=100%" src=doc/_static/process_steps_real.png> <br>
-    <em>Illustration of a <b>PyStack3D</b> workflow applied on a FIB-SEM image and using some of the process steps.</em>
+    <em>Illustration of a FIB-SEM image correction using some of the <b>PyStack3D</b> process steps.</em>
 </p>
 
 ## Installation
@@ -53,8 +53,18 @@ python examples/ex_real_stack.py
 
 This work, carried out on the CEA - Platform for Nanocharacterisation (PFNC), was supported by the “Recherche Technologique de Base” program of the French National Research Agency (ANR).
 
-## Authors information
+## Citations
 
 In case you use the results of this code in an article, please cite:
 
 - Quéméré P., David T. (2024). PyStack3D: A Python package for fast image stack correction. *Journal of Open Source Software. (submitted)*
+
+additional citations for the <b>destriping</b>:
+
+- Pavy K., Quéméré P. (2024). Pyvsnr 2.0.0. Zenodo. https://doi.org/10.5281/zenodo.10623640
+
+- Fehrenbach J., Weiss P., Lorenzo C. (2012). Variational algorithms to remove stationary noise: applications to microscopy imaging. *IEEE Transactions on Image Processing 21.10 (2012): 4420-4430.*
+
+additional citation for the <b>registration</b>:
+
+- Thévenaz P., Ruttimann U.E., Unser M. (1998), A Pyramid Approach to Subpixel Registration Based on Intensity, *IEEE Transactions on Image Processing, vol. 7, no. 1, pp. 27-41, January 1998*
