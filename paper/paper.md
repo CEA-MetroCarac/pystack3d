@@ -48,7 +48,7 @@ The workflow components currently offered by ``PyStack3D`` are:
 
 * **background removal** to reduce, from polynomial approximations, large-scaled artefacts issued for instance from shadowing or charging effects in FIB-SEM images acquisition
 
-* **intensity rescaling** to homogenize the ‘gray’ intensity distribution between successive slices
+* **intensity rescaling** to homogenize the intensity distribution between successive slices
 
 * **registration** to correct the images misalignment due to shifting, drift, rotation, … during the images acquisition (based on the ``PyStackReg`` package [@PyStackReg])
 
