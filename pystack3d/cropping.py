@@ -64,9 +64,10 @@ def inds_from_area(area, fnames, pid_0, output_dirname):
         imin, imax = shape[1] - area[3], shape[1] - area[2]
 
         if pid_0:
-            msg = '\nERROR!! your area exceed the image shape according to the '
-            assert area[1] <= shape[2], msg + 'x-direction'
-            assert area[3] <= shape[1], msg + 'y-direction'
+            msg = '\nERROR!! your area ({}) exceed the image shape ({})'
+            msg += ' according to the {}-direction'
+            assert area[1] <= shape[2], msg.format(area[1], shape[2], 'x')
+            assert area[3] <= shape[1], msg.format(area[3], shape[1], 'y')
             with open(output_dirname / 'outputs' / 'log.txt', 'w') as fid:
                 fid.write(f"Original shape: {shape}")
                 fid.write(f"New shape: {(shape[0], jmax - jmin, imax - imin)}")
