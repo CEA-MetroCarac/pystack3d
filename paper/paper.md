@@ -33,6 +33,7 @@ bibliography: paper.bib
 Three-dimensional reconstruction from 2D image stacks is a crucial technique in various scientific domains. For instance, technics such as focused ion beam scanning electron microscopy (FIB-SEM) or time-of-flight secondary ion mass spectrometry (TOF-SIMS) leverage this approach to visualize complex structures at the nanoscale or analyze the distribution of chemical compounds with unprecedented precision. However, creating a "clean" 3D stack often requires image corrections to remove artifacts and inconsistencies, particularly for volume segmentation, a crucial process for 3D quantitative data analysis.
 
 Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source library, that aimed at performing several image ‘cleaning’ tasks in the most integrated and efficient manner possible.
+
 ![a) Synthetic stack with different types of defects. b) Corrected stack. c) Ground truth.\label{fig:PyStack3D}](../doc/_static/pystack3d.png){width=85%}
 
 # Statement of need
@@ -56,12 +57,13 @@ The workflow components currently offered by ``PyStack3D`` are:
 * **resampling** to correct non uniform spatial steps from slice to slice and enable correct 3D volume reconstructions
 
 * **final cropping** to select another ROI at the end and/or eliminate artefacts potentially produced near the edges during the image processing.
-  ![](../doc/_static/workflow_1.png)
-  ![Cut-planes related to the different process steps issued from the Figure 1b stack correction.\label{fig:workflow}](../doc/_static/workflow_2.png)
+*
+![](../doc/_static/workflow_1.png)
+![Cut-planes related to the different process steps issued from the Figure 1b stack correction.\label{fig:workflow}](../doc/_static/workflow_2.png)
 
 Based on a ``.toml`` parameter file, each of these treatments are performed according to the user's desired order.
 
-At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean values for each slice), along with visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in \autoref{fig:PyStack3D} and \autoref{fig:workflow} respectively can be produced.
+At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean values for each slice), along with visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
 
 Note that in the context of FIB-SEM input data, the processing can be carried out by considering multiple channels and incorporating some metadata issued from the equipment.
 
