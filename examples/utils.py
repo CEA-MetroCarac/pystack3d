@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 from tempfile import gettempdir
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from tifffile import imread
 
@@ -35,7 +36,7 @@ def init_dir(dirpath, case, copy_params_toml=True):
         src = ASSETS / 'toml' / f'params_{case}_stack.toml'
         dst = dirname / 'params.toml'
         shutil.copy(src, dst)
-        
+
     return dirname
 
 
@@ -71,32 +72,113 @@ def postpro(process_steps, input_dir, channel, verbosity=False):
     return dirnames, labels, stats_vals
 
 
-def plot_results(dirnames, labels, vmin, vmax):
+def plot_cube_faces(arr, levels=40,
+                    title=None, show_colorbar=True, vmin=None, vmax=None):
+    """
+    External faces representation of a 3D array with matplotlib
+
+    Parameters
+    ----------
+    arr: numpy.ndarray()
+        3D array to handle
+    levels: int or array-like, optional
+        Determines the number and positions of the contour lines / regions
+    title: str, optional
+        Title of the figure
+    show_colorbar: bool, optional
+        Activation key for colorbar displaying
+    vmin, vmax: floats, optional
+        Data range that the colormap covers
+
+    Returns
+    -------
+    fig : Matplotlib.Figure
+        Return a Matplotlib.Figure if 'ax' is None
+    """
+    fig = plt.figure(figsize=(5, 4))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_title(title)
+
+    if vmin is None:
+        vmin = arr.min()
+
+    if vmax is None:
+        vmax = arr.max()
+
+    shape = arr.shape
+
+    Y, X, Z = np.meshgrid(np.arange(shape[0]),
+                          np.arange(shape[1]),
+                          -np.arange(shape[2]), indexing='ij')
+
+    kwargs = {'vmin': vmin, 'vmax': vmax,
+              'levels': np.linspace(arr.min(), arr.max(), levels)}
+
+    # Plot contour surfaces
+    ax.contourf(X[:, :, 0], Y[:, :, 0], arr[:, :, 0],
+                zdir='z', offset=0, **kwargs)
+    ax.contourf(X[0, :, :], arr[0, :, :], Z[0, :, :],
+                zdir='y', offset=0, **kwargs)
+    ax.contourf(arr[:, -1, :], Y[:, -1, :], Z[:, -1, :],
+                zdir='x', offset=X.max(), **kwargs)
+
+    # Set limits of the plot from coord limits
+    xmin, xmax = X.min(), X.max()
+    ymin, ymax = Y.min(), Y.max()
+    zmin, zmax = Z.min(), Z.max()
+    ax.set(xlim=[xmin, xmax], ylim=[ymin, ymax], zlim=[zmin, zmax])
+    ax.axis('off')
+
+    # Plot edges
+    edges_kw = dict(color='k', linewidth=1, zorder=1e3)
+    ax.plot([xmax, xmax], [ymin, ymax], zmax, **edges_kw)
+    ax.plot([xmin, xmax], [ymin, ymin], zmax, **edges_kw)
+    ax.plot([xmax, xmax], [ymin, ymin], [zmin, zmax], **edges_kw)
+
+    # Set zoom and angle view
+    ax.view_init(30, -45, 0)
+    ax.set_box_aspect([shape[1], shape[0], shape[2]])
+
+    if show_colorbar:
+        norm = mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax'])
+        scmap = plt.cm.ScalarMappable(norm=norm)
+        scmap.set_array([])
+        plt.colorbar(scmap)
+
+
+def plot_results(dirnames, labels, vmin=0, vmax=255,
+                 inds_cutplanes=None, inds_crop=None):
     """ Plot results related to the different process steps """
 
     ncol = len(dirnames)
     fig, ax = plt.subplots(2, ncol, sharex='col', figsize=(2.5 * ncol, 5))
     fig.tight_layout(pad=2.5)
     plt.rcParams["image.origin"] = 'lower'
+    kwargs = {'vmin': vmin, 'vmax': vmax, 'aspect': 'equal'}
 
     for i, (dirname, label) in enumerate(zip(dirnames, labels)):
         fnames = sorted(dirname.glob('*.tif'))
         if len(fnames) != 0:
             arr = imread(fnames)
-            ic, jc, _ = tuple(int(x / 2) for x in arr.shape)
+            if inds_cutplanes is None:
+                kc, ic, _ = tuple(int(x / 2) for x in arr.shape)
+            else:
+                kc, ic = inds_cutplanes
+            if label == 'target' and inds_crop is not None:
+                imin, imax, jmin, jmax = inds_crop
+                arr = arr[:, imin:imax, jmin:jmax]
+
             ax[0, i].set_title(label)
-            ax[0, i].imshow(np.flipud(arr[ic, :, :]), vmin=vmin, vmax=vmax)
-            ax[0, i].axis('auto')
-            ax[1, i].imshow(arr[:, jc, :], vmin=vmin, vmax=vmax)
-            ax[1, i].axis('auto')
+            ax[0, i].imshow(np.flipud(arr[kc, :, :]), **kwargs)
+            ax[1, i].imshow(arr[:, ic, :], **kwargs)
 
             if i == 0:
                 ax[0, 0].set_ylabel("Y")
                 ax[0, 0].set_xlabel("X")
-                add_cutplane_line(ax[0, 0], jc, arr.shape[2], arr.shape[1])
+                add_cutplane_line(ax[0, 0], ic, arr.shape[2], arr.shape[1])
                 ax[1, 0].set_ylabel("Z")
                 ax[1, 0].set_xlabel("X")
-                add_cutplane_line(ax[1, 0], ic, arr.shape[2], -arr.shape[0])
+                add_cutplane_line(ax[1, 0], kc, arr.shape[2], -arr.shape[0])
 
             # # CROPPING
             # from matplotlib.patches import Rectangle
