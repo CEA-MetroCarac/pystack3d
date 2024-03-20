@@ -50,6 +50,7 @@ def registration_transformation(fnames=None,
                                 pre_calculated_tmats=None,
                                 constant_drift=None,
                                 box_size_averaging=None,
+                                subpixel=True,
                                 mode='constant',
                                 cropping=False,
                                 output_dirname=None):
@@ -74,9 +75,11 @@ def registration_transformation(fnames=None,
     constant_drift: tuple of 2 floats, optional
         Constant translation values (transl_x, transl_y) to remove at each
         slice in the transformation matrices
-    box_size_averaging: int, float
+    box_size_averaging: int, optional
         Box size associated to the running-averaged transformation matrices
         to remove at each slice
+    subpixel: bool, optional
+        Activation keyword to enable subpixel translation
     mode: {'constant', 'edge', 'symmetric', 'reflect', 'wrap'}, optional
         For extrapolation, points outside the boundaries of the input are
         filled according to the given mode that is related to `numpy.pad`.
@@ -90,6 +93,12 @@ def registration_transformation(fnames=None,
     if pre_calculated_tmats is None:
         raise IOError("'pre_calculated_tmats' should be given")
     tmats = pre_calculated_tmats
+
+    # remove subpixel translation
+    if not subpixel:
+        for k, tmat in enumerate(tmats):
+            tmat_transl = tmat[:, :, 2]
+            tmat_transl[np.abs(tmat_transl) < 1] = 0
 
     # cumulative transformation matrices by dot products
     tmats_cumul = cumdot(tmats)
