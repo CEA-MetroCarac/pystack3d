@@ -28,7 +28,12 @@ The ``pystack3d`` workflow includes the following process steps which can be act
 An additional step named `cropping_final` can be used to eliminate artefacts produced near the edges during the image processing or to select another ROI at the end.
 
 <p align="center" width="100%">
-    <img align="center" width=100%" src=doc/_static/process_steps_real.png> <br>
+    <img align="center" width=80%" src=https://cea-metrocarac.github.io/pystack3d/pystack3d.png> <br>
+    <em>a) Synthetic case illustrating the defects to be removed by <b>PyStack3D</b>. b) Corrected stack. c) Ground truth.</em>
+</p>
+
+<p align="center" width="100%">
+    <img align="center" width=100%" src=https://cea-metrocarac.github.io/pystack3d/process_steps_real.png> <br>
     <em>Illustration of a FIB-SEM image correction using some of the <b>PyStack3D</b> process steps.</em>
 </p>
 
