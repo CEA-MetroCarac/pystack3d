@@ -48,7 +48,7 @@ The workflow components currently offered by ``PyStack3D`` are:
 
 * **background removal** to reduce, from polynomial approximations, large-scaled artefacts issued for instance from shadowing or charging effects in FIB-SEM images acquisition
 
-* **intensity rescaling** to homogenize the intensity distribution between successive slices
+* **intensity rescaling** to homogenize the ‘gray’ intensity distribution between successive slices
 
 * **registration** to correct the images misalignment due to shifting, drift, rotation, … during the images acquisition (based on the ``PyStackReg`` package [@PyStackReg])
 
@@ -57,10 +57,6 @@ The workflow components currently offered by ``PyStack3D`` are:
 * **resampling** to correct non uniform spatial steps from slice to slice and enable correct 3D volume reconstructions
 
 * **final cropping** to select another ROI at the end and/or eliminate artefacts potentially produced near the edges during the image processing.
-
-![](../doc/_static/workflow_1.png)
-
-![Cut-planes related to the different process steps issued from the Figure 1b stack correction.\label{fig:workflow}](../doc/_static/workflow_2.png)
 
 Based on a ``.toml`` parameter file, each of these treatments are performed according to the user's desired order.
 
@@ -73,5 +69,9 @@ In conclusion, ``Pystak3D`` has been designed to evolve over time and accommodat
 # Acknowledgements
 
 This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was supported by the “Recherche Technologique de Base” program of the French National Research Agency (ANR).
+
+![](../doc/_static/workflow_1.png)
+
+![Cut-planes related to the different process steps issued from the Figure 1b stack correction.\label{fig:workflow}](../doc/_static/workflow_2.png)
 
 # References
