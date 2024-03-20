@@ -11,7 +11,7 @@ from pystack3d.utils_multiprocessing import (send_shared_array,
 
 
 def destriping(fnames=None, inds_partition=None, queue_incr=None,
-               maxit=100, filters=None,
+               maxit=100, cvg_threshold=0, filters=None,
                output_dirname=None):
     """
     Function dedicated to destriping from the VSNR algorithm.
@@ -28,6 +28,9 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
         Queue passed to the function to interact with the progress bar
     maxit: int, optional
         Number of maximum iterations used by the VSNR algorithm
+    cvg_threshold: float, optional
+        Convergence criteria to stop the VSNR iterative process, related to the
+        maximum residual variation between 2 iterations
     filters: list of dict
         Filters defined as a list of dictionaries that specifies for each filter
          the corresponding 'name', 'noise_level', 'sigma' and 'theta'.
@@ -46,7 +49,10 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
     for fname in fnames:
         img = imread(fname)
 
-        img_res = vsnr2d(img, filters, maxit)
+        img_res = vsnr2d(img, filters,
+                         maxit=maxit,
+                         cvg_threshold=cvg_threshold,
+                         norm=False)
 
         outputs_saving(output_dirname, fname, img, img_res, stats)
 
