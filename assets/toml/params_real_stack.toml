@@ -31,7 +31,7 @@ filter_size = 100
 
 [destriping]
 maxit = 100
-#cvg_threshold = 1.e-2
+#cvg_threshold = 1e-2
 filters = [
     { name = "Gabor", noise_level = 30, sigma = [0.5, 80], theta = 0 },
     { name = "Gabor", noise_level = 80, sigma = [0.5, 200], theta = 0 }]
@@ -45,6 +45,7 @@ threshold = 64
 [registration_transformation]
 #constant_drift = [0.0, 0.0]
 box_size_averaging = 100
+#subpixel = true
 mode = "edge"
 cropping = false
 

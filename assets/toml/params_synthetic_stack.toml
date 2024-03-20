@@ -15,27 +15,27 @@ process_steps = [
 history = []
 
 [cropping]
-area = [5, 45, 2, 42]
+area = [40, 340, 0, 300]
 
 [bkg_removal]
 dim = 3
-poly_basis = "1 + x + y + x*y + x**2 + z"
-#orders = [2, 1, 1]
-#cross_terms = false
+#poly_basis = "1 + x*y*z"
+orders = [1, 1, 1]
+cross_terms = true
 skip_factors = [5, 5, 5]
-threshold_min = 0.5
+threshold_min = 5
 #threshold_max = 10.
 #weight_func = "HuberT"
 
 [intensity_rescaling]
-nbins = 256
-#range_bins = [0, 6]
+nbins = 512
+#range_bins = [0, 127]
 filter_size = -1
 
 [destriping]
-maxit = 100
-#cvg_threshold = 1.e-2
-filters = [{ name = "Gabor", noise_level = 200, sigma = [0.5, 10], theta = -45 }]
+maxit = 50
+cvg_threshold = 1e-2
+filters = [{ name = "Gabor", noise_level = 200, sigma = [2, 80], theta = 10 }]
 
 [registration_calculation]
 #area = [5, 35, 5, 35]
@@ -46,12 +46,13 @@ transformation = "TRANSLATION"
 [registration_transformation]
 #constant_drift = [-0.3, 1.2]
 #box_size_averaging = 100
+subpixel = false
 mode = "edge"
-#cropping = false
+cropping = true
 
 [resampling]
 policy = "slice_{slice_nb}_z={z_coord}um.tif"
-dz = 0.5
+dz = 0.01
 
 [cropping_final]
 area = [2, 38, 4, 30]

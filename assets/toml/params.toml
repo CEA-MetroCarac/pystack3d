@@ -33,8 +33,8 @@ nbins = 256
 filter_size = -1
 
 [destriping]
-maxit = 20
-#cvg_threshold = 1.e-2
+#maxit = 50
+cvg_threshold = 1e-2
 filters = [{ name = "Gabor", noise_level = 80, sigma = [0.5, 200], theta = 0 }]
 
 [registration_calculation]
@@ -46,6 +46,7 @@ transformation = "TRANSLATION"
 [registration_transformation]
 #constant_drift = [-0.3, 1.2]
 #box_size_averaging = 100
+#subpixel = true
 mode = "edge"
 #cropping = false
 
