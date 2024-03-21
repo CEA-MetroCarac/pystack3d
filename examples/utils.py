@@ -72,8 +72,8 @@ def postpro(process_steps, input_dir, channel, verbosity=False):
     return dirnames, labels, stats_vals
 
 
-def plot_cube_faces(arr, levels=40,
-                    title=None, show_colorbar=True, vmin=None, vmax=None):
+def plot_cube_faces(arr, ax, levels=40,
+                    show_colorbar=True, vmin=None, vmax=None):
     """
     External faces representation of a 3D array with matplotlib
 
@@ -81,24 +81,15 @@ def plot_cube_faces(arr, levels=40,
     ----------
     arr: numpy.ndarray()
         3D array to handle
+    ax: Axes3D object
+        Axis to work with
     levels: int or array-like, optional
         Determines the number and positions of the contour lines / regions
-    title: str, optional
-        Title of the figure
     show_colorbar: bool, optional
         Activation key for colorbar displaying
     vmin, vmax: floats, optional
         Data range that the colormap covers
-
-    Returns
-    -------
-    fig : Matplotlib.Figure
-        Return a Matplotlib.Figure if 'ax' is None
     """
-    fig = plt.figure(figsize=(5, 4))
-    ax = fig.add_subplot(111, projection='3d')
-    ax.set_title(title)
-
     if vmin is None:
         vmin = arr.min()
 

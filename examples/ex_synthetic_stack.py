@@ -62,8 +62,11 @@ def ex_synthetic_stack(process_steps=None, dirfunc=None, nproc=None,
             if label == 'target' and inds_crop is not None:
                 imin, imax, jmin, jmax = inds_crop
                 arr = arr[:, jmin:jmax, imin:imax]
-            plot_cube_faces(arr, show_colorbar=True, title=label,
-                            vmin=0, vmax=255)
+
+            fig = plt.figure(figsize=(5, 4))
+            ax = fig.add_subplot(111, projection='3d')
+            ax.set_title(labels[-2])
+            plot_cube_faces(arr, ax, show_colorbar=True, vmin=0, vmax=255)
 
         if show_plots:
             plot_results(dirnames, labels,
