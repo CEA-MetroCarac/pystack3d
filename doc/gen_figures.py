@@ -44,16 +44,24 @@ def gen_2d_synthetic():
 
     dirnames, labels, inds_crop = init_synthetic()
 
-    dirnames_ = [dirnames[:4], dirnames[4:]]
-    labels_ = [labels[:4], labels[4:]]
-    titles = ['workflow_1', 'workflow_2']
+    if len(dirnames) > 4:
+        dirnames_ = [dirnames[:4], dirnames[4:]]
+        labels_ = [labels[:4], labels[4:]]
+        titles = ['workflow_1', 'workflow_2']
 
-    for dirnames, labels, title in zip(dirnames_, labels_, titles):
+        for dirnames, labels, title in zip(dirnames_, labels_, titles):
+            plot_results(dirnames, labels, 0, 255,
+                         inds_cutplanes=(83, 150),
+                         inds_crop=inds_crop)
+            plt.tight_layout()
+            plt.savefig(f"{title}.png")
+
+    else:
         plot_results(dirnames, labels, 0, 255,
                      inds_cutplanes=(83, 150),
                      inds_crop=inds_crop)
         plt.tight_layout()
-        plt.savefig(f"{title}.png")
+        plt.savefig(f"{labels[-2]}.png")
 
 
 def gen_3d_synthetic():
@@ -65,6 +73,10 @@ def gen_3d_synthetic():
     dirnames_ = [dirnames[i] for i in inds]
     labels_ = [labels[i] for i in inds]
 
+    fig = plt.figure(figsize=(5, 4))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_title(labels_)
+
     for dirname, label in zip(dirnames_, labels_):
         print(dirname)
         fnames = sorted(dirname.glob('*.tif'))
@@ -74,10 +86,37 @@ def gen_3d_synthetic():
         if label == 'target' and inds_crop is not None:
             imin, imax, jmin, jmax = inds_crop
             arr = arr[:, jmin:jmax, imin:imax]
-        plot_cube_faces(arr, show_colorbar=True, title=label,
-                        vmin=0, vmax=255)
+        plot_cube_faces(arr, ax, show_colorbar=True, vmin=0, vmax=255)
+
+
+def gen_3d_aligned_synthetic():
+    """ Generate 3D visualizations """
+
+    dirnames, labels, inds_crop = init_synthetic()
+
+    fig = plt.figure(figsize=(7, 3))
+    ax = [fig.add_subplot(131, projection='3d'),
+          fig.add_subplot(132, projection='3d'),
+          fig.add_subplot(133, projection='3d'),
+          ]
+
+    for i, (dirname, label) in enumerate(zip(dirnames, labels)):
+        print(dirname)
+        fnames = sorted(dirname.glob('*.tif'))
+        arr = imread(fnames)
+        arr = np.swapaxes(arr, 0, 2).T
+        arr = np.swapaxes(arr, 1, 2)
+        if label == 'target' and inds_crop is not None:
+            imin, imax, jmin, jmax = inds_crop
+            arr = arr[:, jmin:jmax, imin:imax]
+        ax[i].set_title(label)
+        plot_cube_faces(arr, ax[i], show_colorbar=False, vmin=0, vmax=255)
+
+    fig.tight_layout()
+    plt.savefig(f'{labels[-2]}_3D.png')
 
 
 gen_2d_synthetic()
 # gen_3d_synthetic()
+# gen_3d_aligned_synthetic()
 plt.show()
