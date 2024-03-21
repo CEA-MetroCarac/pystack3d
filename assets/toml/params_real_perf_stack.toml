@@ -1,7 +1,7 @@
 #input_dirname = ""
 ind_min = 1
-ind_max = 8
-channels = ["SE2"]
+ind_max = 9999
+channels = ['.']
 nproc = 1
 process_steps = [
     "cropping",
@@ -15,7 +15,7 @@ process_steps = [
 history = []
 
 [cropping]
-area = [907, 3259, 931, 3486]
+area = [900, 3400, 900, 3400]
 
 [bkg_removal]
 orders = [2, 2, 0]
