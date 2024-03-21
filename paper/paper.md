@@ -20,7 +20,10 @@ tags:
 authors:
   - name: Patrick Quéméré
     orcid: 0009-0008-6936-1249
-    affiliation: "1" # (Multiple affiliations must be quoted)
+    affiliation: "1"
+  - name: Thomas David
+    orcid: 0000-0002-6796-220X
+    affiliation: "1"
 affiliations:
   - name: Univ. Grenoble Alpes, CEA, Leti, F-38000 Grenoble, France
     index: 1
