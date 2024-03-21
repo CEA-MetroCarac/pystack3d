@@ -28,7 +28,7 @@ threshold_min = 5
 #weight_func = "HuberT"
 
 [intensity_rescaling]
-nbins = 512
+nbins = 256
 #range_bins = [0, 127]
 filter_size = -1
 
