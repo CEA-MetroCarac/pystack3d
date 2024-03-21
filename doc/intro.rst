@@ -30,6 +30,13 @@ The ``pystack3d`` workflow can be applied to multiple channels and consists in t
 - ``cropping_final`` to eliminate artefacts produced near the edges during the image processing or to select another ROI at the end.
 
 
+.. figure:: _static/pystack3d.png
+    :align: center
+    :width: 70%
+
+    Synthetic case illustrating a) the defects to be removed, b) the corrected stack by **PyStack3D**, c) the ground truth.
+
+
 .. figure:: _static/process_steps_real.png
     :align: center
 

@@ -149,7 +149,7 @@ Each process steps returns **specific** and **standard** outputs (data and figur
 
 **Specific** outputs are related to each process steps. They are described in each of the process steps sections hereafter (if existing).
 
-**Standard** outputs consist in the statistics (min, max, mean) values evolution along the stack axis (z-axis, by convention) **before** and **after** the process step execution, considering for these last ones ('after') the statistics without and with a data reformatting compatible with the input data format. Indeed, some process steps may modify the data type (typically from integer to float) or generate data outside the range of authorized data values. *(This could happen for instance in the **bkg_removal** process step when subtracting the background that could generate negative or positive overflowed values)*.
+**Standard** outputs consist in the statistics (min, max, mean) values evolution along the stack axis (z-axis, by convention) **before** and **after** the process step execution, considering for the 'after' values, the statistics without and with data reformatting compatible with the input data format. Indeed, some process steps may modify the data type (typically from integer to float) or generate data outside the range of authorized data values. *(This could happen for instance in the* **bkg_removal** *process step when subtracting the background that could generate negative or positive overflowed values)*.
 
 
 .. figure:: _static/stats_bkg_removal.png

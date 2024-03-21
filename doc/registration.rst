@@ -9,12 +9,15 @@ This process occurs in two steps.
 
 * the **transformation** step as the application of the previous calculated matrices to the full stack.
 
-
-.. figure:: _static/registration.png
-    :width: 400px
+.. figure:: _static/registration_3D.png
+    :width: 100%
     :align: center
 
-    Illustration of the **registration** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_.
+.. figure:: _static/registration.png
+    :width: 80%
+    :align: center
+
+    Illustration of the **registration** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_. Reminder: shifted slices are located in [20-70]
 
 
 ::
@@ -28,8 +31,9 @@ This process occurs in two steps.
     [registration_transformation]
     #constant_drift = [-0.3, 1.2]
     #box_size_averaging = 100
+    subpixel = false
     mode = "edge"
-    #cropping = false
+    cropping = true
 
 ``area`` is an **optional** keyword used to calculate the transformation matrices with cropped images in the aim to reduce the CPU time.
 Note that the area should be sufficiently large to encompass "features" relevant for the registration processing.
@@ -45,6 +49,8 @@ During the image acquisition, it is not uncommon for drift to occur (visible in 
 
 In the case of a large-scale fluctuating drift, the user has the possibility to subtract the resulting mean component from a running average of a size (number of slices) defined by the ``box_size_averaging`` parameter.
 
+``subpixel`` is an activation key to consider (or not) translation less or equal than 1 pixel. Figures below illustrate an application with ``subpixel = false``.
+
 ``mode`` is associated to the extrapolation method to be considered when applying the transformation matrices (to choose among 'constant', 'edge', 'symmetric', 'reflect', 'wrap' - see `numpy.pad <https://numpy.org/doc/stable/reference/generated/numpy.pad.html>`_ for more details. Note that if 'constant' is selected, the corresponding value (cval) associated to the extrapolation is by default NaN (np.nan)).
 
 ``cropping`` is an activation key to perform cropping on the entire stack according to the area of aligned images preserved from any extrapolation effects.(Default value is ``false``).
@@ -53,19 +59,20 @@ In the case of a large-scale fluctuating drift, the user has the possibility to 
 Plotting
 --------
 
-The special plotting related to the **registration_calculation** and the **registration_transformation** process steps generates images in the dedicated **outputs**  folder that are named **registration_calculation.png** and **registration_calculation_cumul.png**.
+The special plotting related to the **registration_calculation** and the **registration_transformation** process steps generates images in the 2 dedicated **outputs**  folders that are named **registration_calculation.png** and **registration_calculation_cumul.png**.
 
 
 .. figure:: _static/registration_calculation.png
-    :width: 400px
+    :width: 80%
     :align: center
 
     **registration_calculation.png** shows the transformation matrices values resulting from the registration of images pairs.
 
 
 .. figure:: _static/registration_calculation_cumul.png
-    :width: 400px
+    :width: 80%
     :align: center
 
     **registration_calculation_cumul.png** shows the corresponding cumulative transformation used for the full stack images realignment.
 
+Note that setting ``subpixel = false`` in this use case makes the cumulative transformation flat (=no translation) outside the shift area [30-70] despite low translation values calculated during the registration_calculation process step.

@@ -3,7 +3,7 @@ Background removal
 
 Most of the stacks acquisition techniques can engender a gray intensities increasing or decreasing due for instance to **charging** effects (on low conductive material) or to **shadowing** effects (when carving the material).
 
-The **background removal** process step aims at reducing these effects on the images assuming a polynomial behaviour to be fitted and removed.
+The **background removal** process step aims at reducing these **large-scale** effects on the images assuming a polynomial behaviour to be fitted and removed.
 
 .. note::
 
@@ -14,11 +14,14 @@ The **background removal** process step aims at reducing these effects on the im
 
     .. math::
 
-         \begin{aligned}{\underset {(x, y)\in \mathbb {RxR} \subset Img}{\operatorname {minimize} }}\quad &\|a_0.1 + a_1.x + a_2.y + a_3.xy + a_4.x^2 + ... - Img(x, y)\|^{2}\end{aligned}
+         \begin{aligned}{\underset {(x, y)\in \mathbb {RxR} \subset Img}{\operatorname {minimize} }}\quad &\|Img(x, y) - a_0.1 + a_1.x + a_2.y + a_3.xy + a_4.x^2 + ...\|^{2}\end{aligned}
 
+.. figure:: _static/bkg_removal_3D.png
+    :width: 100%
+    :align: center
 
 .. figure:: _static/bkg_removal.png
-    :width: 400px
+    :width: 80%
     :align: center
 
     Illustration of the **bkg_removal** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_.
@@ -27,29 +30,30 @@ The **background removal** process step aims at reducing these effects on the im
 
     [bkg_removal]
     dim = 3
-    poly_basis = "1 + x + y + x*y + x**2 + z"
-    #orders = [2, 1, 1]
-    #cross_terms = true
+    #poly_basis = "1 + x*y*z"
+    orders = [1, 1, 1]
+    cross_terms = true
     skip_factors = [5, 5, 5]
-    threshold_min = 0.5
+    threshold_min = 5
     #threshold_max = 10.
     #weight_func = "HuberT"
 
 
-the ``dim`` parameter defines the dimension of the problem to solve (2D or 3D):
+The ``dim`` parameter defines the dimension of the problem to solve (2D or 3D):
 
-* with  ``dim = 3`` a single and potentially high CPU cost resolution is performed on all the stack to determine the polynom coefficients.
+* with  ``dim = 3`` a single and potentially high CPU cost resolution is performed on all the stack to determine the polynom coefficients. *(The cost resolution can be significantly decreased using the* ``skip_factor`` *parameter, see above).*
 
-* whereas with  ``dim = 2`` the resolution is performed slice by slice leading to different polynom coefficients  from one slice to another one.
+* with  ``dim = 2`` the resolution is performed slice by slice leading to different polynom coefficients  from one slice to another one.
 
 The 2D or 3D polynomial basis used to perform the fit can be defined in two ways:
 
-* from ``poly_basis`` which allows to define the polynomial basis **explicitly**, term by term, from a literal expression
+* from ``poly_basis`` which defines the polynomial basis definition **explicitly**, term by term, from a literal expression
 
 * from ``orders`` and ``cross_terms`` which define the basis **implicitly** in function to the order associated to each variable (x, y) in 2D or (x, y, z) in 3D.
 
-Note that in the example above, the two approaches define two different basis. Indeed, in the implicit approach, the cross terms parameter (set to ``true``) generates terms like **z*x*y** and  **z*x**2** that are not present in the literal expression.
-In this sense, the explicit approach provides more flexibility in term of the polynomial basis definition.
+.. warning::
+    Taking into account **cross terms** in the definition of the polynomial basis can prove crucial for achieving the desired fit. Indeed, a background thought to be in the form of 'xyz' may actually have its minimum following a definition in '(x-a)(y-b)(z-c)' in the reference basis used by the minimization procedure.
+
 
 Since the images sizes and the number of frames could be big, the ``skip_factors`` parameter allows to significantly reduced the array to consider in the fitting processing.
 *(Setting a skip_factors = [10, 10, 10] on a stack of size ~1000x1000x1000 seems to be a good compromise between accuracy, RAM occupancy and time execution).*
@@ -72,7 +76,7 @@ Plotting
 The special plotting related to the **bkg_removal** process step generates an image in the dedicated **outputs**  folder that is named **coefs.png**.
 
 .. figure:: _static/bkg_removal_coefs.png
-    :width: 400px
+    :width: 80%
     :align: center
 
     **coefs.png** gives the polynomial basis coefficients.

@@ -19,11 +19,11 @@ General Parameters
     ]
     history = ["cropping", "bkg_removal"]
 
-``input_dirname`` specifies where the input .tif files are stored (to be defined if not passed in pystack3d.Stack3d(``input_name``)).
+``input_dirname`` specifies where the input `.tif` files are stored (to be defined if not passed in pystack3d.Stack3d(``input_name``)).
 
 ``ind_min`` and ``ind_max`` are related to the frames (slices) indices where to start and end the workflow processing. (If not specified, consider the first and the last frame).
 
-``channels`` is used to indicate the channels names in the case of a multiple channels acquisition. In the case of a single channel acquisition, `.tif` files can be directly put at the root, equivalent to  ```channels = ["."]``` (default value).
+``channels`` is used to indicate the channels names in the case of a multiple channels acquisition. In the case of a single channel acquisition, `.tif` files can be directly put at the root, equivalent to  ``channels = ["."]`` (default value).
 
 ``nproc`` allows to define the default value for the number of processors to work with.
 

@@ -5,19 +5,21 @@ The **intensity rescaling** process aims at homogenize the gray level histograms
 
 To achieve this, a reference histogram is defined, corresponding either to the average histogram across all slices or to a running average along the slices (z-axis).
 
-.. figure:: _static/intensity_rescaling.png
-    :width: 400px
+.. figure:: _static/intensity_rescaling_3D.png
+    :width: 100%
     :align: center
 
-    Illustration of the **intensity_rescaling** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_.
-    In the present case, the reference histogram has been defined from all the slices. This leads to values after intensity rescaling that are nearly **constant** along the z-axis.
+.. figure:: _static/intensity_rescaling.png
+    :width: 80%
+    :align: center
 
+    Illustration of the **intensity_rescaling** process step in the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_. The Z cut-plane (taken at Z=83) corresponds to a slice with a strong change in contrast.
 
 ::
 
     [intensity_rescaling]
     nbins = 256
-    #range_bins = [0, 6]
+    #range_bins = [0, 127]
     filter_size = -1
 
 ``nbins`` corresponds to the number of bins associated to the histograms.
@@ -37,13 +39,15 @@ Plotting
 The special plotting related to the **intensity_rescaling** process step generates images in the dedicated **outputs**  folder that are named **intensity_rescaling_profiles.png** and **intensity_rescaling_maps.png**.
 
 .. figure:: _static/intensity_rescaling_profiles.png
+    :width: 100%
     :align: center
 
     **intensity_rescaling_profiles.png** gives the histograms profiles calculated for each slice.
 
 .. figure:: _static/intensity_rescaling_maps.png
+    :width: 100%
     :align: center
 
     **intensity_rescaling_maps.png** returns the same information but according to intensity maps along the z-axis.
 
-Note that in the map representation the maximal intensity values of the 2D-histogram (near 400) are hidden by the y-axis (# Frames).
+Note that in the map representation the maximal intensity values of the 2D-histograms are mainly hidden by the y-axis (except for slices in [70-100] of the Original histograms).
