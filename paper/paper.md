@@ -79,7 +79,7 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 # Appendice
 
-**Processing time for a stack composed of 2000 slices** (from example ![here](https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py))
+**Processing time for a stack composed of 2000 slices** (from [ex_real_stack_perf.py](https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py))
 
 | Process step        | Time (s) |
 |:--------------------|:--------:|
