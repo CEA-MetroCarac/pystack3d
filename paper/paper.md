@@ -43,7 +43,7 @@ Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source li
 
 Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in Java, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, most of these macros do not support multiprocessing, resulting in processing times that can span hours for stacks composed of several thousand images.
 
-In addition to being a tool that can be easily used into a workflow using Python scripting, ``PyStack3D`` has been developed to achieve processing times of just a few minutes through its full multiprocessing capabilities, enabling easy workflow stopping, readjusting and restarting.
+In addition to being a tool that can be easily used into a workflow using Python scripting, ``PyStack3D`` has been developed to achieve processing times of just a few minutes through its full multiprocessing capabilities (see [Appendice](#appendice), enabling easy workflow stopping, readjusting and restarting.
 
 The workflow components currently offered by ``PyStack3D`` are:
 
@@ -59,7 +59,7 @@ The workflow components currently offered by ``PyStack3D`` are:
 
 * **resampling** to correct non uniform spatial steps from slice to slice and enable correct 3D volume reconstructions
 
-* **final cropping** to select another ROI at the end and/or eliminate artefacts potentially produced near the edges during the image processing.
+* **final cropping** to eliminate artefacts potentially produced near the edges during the image processing or select another ROI at the end.
 
 Based on a ``.toml`` parameter file, each of these treatments are performed according to the user's desired order.
 
@@ -76,5 +76,24 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 ![](../doc/_static/workflow_1.png)
 
 ![Cut-planes related to the different process steps issued from the Figure 1b stack correction.\label{fig:workflow}](../doc/_static/workflow_2.png)
+
+# Appendice
+
+**Processing time for a stack composed of 2000 slices** (from ![ex_real_stack_perf.py](https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py))
+
+| Process step        | Time (s) |
+|:--------------------|:--------:|
+| cropping            |    28    |
+| bkg_removal         |    33    |
+| destriping          |   350*   |
+| registration        |    17    |
+| intensity_rescaling |    20    |
+| resampling          |    9     |
+
+**image size**: 4224 x 4224 before cropping / 2000 x 2000 after cropping
+
+**Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz
+
+(*) destriping calculation performed on a GPU Nvidia A-100 (images processed one by one)
 
 # References
