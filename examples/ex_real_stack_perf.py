@@ -44,7 +44,7 @@ def ex_real_stack_perf(process_steps=None, dirfunc=None, nproc=None,
 if __name__ == '__main__':
     # DIRFUNC = UserTempDirectory  # use the user temp location
     DIRFUNC = TemporaryDirectory  # use a TemporaryDirectory
-    NPROC = 4
+    NPROC = 32
     PROCESS_STEPS = [
         'cropping',
         'bkg_removal',
@@ -53,8 +53,9 @@ if __name__ == '__main__':
         'intensity_rescaling',
         'resampling',
     ]
+    NSLICES = 2000
 
-    # beware of the space disk (1000 slices take ~11 GB before cropping)
-    NSLICES = 100
-
-    ex_real_stack_perf(PROCESS_STEPS, DIRFUNC, NPROC, NSLICES)
+    print("\n\nWARNING: This test requires more than 100GB of disk space.\n"
+          "Please ensure that you have enough free space on your disk before "
+          "running it.")
+    # ex_real_stack_perf(PROCESS_STEPS, DIRFUNC, NPROC, NSLICES)
