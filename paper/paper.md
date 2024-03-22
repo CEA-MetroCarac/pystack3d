@@ -90,10 +90,10 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 | intensity_rescaling |    20    |
 | resampling          |    9     |
 
-**image size**: 4224 x 4224 before cropping / 2000 x 2000 after cropping
+**image size**: 4224 x 4224 before cropping / 2000 x 2000 after cropping.
 
-**Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz
+**Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz.
 
-(*) destriping calculation performed on a GPU Nvidia A-100 (images processed one by one)
+(*) destriping calculation performed on a GPU Nvidia A-100 (images processed one by one).
 
 # References
