@@ -43,6 +43,33 @@ The ``pystack3d`` workflow can be applied to multiple channels and consists in t
     Illustration of a FIB-SEM image correction using some of the **PyStack3D** process steps.
 
 
+Performance
+-----------
+
+``PyStack3D`` was designed to perform rapid stack corrections using **multiprocessing**.
+
+Here is an example of processing times associated with the example provided `here <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py>`_, corresponding to a stack of **2000 images**, sized 4224 x 4224 before cropping and 2000 x 2000 after cropping, using **32 CPUs** (Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz) on a Linux server.
+
+.. list-table:: Performance
+   :widths: 25 10
+   :header-rows: 1
+   :align: center
+
+   * - Process
+     - Time (s)
+   * - cropping
+     - 28
+   * - bkg_removal
+     - 33
+   * - destriping
+     - 350*
+   * - intensity_rescaling
+     - 20
+   * - resampling
+     - 9
+
+(*) **destriping** calculation performed on a GPU Nvidia A-100, with images processed one by one.
+
 Install
 -------
 
@@ -55,13 +82,17 @@ or by a pypi install::
     pip install pystack3d
 
 
+.. note::
+
+    Note that to be executed with GPU, the **pyvsnr** library used by the **destriping** process requires a specific installation. Refer to the **pyvsnr** `requirements section <https://github.com/CEA-MetroCarac/pyvsnr?tab=readme-ov-file#requirements>`_ for further details.
+
+
 Tests and examples execution
 ----------------------------
 
 ::
 
     pip install pytest
-    git clone https://github.com/CEA-MetroCarac/pystack3d.git
     cd pystack3d
     pytest
     python examples/ex_synthetic_stack.py
