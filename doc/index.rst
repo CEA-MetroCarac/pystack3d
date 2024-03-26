@@ -20,6 +20,7 @@ Welcome to the PyStack3D documentation !
    intro.rst
    getting_started.rst
    params.rst
+   dev_notes.rst
 
 
 .. toctree::
