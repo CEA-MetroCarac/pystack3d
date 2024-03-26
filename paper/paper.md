@@ -94,6 +94,6 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 **Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz.
 
-(*) destriping calculation performed on a GPU Nvidia A-100 (images processed one by one).
+(*) **destriping** calculation performed on a GPU Nvidia A-100 with images processed one by one.
 
 # References
