@@ -88,7 +88,13 @@ or for a multi-channels acquisition::
         |       |       |       |   ...
         |        ...
 
-*(The content of each 'output' directory is detailed below)*
+*(The content of each 'outputs' directory is detailed below)*
+
+.. warning::
+
+    As illustrated above, following each process, images of the entire processed stack are saved. Consequently, this requires having a sufficient amount of free disk space.
+
+    For instance, in the case of a stack of 2000 images sized 2000x2000 encoded in 16 bits, each process step will require storing approximately 15GB of data.
 
 Workflow initialization
 -----------------------
