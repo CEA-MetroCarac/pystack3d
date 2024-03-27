@@ -38,7 +38,7 @@ This process occurs in two steps.
 ``area`` is an **optional** keyword used to calculate the transformation matrices with cropped images in the aim to reduce the computing time.
 Note that the area should be sufficiently large to encompass "features" relevant for the registration processing.
 
-``threshold`` is employed to binarize the images during the registration_calculation processing. In the case of a ``None`` value, the registration will be done on gray-level images.
+``threshold`` is employed to binarize the images during the registration_calculation processing. If a threshold value is not specified (commented line), the registration will be performed based on the gray levels of the images.
 
 
 ``nb_blocks`` allows decomposing the image into patches (according to a grid defined by the number of blocks in the x and y directions). This spatial division of the images thus enables accounting for non-uniform alignment effects on large images that could not be captured by a single transformation matrix.
