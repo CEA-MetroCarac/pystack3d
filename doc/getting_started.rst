@@ -116,9 +116,13 @@ In the case of **Zeiss** FIB-SEM acquisitions, some **metadata** produced by the
 where ``project_dir`` refers to the project directory pathname containing the ``Atlas3D.a3d-setup`` file (mandatory file), and the .tif files in sub-directories corresponding to different channels (at least one slice in the first channel directory is required).
 This will save a ``params_from_metadata.toml`` file based on the **raw** one but adapting some of the parameters to the acquisiton with the help of the extracted metadata.
 The affected parameters are listed here:
+
 - Name of the **channels** is read in the ``Atlas3D.a3d-setup`` file.
+
 - For the cropping step, **area** is defined based on the ROI of the first slice and will not take into account changes of ROI that might have been made during the acquisition.
+
 - For the resampling step, **dz** is read in the ``Atlas3D.a3d-setup`` file
+
 On top of that, the function checks that the first slice is square and that the field of view of the ``Atlas3D.a3d-setup`` file corresponds to the first slice size.
 
 By default, the reference ``params.toml`` file used by :code:`params_from_metadata` for all the other parameters is the **raw** one. But the user can provide another reference .toml file through the ``fname_toml_ref`` argument::
