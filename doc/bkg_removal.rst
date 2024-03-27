@@ -41,7 +41,7 @@ The **background removal** process step aims at reducing these **large-scale** e
 
 The ``dim`` parameter defines the dimension of the problem to solve (2D or 3D):
 
-* with  ``dim = 3`` a single resolution is performed (with a potentially high CPU cost) on the entire stack to determine the polynom coefficients. *(The cost resolution can be significantly decreased using the* ``skip_factor`` *parameter, see abelow).*
+* with  ``dim = 3`` a single resolution is performed (with a potentially high CPU cost) on the entire stack to determine the polynom coefficients. *(The cost resolution can be significantly decreased using the* ``skip_factor`` *parameter, see below).*
 
 * with  ``dim = 2`` the resolution is performed slice by slice, leading to different polynom coefficients from one slice to another.
 
