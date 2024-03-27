@@ -1,9 +1,9 @@
 Background removal
 ==================
 
-Most of the stacks acquisition techniques can engender a gray intensities increasing or decreasing due for instance to **charging** effects (on low conductive material) or to **shadowing** effects (when carving the material).
+Most of the stacks acquisition techniques can produce gray intensity variations due, for instance, to **charging** effects (on low conductive material) or to **shadowing** effects (when imaging an area deep inside the material).
 
-The **background removal** process step aims at reducing these **large-scale** effects on the images assuming a polynomial behaviour to be fitted and removed.
+The **background removal** process step aims at reducing these **large-scale** effects on the images, assuming a polynomial behaviour to be fitted and removed.
 
 .. note::
 
@@ -41,9 +41,9 @@ The **background removal** process step aims at reducing these **large-scale** e
 
 The ``dim`` parameter defines the dimension of the problem to solve (2D or 3D):
 
-* with  ``dim = 3`` a single and potentially high CPU cost resolution is performed on all the stack to determine the polynom coefficients. *(The cost resolution can be significantly decreased using the* ``skip_factor`` *parameter, see above).*
+* with  ``dim = 3`` a single resolution is performed (with a potentially high CPU cost) on the entire stack to determine the polynom coefficients. *(The cost resolution can be significantly decreased using the* ``skip_factor`` *parameter, see abelow).*
 
-* with  ``dim = 2`` the resolution is performed slice by slice leading to different polynom coefficients  from one slice to another one.
+* with  ``dim = 2`` the resolution is performed slice by slice, leading to different polynom coefficients from one slice to another.
 
 The 2D or 3D polynomial basis used to perform the fit can be defined in two ways:
 
@@ -52,7 +52,7 @@ The 2D or 3D polynomial basis used to perform the fit can be defined in two ways
 * from ``orders`` and ``cross_terms`` which define the basis **implicitly** in function to the order associated to each variable (x, y) in 2D or (x, y, z) in 3D.
 
 .. warning::
-    Taking into account **cross terms** in the definition of the polynomial basis can prove crucial for achieving the desired fit. Indeed, a background thought to be in the form of 'xyz' may actually have its minimum following a definition in '(x-a)(y-b)(z-c)' in the reference basis used by the minimization procedure.
+    Taking into account **cross terms** in the definition of the polynomial basis can prove crucial for achieving the desired fit. For instance, a background thought to be in the form of 'xyz' may actually have its minimum following a definition in '(x-a)(y-b)(z-c)' in the reference basis used by the minimization procedure.
 
 
 Since the images sizes and the number of frames could be big, the ``skip_factors`` parameter allows to significantly reduced the array to consider in the fitting processing.
@@ -65,7 +65,7 @@ Images may include regions that are not impacted (or slightly impacted) by the b
 For this reason, a mask to exclude values below ``threshold_min`` and above ``threshold_max`` can be defined to be applied during the fit processing.
 
 
-At least, the ``weight_func`` parameter ("**HuberT**" or "**Hampel**") can be used to specify a weight function used to determine and exclude outliers during the least squares problem resolution.
+At last, the ``weight_func`` parameter ("**HuberT**" or "**Hampel**") can be used to specify a weight function used to determine and exclude outliers during the least squares problem resolution.
 See  the `RLM documentation <https://www.statsmodels.org/stable/rlm.html>`_ for more details.
 (Default value is HuberT).
 

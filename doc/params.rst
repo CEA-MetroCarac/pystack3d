@@ -7,17 +7,17 @@ The PyStack3D workflow parameters are defined in a ``params.toml`` file that is 
 
 * The following 'encapsulated' parameters are related to the conditions of each **process step** execution.
 
-To illustrate each of the process step we will consider hereafter the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_ associated to a original stack (named as 'target' by the next) composed of 300 x 300 x 300 voxels. The defects to be removed corresponds to:
+To illustrate each of the process step we will consider hereafter the `synthetic test case <https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_synthetic_stack.py>`_ obtained by adding defects to an original stack (which is named 'target' in what follows) composed of 300 x 300 x 300 voxels. The defects to be removed corresponds to:
 
     - curtaining effects in some slices
 
-    - a background effects (defined from a polynom x*y*z),
+    - a background effect (defined from a polynom x*y*z),
 
     - shifts along the x-axis (for slices in [20-70])
 
-    - changes in contrast (for slices in [70-100])
+    - changes in brightness (for slices in [70-100])
 
-    - a non-uniform sampling (dz passing from 0.01 to 0.02 at slice 100)
+    - a non-uniform sampling (inter-slice distance *dz* changing from 0.01 to 0.02 at slice 100)
 
 
 .. figure:: _static/synth_use_case_3D.png

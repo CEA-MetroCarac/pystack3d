@@ -1,7 +1,7 @@
 Intensity rescaling
 ===================
 
-The **intensity rescaling** process aims at homogenize the gray level histograms between consecutive images.
+The **intensity rescaling** process aims at homogenizing the gray level histograms between consecutive images.
 
 To achieve this, a reference histogram is defined, corresponding either to the average histogram across all slices or to a running average along the slices (z-axis).
 

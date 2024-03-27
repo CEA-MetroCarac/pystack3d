@@ -23,10 +23,10 @@ General Parameters
 
 ``ind_min`` and ``ind_max`` are related to the frames (slices) indices where to start and end the workflow processing. (If not specified, consider the first and the last frame).
 
-``channels`` is used to indicate the channels names in the case of a multiple channels acquisition. In the case of a single channel acquisition, `.tif` files can be directly put at the root, equivalent to  ``channels = ["."]`` (default value).
+``channels`` is used to indicate the channel names in the case of a multiple channels acquisition. In the case of a single channel acquisition, `.tif` files can be directly put at the root of the input directory, equivalent to  ``channels = ["."]`` (default value).
 
-``nproc`` allows to define the default value for the number of processors to work with.
+``nproc`` allows to define the default value for the number of parallel threads to use for the processing.
 
-``process_steps`` is the list of the default process steps to handle.
+``process_steps`` is the list of the process steps to execute.
 
-``history`` is a list that can be used to specify the process steps that have already been handled when restarting. Note that during the workflow execution this list is automatically updated after each process step.
+``history`` is a list that can be used to specify the process steps that have already been done in the case of stopping the workflow in the middle. It allows the workflow to restart from the last finished step and with the correct input data (the last 'outputs' directory). Note that during the workflow execution this list is automatically updated after each process step in order to be able to restart in case of any unexpected interruption.

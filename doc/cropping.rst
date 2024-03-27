@@ -2,7 +2,7 @@ Cropping
 --------
 
 
-Most of the time, the images stack acquisition area is wider than the Region Of Interest (ROI). **Cropping** is then dedicated to "crop" the images in the ROI.
+Most of the time, the images stack acquisition area is larger than the actual Region Of Interest (ROI). **Cropping** is then dedicated to "crop" the images in the ROI.
 
 .. figure:: _static/cropping_3D.png
     :width: 100%

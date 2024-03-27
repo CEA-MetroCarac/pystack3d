@@ -5,14 +5,14 @@ What is PyStack3D ?
 -------------------
 
 PyStack3D is an open source library written in Python which provides tools to do
-images stacks corrections, typically before image segmentation for images issued from FIB-SEM 3D acquisition.
+images stacks corrections, typically before image segmentation for images issued from 3D FIB-SEM acquisition.
 
-The ``pystack3d`` workflow can be applied to multiple channels and consists in the following optional process steps that can be executed in any order:
+The ``pystack3d`` workflow can be applied to multiple channels (image stacks corresponding to multiple detectors) and consists in the following optional process steps that can be executed in any order:
 
 - ``cropping`` to reduce the image field of view to a ROI (Region Of Interest)
 
 
-- ``background removal`` to reduce from polynomial approximations artefacts issued for instance from shadowing, charging, ...
+- ``background removal`` to reduce, based on polynomial approximations, contrast/brightness inhomogeneties resulting for instance from shadowing, charging, ...
 
 
 - ``intensity rescaling`` to homogenize the 'gray' intensity distribution between successive frames/slices
@@ -21,13 +21,13 @@ The ``pystack3d`` workflow can be applied to multiple channels and consists in t
 - ``registration`` to correct the images misalignment due to shifting, drift, rotation, ... during the images acquisition
 
 
-- ``destriping`` to minimize artefacts like stripes that can appear in some image acquisition technics
+- ``destriping`` to minimize artefacts like stripes, that can appear in some image acquisition technics (typically in FIB-SEM)
 
 
-- ``resampling`` to correct non uniform spatial steps
+- ``resampling`` to correct non uniform spatial steps between slices
 
 
-- ``cropping_final`` to eliminate artefacts produced near the edges during the image processing or to select another ROI at the end.
+- ``cropping_final`` to eliminate artefacts produced near the edges during the image processing, or to select another ROI at the end.
 
 
 .. figure:: _static/pystack3d.png
@@ -73,7 +73,7 @@ Here is an example of processing times associated with the example provided `her
 Install
 -------
 
-The ``pystack3d`` package install can be realized via a git cloning::
+The ``pystack3d`` package install can be done via a git cloning::
 
     git clone https://github.com/CEA-MetroCarac/pystack3d.git
 

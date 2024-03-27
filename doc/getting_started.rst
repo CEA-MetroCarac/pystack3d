@@ -5,12 +5,12 @@ Getting started
 Project directory organization
 ------------------------------
 
-To be executed a **PyStack3D** workflow requires both:
+To be executed, a **PyStack3D** workflow requires both:
 
 * a ``params.toml`` file defining all the process steps parameters (see the `parameters settings <file:///C:/Users/PQ177701/PycharmProjects/pystack3d/doc/_build/html/params.html>`_ section)
 
 
-* a **project directory** including the ``.tif`` images annotated with their respective **slice numbers** and their **z-positions** either in the root directory:
+* a **project directory** including the ``.tif`` images named with their respective **slice numbers** and their **z-positions** either in the root directory:
 
 ::
 
@@ -33,7 +33,7 @@ or in sub-folders for a multi-channels acquisition::
         |       |-- slice_0001_z=0.0100um.tif
         |           ...
 
-Once executed, the **outputs** directories related to each process step take place inside the ``process`` directory as follows::
+Once executed, the **outputs** directories related to each process step can be found inside the ``process`` directory as follows::
 
     project_dir
         |-- params.toml
@@ -104,18 +104,24 @@ All the workflow instructions are provided in a ``params.toml``.
 A **raw** ``params.toml`` is given `here <https://github.com/CEA-MetroCarac/pystack3d/blob/main/assets/toml/params.toml>`_ (to be adapted according to needs).
 
 
-Fibics
-~~~~~~
+Case of a Zeiss FIB-SEM
+~~~~~~~~~~~~~~~~~~~~~~~
 
-In the frame of **Fibics** (FIB-SEM) acquisitions, **metadata** can be extracted from the .tif files and the ``Atlas3D.a3d-setup`` file as follows::
+In the case of **Zeiss** FIB-SEM acquisitions, some **metadata** produced by the software for 3D acquisition (Atlas, developped by Fibics) can be automatically extracted from the .tif image files and the ``Atlas3D.a3d-setup`` file. Based on these, the default parameters for the processing can be adapted as follows::
 
    from pystack3d.utils_metadata_fibics import params_from_metadata
 
    params_from_metadata(project_dir, save=True)
 
-where ``project_dir`` refers to the project directory pathname containing the .tif files and the ``Atlas3D.a3d-setup`` file (mandatory file).
+where ``project_dir`` refers to the project directory pathname containing the ``Atlas3D.a3d-setup`` file (mandatory file), and the .tif files in sub-directories corresponding to different channels (at least one slice in the first channel directory is required).
+This will save a ``params_from_metadata.toml`` file based on the **raw** one but adapting some of the parameters to the acquisiton with the help of the extracted metadata.
+The affected parameters are listed here:
+- Name of the **channels** is read in the ``Atlas3D.a3d-setup`` file.
+- For the cropping step, **area** is defined based on the ROI of the first slice and will not take into account changes of ROI that might have been made during the acquisition.
+- For the resampling step, **dz** is read in the ``Atlas3D.a3d-setup`` file
+On top of that, the function checks that the first slice is square and that the field of view of the ``Atlas3D.a3d-setup`` file corresponds to the first slice size.
 
-By default, the reference ``params.toml`` file used by :code:`params_from_metadata` is the **raw** one. But the user can provide another reference .toml file through the ``fname_toml_ref`` argument::
+By default, the reference ``params.toml`` file used by :code:`params_from_metadata` for all the other parameters is the **raw** one. But the user can provide another reference .toml file through the ``fname_toml_ref`` argument::
 
    params_from_metadata(project_dir, save=True, fname_toml_ref=my_toml_ref)
 
@@ -143,9 +149,9 @@ A **PyStack3D** workflow execution is obtained with the following instructions::
     # execute all the process steps defined in the 'params.toml' file
     stack.eval(nproc=16)
 
-``nproc`` corresponds to the number of CPU to use for the workflow execution.
+``nproc`` corresponds to the number of threads to use for the workflow execution.
 
-Note that an additional boolean keyword named ``serial`` allows to realize non-serialized calculations when setting to ``False`` (said differently, with ``serial = False`` the workflow is executed considering for each process step the original raw input data).
+Note that an additional boolean keyword named ``serial`` allows to realize non-serialized calculations when setting to ``False`` (said differently, with ``serial = False`` the workflow is executed using the original raw input data for each process step).
 
 
 Outputs
@@ -155,7 +161,7 @@ Each process steps returns **specific** and **standard** outputs (data and figur
 
 **Specific** outputs are related to each process steps. They are described in each of the process steps sections hereafter (if existing).
 
-**Standard** outputs consist in the statistics (min, max, mean) values evolution along the stack axis (z-axis, by convention) **before** and **after** the process step execution, considering for the 'after' values, the statistics without and with data reformatting compatible with the input data format. Indeed, some process steps may modify the data type (typically from integer to float) or generate data outside the range of authorized data values. *(This could happen for instance in the* **bkg_removal** *process step when subtracting the background that could generate negative or positive overflowed values)*.
+**Standard** outputs consist in the statistics (min, max, mean) on gray values evolution along the stack axis (z-axis, by convention) **before** and **after** the process step execution. For the 'after' values, the statistics without and with data reformatting compatible with the input data format are plotted. Indeed, some process steps may modify the data type (typically from integer to float) and/or generate data outside the range of authorized data values. *(This could happen for instance in the* **bkg_removal** *process step when subtracting the background that could generate negative or positive overflowed values)*.
 
 
 .. figure:: _static/stats_bkg_removal.png

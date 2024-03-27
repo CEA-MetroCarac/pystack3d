@@ -1,7 +1,7 @@
 Resampling
 ==========
 
-The resampling process step recreates slices with a uniform distribution (= with a constant step size along the z-axis), using linear interpolations between slices.
+The resampling process step recreates slices with an uniform distribution (= with a constant step size along the z-axis), using linear interpolations between slices. For this, the **actual** position of the slices have to be known (for instance measured during the acquisition).
 
 .. figure:: _static/resampling_3D.png
     :width: 100%
@@ -19,7 +19,7 @@ The resampling process step recreates slices with a uniform distribution (= with
     policy = "slice_{slice_nb}_z={z_coord}um.tif"
     dz = 0.01
 
-``policy`` refers to the file naming including the number of the slice (**slice_nb**) and its z coordinates (**z_coord**).
+``policy`` refers to the format of file names including the number of the slice (**slice_nb**) and its z coordinates (**z_coord**).
 
 ``dz`` corresponds to the step size along the z-axis to be considered in the resampling.
 
