@@ -107,7 +107,7 @@ def registration_transformation(fnames=None,
     if constant_drift is not None:
         tmats_cumul = constant_drift_removal(tmats_cumul, constant_drift)
     if box_size_averaging is not None:
-        box_size = box_size_averaging
+        box_size = max(box_size_averaging, 0)
         tmats_cumul = running_avg_removal(tmats_cumul, box_size=box_size)
 
     if cropping:
