@@ -45,7 +45,7 @@ Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source li
 
 Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in Java, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, most of these macros do not support multiprocessing, resulting in processing times that can span hours for stacks composed of several thousand images.
 
-As an alternative, ``PyStack3D`` has been developed to achieve processing times of just a few minutes through its full multiprocessing capabilities (see [Appendice](#appendice)), enabling easy workflow stopping, readjusting and restarting. In addition, it is a tool that can be easily used into a workflow using Python scripting.
+As an alternative, ``PyStack3D`` has been developed to achieve processing times of just a few minutes through its full multiprocessing capabilities (see [Appendice](#appendice)), enabling easy workflow stopping, readjusting and restarting. In addition, slices are loaded and processed one by one, reducing the memory footprint even in the case of very large datasets. At last, it is a tool that can be easily used into a workflow using Python scripting.
 
 The workflow components currently offered by ``PyStack3D`` are:
 
@@ -67,7 +67,7 @@ Based on a ``.toml`` parameter file, these processing steps can be performed acc
 
 At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean gray values for each slice), along with relevant visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
 
-Note that in the context of FIB-SEM input data, the processing can be carried out on multiple channels corresponding to images from multiple detectors, and incorporating some metadata issued from the equipment.
+Note that in the context of FIB-SEM input data, the processing can be carried out on multiple channels corresponding to images from multiple detectors, and automatically incorporating some metadata issued from the equipment.
 
 In conclusion, ``Pystak3D`` has been designed to evolve over time and accommodate new process steps. Its code structure has been crafted to seamlessly integrate new functionalities, leveraging multiprocessing capabilities.
 
