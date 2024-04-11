@@ -20,6 +20,7 @@ from tifffile import imread
 from tomli import load
 from tomlkit import dump
 
+from pystack3d.utils import imread_3d_skipping
 from pystack3d.utils_multiprocessing import (worker_init, step_wrapper,
                                              initialize_args)
 
@@ -253,7 +254,7 @@ class Stack3d:
                         results.wait()
                     results.get()
 
-                plot(process_step, output_dirname)
+                plot(process_step, output_dirname, input_dirname, kwargs)
 
             # 'history' parameter updating and saving
             if serial:
@@ -262,7 +263,7 @@ class Stack3d:
                     dump(self.params, fid)
 
 
-def plot(process_step, output_dirname):
+def plot(process_step, output_dirname, input_dirname, kwargs):
     """ Plot statistics and specific values related to the 'process_step' """
     fname = output_dirname / 'outputs' / 'stats.npy'
     if os.path.isfile(fname):
@@ -280,12 +281,55 @@ def plot(process_step, output_dirname):
         ax[-1].set_xlabel('# Frames', labelpad=-1)
         plt.savefig(output_dirname / 'outputs' / 'stats.png')
 
+    if process_step == 'bkg_removal':
+        plot_stats_xy(input_dirname, output_dirname,
+                      skip_factors=kwargs['skip_factors'])
+
     if process_step == 'cropping_final':
         process_step = 'cropping'
 
     module = import_module(f"pystack3d.{process_step}")
     if hasattr(module, 'plot'):
         getattr(module, "plot")(output_dirname)
+
+
+def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
+    """ Plot statistics in x et y directions considering 'skip_factors' when
+        loading the full 3D stack """
+
+    labels = ['Min', 'Max', 'Mean']
+    sfx = [' (input)', ' (output)']
+    axis_labels = ['X', 'Y']
+
+    figs = []
+    axes = []
+    for axis in axis_labels:
+        fig, ax = plt.subplots(3, 1, figsize=(8, len(labels) * 2))
+        fig.canvas.manager.set_window_title(f"stats_{axis}")
+        fig.tight_layout()
+        figs.append(fig)
+        axes.append(ax)
+
+    for i, dirname in enumerate([input_dirname, output_dirname]):
+        fnames = sorted(Path(dirname).glob("*.tif"))
+        arr_3d = imread_3d_skipping(fnames, skip_factors=skip_factors)
+        arr_3d = np.swapaxes(arr_3d, 0, 1)
+        arr_3d = np.swapaxes(arr_3d, 1, 2)
+        arr_3d = arr_3d[::-1, :, :]
+
+        for axis in range(2):
+            stats = [np.min(arr_3d, axis=(axis, 2)),
+                     np.max(arr_3d, axis=(axis, 2)),
+                     np.mean(arr_3d, axis=(axis, 2))]
+
+            for k, label in enumerate(labels):
+                x = skip_factors[axis] * np.arange(len(stats[k]))
+                axes[axis][k].plot(x, stats[k], c=CMAP(i), label=label + sfx[i])
+                axes[axis][k].legend(loc=9, ncols=3)
+            axes[axis][-1].set_xlabel(axis_labels[axis], labelpad=-1)
+
+    for i, fig in enumerate(figs):
+        fig.savefig(output_dirname / 'outputs' / f"stats_{axis_labels[i]}.png")
 
 
 def pbar_update(queue_incr, nslices, nproc):
