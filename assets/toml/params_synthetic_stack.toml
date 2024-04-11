@@ -26,6 +26,7 @@ skip_factors = [5, 5, 5]
 threshold_min = 5
 #threshold_max = 10.
 #weight_func = "HuberT"
+preserve_avg = true
 
 [intensity_rescaling]
 nbins = 256

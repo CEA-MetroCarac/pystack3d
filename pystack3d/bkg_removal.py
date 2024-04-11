@@ -55,6 +55,11 @@ def init_args(params, nslices):
         msg = "threshold_min must be strictly less than threshold_max"
         assert params['threshold_min'] < params['threshold_max'], msg
 
+    if 'preserve_avg' in params.keys():
+        if params['preserve_avg']:
+            msg = "'preserve_avg' is only suitable for '3D' background eval."
+            assert len(powers[0]) == 3, msg
+
     # kwargs updating
     params.update({'powers': powers})
     for key in ['poly_basis', 'orders', 'cross_terms', 'dim']:
@@ -68,7 +73,7 @@ def init_args(params, nslices):
 def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
                 powers=None, skip_factors=(10, 10), skip_averaging=False,
                 threshold_min=None, threshold_max=None, weight_func="HuberT",
-                output_dirname=None):
+                preserve_avg=False, output_dirname=None):
     """
     Function dedicated to the background removal processing
 
@@ -97,6 +102,9 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
         For more details see : https://www.statsmodels.org/stable/rlm.html
         If None, polynomial fitting is calculated according to the classical
         'leastsq' algorithm when solving : A.X = B
+    preserve_avg: bool, optional
+        Activation key to preserve the average between the input and the output
+        (work only with background evaluated from '3D' coefficients)
     output_dirname: str, optional
         Directory pathname for process results saving
     """
@@ -135,7 +143,8 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
                                   threshold_max=threshold_max,
                                   skip_averaging=skip_averaging,
                                   weight_func=weight_func,
-                                  poly_basis_precalc=poly_basis_skip)
+                                  poly_basis_precalc=poly_basis_skip,
+                                  preserve_avg=preserve_avg)
 
             np.savetxt(output_dirname / 'outputs' / 'coefs_3d.txt', coefs_3d)
 
@@ -169,7 +178,8 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
                                   threshold_max=threshold_max,
                                   skip_averaging=skip_averaging,
                                   weight_func=weight_func,
-                                  kwargs_3d=kwargs_3d)
+                                  kwargs_3d=kwargs_3d,
+                                  preserve_avg=preserve_avg)
         coefs.append(coef)
 
         outputs_saving(output_dirname, fname, img, img_res, stats)
@@ -309,7 +319,8 @@ def eval(arr, powers,
          weight_func="HuberT",
          poly_basis_precalc=None,
          poly_basis_precalc_skip=None,
-         kwargs_3d=None):
+         kwargs_3d=None,
+         preserve_avg=False):
     """
     Background removal function dedicated to stack3d
 
@@ -341,6 +352,9 @@ def eval(arr, powers,
         Pre-calculated polynomial basis taking into account the 'skip_factors'
     kwargs_3d: dict, optional
         Dictionary related to 3D background calculation
+    preserve_avg: bool, optional
+        Activation key to preserve the average between the input and the output
+        (work only with background evaluated from '3D' coefficients)
 
     Returns
     -------
@@ -370,6 +384,11 @@ def eval(arr, powers,
 
         coefs = kwargs_3d['coefs_3d']
 
+        if not preserve_avg:
+            bkg -= coefs[0]  # to not consider the mean value in the bkg
+        arr_bkg -= bkg
+        arr_bkg[~mask] = arr[~mask]
+
     else:
         bkg, coefs, _ = bkg_calculation(arr_bkg,
                                         powers=powers,
@@ -379,9 +398,12 @@ def eval(arr, powers,
                                         poly_basis_precalc=poly_basis_precalc,
                                         poly_basis_precalc_skip=poly_basis_precalc_skip)
 
-    bkg -= coefs[0]  # to not consider the cst compo. (=mean value) in the bkg
-    arr_bkg -= bkg
-    arr_bkg[~mask] = arr[~mask]
+        bkg -= coefs[0]  # to not consider the mean value in the bkg
+        arr_bkg -= bkg
+        arr_bkg[~mask] = arr[~mask]
+
+        if preserve_avg:
+            coefs[0] = arr_bkg[mask].mean() - arr[mask].mean()
 
     return arr_bkg, bkg, coefs
 
