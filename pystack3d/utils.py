@@ -31,12 +31,12 @@ def imread_3d_skipping(fnames, skip_factors=(10, 10, 10)):
     shape = arr0.shape
     dtype = arr0.dtype
 
-    arr_red = np.zeros((int(np.ceil(len(fnames) / skip_factors[0])),
+    arr_red = np.zeros((int(np.ceil(len(fnames) / skip_factors[2])),
                         int(np.ceil(shape[0] / skip_factors[1])),
-                        int(np.ceil(shape[1] / skip_factors[2]))), dtype=dtype)
+                        int(np.ceil(shape[1] / skip_factors[0]))), dtype=dtype)
 
-    for k, fname in enumerate(fnames[::skip_factors[0]]):
-        arr_red[k, ...] = imread(fname)[::skip_factors[1], ::skip_factors[2]]
+    for k, fname in enumerate(fnames[::skip_factors[2]]):
+        arr_red[k, ...] = imread(fname)[::skip_factors[1], ::skip_factors[0]]
 
     return arr_red
 
