@@ -168,7 +168,7 @@ Each process steps returns **specific** and **standard** outputs (data and figur
 **Standard** outputs consist in the statistics (min, max, mean) on gray values evolution along the stack axis (z-axis, by convention) **before** and **after** the process step execution. For the 'after' values, the statistics without and with data reformatting compatible with the input data format are plotted. Indeed, some process steps may modify the data type (typically from integer to float) and/or generate data outside the range of authorized data values. *(This could happen for instance in the* **bkg_removal** *process step when subtracting the background that could generate negative or positive overflowed values)*.
 
 
-.. figure:: _static/stats_bkg_removal.png
+.. figure:: _static/bkg_removal_stats.png
     :width: 80%
     :align: center
 
