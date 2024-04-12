@@ -37,6 +37,7 @@ The **background removal** process step aims at reducing these **large-scale** e
     threshold_min = 5
     #threshold_max = 10.
     #weight_func = "HuberT"
+    #preserve_avg = true
 
 
 The ``dim`` parameter defines the dimension of the problem to solve (2D or 3D):
@@ -65,15 +66,18 @@ Images may include regions that are not impacted (or slightly impacted) by the b
 For this reason, a mask to exclude values below ``threshold_min`` and above ``threshold_max`` can be defined to be applied during the fit processing.
 
 
-At last, the ``weight_func`` parameter ("**HuberT**" or "**Hampel**") can be used to specify a weight function used to determine and exclude outliers during the least squares problem resolution.
+The ``weight_func`` parameter ("**HuberT**", "**Hampel**" or "**None**") enables to specify (or not) a weight function used to determine and exclude outliers during the least squares problem resolution.
 See  the `RLM documentation <https://www.statsmodels.org/stable/rlm.html>`_ for more details.
-(Default value is HuberT).
+(Default value is "HuberT").
+
+At last, the ``preserve_avg`` parameter enables to preserve the average between the input and the output data. The average preservation is suitable only when ``dim = 3``.
+(Default value is False).
 
 
 Plotting
 --------
 
-The special plotting related to the **bkg_removal** process step generates an image in the dedicated **outputs**  folder that is named **coefs.png**.
+The special plotting related to the **bkg_removal** process step generates images in the dedicated **outputs**  folder that are named **coefs.png**, **stats_X.png** and **stats_Y.png**.
 
 .. figure:: _static/bkg_removal_coefs.png
     :width: 80%
@@ -81,3 +85,16 @@ The special plotting related to the **bkg_removal** process step generates an im
 
     **coefs.png** gives the polynomial basis coefficients.
 
+
+.. figure:: _static/bkg_removal_stats_X.png
+    :width: 80%
+    :align: center
+
+    **stats_X.png** displays statistics along the 'X' axis.
+
+
+.. figure:: _static/bkg_removal_stats_Y.png
+    :width: 80%
+    :align: center
+
+    **stats_Y.png** displays statistics along the 'Y' axis.
