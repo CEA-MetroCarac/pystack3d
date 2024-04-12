@@ -55,6 +55,12 @@ def init_args(params, nslices):
         msg = "threshold_min must be strictly less than threshold_max"
         assert params['threshold_min'] < params['threshold_max'], msg
 
+    if 'weight_func' in params.keys():
+        msg = "'weight_func'] should be 'HuberT', 'Hampel', or 'None'"
+        assert params['weight_func'] in ['HuberT', 'Hampel', 'None'], msg
+        if params['weight_func'] == 'None':
+            params['weight_func'] = None
+
     if 'preserve_avg' in params.keys():
         if params['preserve_avg']:
             msg = "'preserve_avg' is only suitable for '3D' background eval."
@@ -137,14 +143,14 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
             poly_basis_skip = poly_basis_calculation(shape_3d, powers_3d,
                                                      skip_factors=skip_factors)
 
-            _, _, coefs_3d = eval(arr_3d, powers_3d,
-                                  skip_factors=None,
-                                  threshold_min=threshold_min,
-                                  threshold_max=threshold_max,
-                                  skip_averaging=skip_averaging,
-                                  weight_func=weight_func,
-                                  poly_basis_precalc=poly_basis_skip,
-                                  preserve_avg=preserve_avg)
+            _, _, coefs_3d = bkg_eval(arr_3d, powers_3d,
+                                      skip_factors=None,
+                                      threshold_min=threshold_min,
+                                      threshold_max=threshold_max,
+                                      skip_averaging=skip_averaging,
+                                      weight_func=weight_func,
+                                      poly_basis_precalc=poly_basis_skip,
+                                      preserve_avg=preserve_avg)
 
             np.savetxt(output_dirname / 'outputs' / 'coefs_3d.txt', coefs_3d)
 
@@ -170,16 +176,16 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
         if kwargs_3d is not None:
             kwargs_3d['index'] = inds_partition[k]
 
-        img_res, bkg, coef = eval(img, powers,
-                                  skip_factors=skip_factors,
-                                  poly_basis_precalc=poly_basis,
-                                  poly_basis_precalc_skip=poly_basis_skip,
-                                  threshold_min=threshold_min,
-                                  threshold_max=threshold_max,
-                                  skip_averaging=skip_averaging,
-                                  weight_func=weight_func,
-                                  kwargs_3d=kwargs_3d,
-                                  preserve_avg=preserve_avg)
+        img_res, bkg, coef = bkg_eval(img, powers,
+                                      skip_factors=skip_factors,
+                                      poly_basis_precalc=poly_basis,
+                                      poly_basis_precalc_skip=poly_basis_skip,
+                                      threshold_min=threshold_min,
+                                      threshold_max=threshold_max,
+                                      skip_averaging=skip_averaging,
+                                      weight_func=weight_func,
+                                      kwargs_3d=kwargs_3d,
+                                      preserve_avg=preserve_avg)
         coefs.append(coef)
 
         outputs_saving(output_dirname, fname, img, img_res, stats)
@@ -311,16 +317,16 @@ def expr_from_powers(powers, variables=['x', 'y', 'z']):
     return expr[3:]
 
 
-def eval(arr, powers,
-         skip_factors=(10, 10),
-         threshold_min=None,
-         threshold_max=None,
-         skip_averaging=False,
-         weight_func="HuberT",
-         poly_basis_precalc=None,
-         poly_basis_precalc_skip=None,
-         kwargs_3d=None,
-         preserve_avg=False):
+def bkg_eval(arr, powers,
+             skip_factors=(10, 10),
+             threshold_min=None,
+             threshold_max=None,
+             skip_averaging=False,
+             weight_func="HuberT",
+             poly_basis_precalc=None,
+             poly_basis_precalc_skip=None,
+             kwargs_3d=None,
+             preserve_avg=False):
     """
     Background removal function dedicated to stack3d
 
@@ -482,7 +488,7 @@ def bkg_calculation(arr, powers,
     skip_averaging: bool, optional
         Activation key for averaging when skip_factors is used.
     weight_func: str, optional
-        Weight function ('HuberT' or 'Hampel') to consider by the M-estimator.
+        Weight function ('HuberT', 'Hampel',...) to consider by the M-estimator.
         For more details see : https://www.statsmodels.org/stable/rlm.html
         If None, polynomial fitting is calculated according to the classical
         'leastsq' algorithm when solving : A.X = B
@@ -533,8 +539,6 @@ def bkg_calculation(arr, powers,
         _, coefs, _ = bkg_calculation(arr_red, powers,
                                       weight_func=weight_func,
                                       poly_basis_precalc=poly_basis_skip)
-        print(powers, coefs)
-
     else:
 
         # array flattening and np.nan values exclusion
@@ -558,10 +562,7 @@ def bkg_calculation(arr, powers,
         if weight_func is None:
             coefs = np.linalg.lstsq(poly_basis_clean, arr_clean, rcond=None)[0]
         else:
-            if weight_func == "HuberT":
-                wfun = sm.robust.norms.HuberT()
-            if weight_func == "Hampel":
-                wfun = sm.robust.norms.Hampel()
+            wfun = eval(f"sm.robust.norms.{weight_func}()")
             rlm_model = sm.RLM(arr_clean, poly_basis_clean, M=wfun)
             rlm_results = rlm_model.fit()
             coefs = rlm_results.params
