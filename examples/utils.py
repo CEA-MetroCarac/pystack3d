@@ -31,6 +31,9 @@ def init_dir(dirpath, case, copy_params_toml=True):
     # delete .tif to avoid bad surprises when working with user temp
     for fname in dirname.glob("*.tif"):
         os.remove(fname)
+    dirname_target = dirname / 'target'
+    if os.path.exists(dirname_target):
+        shutil.rmtree(dirname_target)
 
     if copy_params_toml:
         src = ASSETS / 'toml' / f'params_{case}_stack.toml'
