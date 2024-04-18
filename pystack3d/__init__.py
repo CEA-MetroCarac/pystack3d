@@ -24,7 +24,8 @@ from pystack3d.utils import imread_3d_skipping
 from pystack3d.utils_multiprocessing import (worker_init, step_wrapper,
                                              initialize_args)
 
-PROCESS_STEPS = ['cropping', 'bkg_removal', 'intensity_rescaling',
+PROCESS_STEPS = ['cropping', 'bkg_removal',
+                 'intensity_rescaling', 'intensity_rescaling_area',
                  'registration_calculation', 'registration_transformation',
                  'destriping', 'resampling', 'cropping_final']
 CMAP = plt.get_cmap("tab10")

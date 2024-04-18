@@ -7,6 +7,7 @@ process_steps = [
     "cropping",
     "bkg_removal",
     "intensity_rescaling",
+    #"intensity_rescaling_area",
     "registration_calculation", "registration_transformation",
     "destriping",
     "resampling",
@@ -32,6 +33,9 @@ preserve_avg = true
 nbins = 256
 #range_bins = [0, 99999]
 filter_size = -1
+
+#[intensity_rescaling_area]
+#area = [0, 99999, 0, 99999]
 
 [destriping]
 #maxit = 200
