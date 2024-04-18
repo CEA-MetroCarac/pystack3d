@@ -87,7 +87,7 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 |:--------------------|:--------:|
 | cropping            |    28    |
 | bkg_removal         |    33    |
-| destriping          |   350*   |
+| destriping          |   314*   |
 | registration        |    17    |
 | intensity_rescaling |    20    |
 | resampling          |    9     |

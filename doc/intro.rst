@@ -62,7 +62,7 @@ Here is an example of processing times associated with the example provided `her
    * - bkg_removal
      - 33
    * - destriping
-     - 350*
+     - 314*
    * - intensity_rescaling
      - 20
    * - resampling
