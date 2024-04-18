@@ -171,11 +171,16 @@ class Stack3d:
 
         if nproc is None:
             nproc = self.params['nproc']
+        self.params['nproc'] = nproc
 
         assert type(nproc) is int and nproc > 0, 'nproc not a positive int'
 
         # process step calculation
         for process_step in process_steps:
+
+            nproc = self.params['nproc']
+            if process_step == 'destriping':
+                nproc = 1
 
             history = self.params['history']
 
@@ -193,10 +198,10 @@ class Stack3d:
 
             for channel in channels:
 
-                # process kwargs (to be overwritten))
-                kwargs = self.params[process_step].copy()
-
                 print(process_step, (channel != '.') * f"channel {channel}")
+
+                # process kwargs (to be overwritten)
+                kwargs = self.params[process_step].copy()
 
                 input_dirname = last_step_dir / channel
 
