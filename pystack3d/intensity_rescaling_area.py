@@ -7,9 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tifffile import imread
 
-from pystack3d.utils import outputs_saving
-from pystack3d.utils_mp import send_shared_array, receive_shared_array
 from pystack3d.cropping import inds_from_area
+from pystack3d.utils import outputs_saving
+from pystack3d.utils_multiprocessing import (send_shared_array,
+                                             receive_shared_array)
 
 
 def init_args(params, nslices):
@@ -37,6 +38,7 @@ def init_args(params, nslices):
 
 def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
                              area=None,
+                             factors_range=None,
                              output_dirname=None):
     """
     Function for image intensity rescaling according to the averaged gray
@@ -53,11 +55,16 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
         Queue passed to the function to interact with the progress bar
     area: iterable of 4 ints, optional
         Reference area, defined from coordinates (xmin, xmax, ymin, ymax) in px,
-         to estimate the rescaling factor
+         to estimate the rescaling factors
+    factors_range: iterable of 2 floats, optional
+        Authorized range for the rescaling factors. Default is (0.8, 1.2)
     output_dirname: str, optional
         Directory pathname for process results saving
     """
     pid_0 = inds_partition[0] == 0  # first thread
+
+    if factors_range is None:
+        factors_range = [0.8, 1.2]
 
     # conversion from area coordinates to indices
     imin, imax, jmin, jmax = inds_from_area(area, fnames, pid_0, output_dirname)
@@ -69,35 +76,34 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
         means.append(img.mean())
         queue_incr.put(0.5)
 
-    # array sharing and saving between multiproc
+    # arrays sharing and saving between multiproc
     kmin, kmax = inds_partition[0], inds_partition[-1]
     send_shared_array(means, kmin, kmax)
     means = receive_shared_array()
+    means_ref = means.median()
+
+    with np.errstate(all='ignore'):
+        factors = np.divide(means_ref, mean)
+    factors = np.clip(factors, factors_range[0], factors_range[1])
+
     if pid_0:
         np.save(output_dirname / 'outputs' / 'means.npy', means)
+        np.save(output_dirname / 'outputs' / 'factors.npy', factors)
 
-    mean_ref = means.min()
-
-    stats, rescaling_factors = [], []
+    stats = []
     for k, fname in enumerate(fnames):
         img = imread(fname)
-        mean = means[k + inds_partition[0]]
-        rescaling_factor = mean_ref / mean
-        img_res = rescaling_factor * img
+        img_res = factors[k + inds_partition[0]] * img
         outputs_saving(output_dirname, fname, img, img_res, stats)
-        rescaling_factors.append(rescaling_factor)
         queue_incr.put(0.5)
 
     queue_incr.put('finished')
 
-    # rescaling_factors and stats sharing and saving
+    # stats sharing and saving
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(rescaling_factors, kmin, kmax)
-    rescaling_factors = receive_shared_array()
     send_shared_array(stats, kmin, kmax, is_stats=True)
     stats = receive_shared_array(is_stats=True)
     if pid_0:
-        np.save(output_dirname / 'outputs' / 'factors.npy', rescaling_factors)
         np.save(output_dirname / 'outputs' / 'stats.npy', stats)
 
 
