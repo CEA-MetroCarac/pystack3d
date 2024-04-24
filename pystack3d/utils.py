@@ -5,6 +5,16 @@ import numpy as np
 from tifffile import imread, imwrite
 
 
+def mask_creation(arr, threshold_min=None, threshold_max=None):
+    """ Return mask with true values in range [threshold_min, threshold_max] """
+    mask = np.ones_like(arr, dtype=bool)
+    if threshold_min is not None:
+        mask *= arr >= threshold_min
+    if threshold_max is not None:
+        mask *= arr <= threshold_max
+    return mask
+
+
 def outputs_saving(output_dirname, fname, img, img_res, stats):
     """ Append stats and Write img_res after reformatting """
     img_res2 = img_reformatting(img_res, img.dtype)

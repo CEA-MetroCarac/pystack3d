@@ -14,7 +14,7 @@ from tifffile import imread
 from PIL import Image, ImageDraw
 
 from pystack3d.utils import (imread_3d_skipping, skipping, division,
-                             outputs_saving, )
+                             outputs_saving, mask_creation)
 from pystack3d.utils_multiprocessing import (send_shared_array,
                                              receive_shared_array)
 
@@ -372,12 +372,9 @@ def bkg_eval(arr, powers,
         Polynomial coefficients resulting from the fit
     """
     arr_bkg = arr.copy().astype(float)
-    mask = np.ones_like(arr, dtype=bool)
-
-    if threshold_min is not None:
-        mask *= arr > threshold_min
-    if threshold_max is not None:
-        mask *= arr < threshold_max
+    mask = mask_creation(arr_bkg,
+                         threshold_min=threshold_min,
+                         threshold_max=threshold_max)
     arr_bkg[~mask] = np.nan
 
     # background calculation
