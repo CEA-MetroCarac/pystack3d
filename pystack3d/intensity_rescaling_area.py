@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from tifffile import imread
 
 from pystack3d.cropping import inds_from_area
-from pystack3d.utils import outputs_saving
+from pystack3d.utils import mask_creation, outputs_saving
 from pystack3d.utils_multiprocessing import (send_shared_array,
                                              receive_shared_array)
 
@@ -37,7 +37,7 @@ def init_args(params, nslices):
 
 
 def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
-                             area=None,
+                             area=None, threshold_min=None, threshold_max=None,
                              factors_range=None,
                              output_dirname=None):
     """
@@ -56,6 +56,9 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
     area: iterable of 4 ints, optional
         Reference area, defined from coordinates (xmin, xmax, ymin, ymax) in px,
          to estimate the rescaling factors
+    threshold_min, threshold_max: floats, optional
+        Relative thresholds used to exclude low and high values in the
+        selected area
     factors_range: iterable of 2 floats, optional
         Authorized range for the rescaling factors. Default is (0.8, 1.2)
     output_dirname: str, optional
@@ -73,7 +76,10 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
     means = []
     for fname in fnames:
         img = imread(fname)[imin:imax, jmin:jmax]
-        means.append(img.mean())
+        mask = mask_creation(img,
+                             threshold_min=threshold_min,
+                             threshold_max=threshold_max)
+        means.append(img[mask].mean())
         queue_incr.put(0.5)
 
     # arrays sharing and saving between multiproc
@@ -83,7 +89,7 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
     means_ref = means.median()
 
     with np.errstate(all='ignore'):
-        factors = np.divide(means_ref, mean)
+        factors = np.divide(means_ref, means)
     factors = np.clip(factors, factors_range[0], factors_range[1])
 
     if pid_0:
