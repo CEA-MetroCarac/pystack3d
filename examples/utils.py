@@ -137,7 +137,7 @@ def plot_cube_faces(arr, ax, levels=40,
         norm = mpl.colors.Normalize(vmin=kwargs['vmin'], vmax=kwargs['vmax'])
         scmap = plt.cm.ScalarMappable(norm=norm)
         scmap.set_array([])
-        plt.colorbar(scmap)
+        plt.colorbar(scmap, ax=ax)
 
 
 def plot_results(dirnames, labels, vmin=0, vmax=255,
