@@ -4,6 +4,7 @@ utilities functions to extract metadata from FIB-SEM acquisitions in the
 """
 import pprint
 from pathlib import Path
+import numpy as np
 from tomlkit import load, dump
 import tifffile
 from lxml.etree import tostring, fromstring, parse, XMLPullParser
@@ -36,6 +37,7 @@ PARAMS = {
     'ZPos': 'ATLAS3D/Slice/ZPos',
     'SEMCorrectionX': 'ATLAS3D/Slice/SEMCorrectionX',
     'SEMCorrectionY': 'ATLAS3D/Slice/SEMCorrectionY',
+    'ExtI': 'BeamInfo/item[@name="Ext I"]'
 }
 
 
@@ -117,6 +119,31 @@ def params_from_metadata(stack_dir,
             dump(params, fid)
 
     return params
+
+
+def currents_from_metadata(fnames):
+    """
+    Return currents from metadata
+
+    Parameters
+    ----------
+    fnames: list of n-str
+        List of the '.tif' filenames
+
+    Returns
+    -------
+    currents: np.ndarray((n))
+        Currents values extracted from the metadata
+    """
+    currents = []
+    for fname in fnames:
+        xml_ETroot = read_tags(fname)
+        current = param_from_xml_ETroot('ExtI', xml_ETroot).split(' ')[0]
+        currents.append(float(current))
+
+    currents = np.asarray(currents)
+
+    return currents
 
 
 def read_tags(fname, print_tags=False, fname_xml=None, encoding="iso-8859-1"):
