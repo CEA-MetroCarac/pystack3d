@@ -36,6 +36,8 @@ filter_size = -1
 
 #[intensity_rescaling_area]
 #area = [0, 99999, 0, 99999]
+#threshold_min = 0
+#threshold_max = 99999
 #factors_range = [0.8, 1.2]
 
 [destriping]
