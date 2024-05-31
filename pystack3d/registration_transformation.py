@@ -60,7 +60,7 @@ def registration_transformation(fnames=None,
 
     Parameters
     ----------
-    fnames: list os pathlib.Path, optional
+    fnames: list of pathlib.Path, optional
         List of '.tif' filenames to process
     inds_partition: list of ints, optional
         List of indexes to be considered by the global var SHARED_ARRAY when
