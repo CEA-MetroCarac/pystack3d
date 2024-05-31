@@ -4,7 +4,7 @@ Functions related to the intensity rescaling processing
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from tifffile import imread
+from tifffile import TiffFile
 from scipy.ndimage import uniform_filter1d
 
 from pystack3d.utils import outputs_saving
@@ -71,7 +71,8 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
     if range_bins is None:
         stats = []
         for fname in fnames:
-            img = imread(fname)
+            with TiffFile(fname) as tiff:
+                img = tiff.asarray()
             stats.append([[img.min(), img.max(), None],
                           [None, None, None], [None, None, None]])
         kmin, kmax = inds_partition[0], inds_partition[-1]
@@ -82,7 +83,8 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
     # histograms calculation
     histos_orig = []
     for fname in fnames:
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
         hist, edges = np.histogram(img.flatten(), bins=nbins, range=range_bins)
         histos_orig.append(hist)
         queue_incr.put(0.5)
@@ -111,7 +113,8 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
     histos_final = []
     stats = []
     for k, fname in enumerate(fnames):
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
 
         cdf_target = np.cumsum(histos_ref[inds_partition[k]])
         cdf_target = cdf_target / np.max(cdf_target)

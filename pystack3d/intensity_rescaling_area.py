@@ -5,7 +5,7 @@ contained in a area defined by the user
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from tifffile import imread
+from tifffile import TiffFile
 
 from pystack3d.cropping import inds_from_area
 from pystack3d.utils import mask_creation, outputs_saving
@@ -75,11 +75,13 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
     # calculation of the averaged values in the selected area
     means = []
     for fname in fnames:
-        img = imread(fname)[imin:imax, jmin:jmax]
-        mask = mask_creation(img,
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
+        img_roi = img[imin:imax, jmin:jmax]
+        mask = mask_creation(img_roi,
                              threshold_min=threshold_min,
                              threshold_max=threshold_max)
-        means.append(img[mask].mean())
+        means.append(img_roi[mask].mean())
         queue_incr.put(0.5)
 
     # arrays sharing and saving between multiproc
@@ -98,7 +100,8 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
 
     stats = []
     for k, fname in enumerate(fnames):
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
         img_res = factors[k + inds_partition[0]] * img
         outputs_saving(output_dirname, fname, img, img_res, stats)
         queue_incr.put(0.5)

@@ -2,7 +2,7 @@
 Functions related to the cropping processing
 """
 import numpy as np
-from tifffile import imread
+from tifffile import TiffFile
 
 from pystack3d.utils import outputs_saving
 from pystack3d.utils_multiprocessing import (send_shared_array,
@@ -35,7 +35,8 @@ def cropping(fnames=None, inds_partition=None, queue_incr=None,
 
     stats = []
     for fname in fnames:
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
         img_res = img[imin:imax, jmin:jmax]
         outputs_saving(output_dirname, fname, img, img_res, stats)
         queue_incr.put(1)
@@ -52,7 +53,8 @@ def cropping(fnames=None, inds_partition=None, queue_incr=None,
 
 def inds_from_area(area, fnames, pid_0, output_dirname):
     """ Return imin, imax, jmin, jmax from 'area' """
-    img0 = imread(fnames[0])
+    with TiffFile(fnames[0]) as tiff:
+        img0 = tiff.asarray()
 
     if area is None:
         imin, imax, jmin, jmax = 0, img0.shape[0], 0, img0.shape[1]

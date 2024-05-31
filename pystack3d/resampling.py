@@ -5,7 +5,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from parse import Parser
-from tifffile import imread, imwrite
+from tifffile import TiffFile, imwrite
 
 from pystack3d.utils import img_reformatting
 from pystack3d.utils_multiprocessing import (send_shared_array,
@@ -89,7 +89,8 @@ def resampling(fnames=None, inds_partition=None, queue_incr=None,
 
     stats, stats_out, z_out = [], [], []
     for k, fname in enumerate(fnames):
-        img_k = imread(fname)
+        with TiffFile(fname) as tiff:
+            img_k = tiff.asarray()
         stats.append([[img_k.min(), img_k.max(), img_k.mean()],
                       [None, None, None], [None, None, None]])
 

@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from skimage.transform import resize
-from tifffile import imread
+from tifffile import TiffFile
 from PIL import Image, ImageDraw
 
 from pystack3d.utils import (imread_3d_skipping, skipping, division,
@@ -125,7 +125,8 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
     bkg_dirname = output_dirname / 'outputs' / 'bkgs'
     os.makedirs(bkg_dirname, exist_ok=True)
 
-    shape = imread(fnames[0]).shape
+    with TiffFile(fnames[0]) as tiff:
+        shape = tiff.asarray().shape
 
     # 3D Background coefficients calculation on a down sampled 3D stack
     if len(powers[0]) == 3:
@@ -171,7 +172,8 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
     # background calculation and removing
     stats, coefs = [], []
     for k, fname in enumerate(fnames):
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
 
         if kwargs_3d is not None:
             kwargs_3d['index'] = inds_partition[k]

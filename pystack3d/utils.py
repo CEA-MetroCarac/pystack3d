@@ -2,7 +2,7 @@
 utilities functions
 """
 import numpy as np
-from tifffile import imread, imwrite
+from tifffile import TiffFile, imwrite
 
 
 def mask_creation(arr, threshold_min=None, threshold_max=None):
@@ -37,7 +37,8 @@ def img_reformatting(arr, dtype):
 
 def imread_3d_skipping(fnames, skip_factors=(10, 10, 10)):
     """ Return a 3D-Array from .tif files wrt skip factors in all directions """
-    arr0 = imread(fnames[0])
+    with TiffFile(fnames[0]) as tiff:
+        arr0 = tiff.asarray()
     shape = arr0.shape
     dtype = arr0.dtype
 
@@ -46,7 +47,9 @@ def imread_3d_skipping(fnames, skip_factors=(10, 10, 10)):
                         int(np.ceil(shape[1] / skip_factors[0]))), dtype=dtype)
 
     for k, fname in enumerate(fnames[::skip_factors[2]]):
-        arr_red[k, ...] = imread(fname)[::skip_factors[1], ::skip_factors[0]]
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
+        arr_red[k, ...] = img[::skip_factors[1], ::skip_factors[0]]
 
     return arr_red
 

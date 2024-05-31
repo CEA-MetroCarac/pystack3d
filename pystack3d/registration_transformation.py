@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib import patches
 from skimage.transform import PiecewiseAffineTransform, AffineTransform, warp
 from scipy.ndimage import uniform_filter1d
-from tifffile import imread
+from tifffile import TiffFile
 
 from pystack3d.registration_calculation import registration_plot
 from pystack3d.utils import cumdot, outputs_saving
@@ -111,7 +111,8 @@ def registration_transformation(fnames=None,
         tmats_cumul = running_avg_removal(tmats_cumul, box_size=box_size)
 
     if cropping:
-        shape = imread(fnames[0]).shape
+        with TiffFile(fnames[0]) as tiff:
+            shape = tiff.asarray().shape
         inds_crop, img_crop = inner_rectangle(shape, tmats_cumul, nb_blocks)
         imin, imax, jmin, jmax = inds_crop
 
@@ -124,7 +125,8 @@ def registration_transformation(fnames=None,
     # transformation matrices application
     stats = []
     for k, fname in enumerate(fnames):
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
         tmat = tmats_cumul[inds_partition[k]]
         dtype_orig = img.dtype
         img_res = img_transformation(img.astype(float), tmat,

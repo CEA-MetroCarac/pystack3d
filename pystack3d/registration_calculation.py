@@ -5,7 +5,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from pystackreg import StackReg
-from tifffile import imread
+from tifffile import TiffFile
 from skimage.util.shape import view_as_blocks
 from skimage.transform import AffineTransform
 
@@ -90,7 +90,9 @@ def registration_calculation(fnames=None, inds_partition=None, queue_incr=None,
 
     # transformation matrices calculation
     for k, fname in enumerate(fnames):
-        img = imread(fname)[imin: imax, jmin: jmax]
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
+        img = img[imin: imax, jmin: jmax]
         if threshold is not None:
             img = img <= threshold
         if k == 0:

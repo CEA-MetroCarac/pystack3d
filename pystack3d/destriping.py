@@ -2,7 +2,7 @@
 Functions related to the destriping processing
 """
 import numpy as np
-from tifffile import imread
+from tifffile import TiffFile
 from pyvsnr import vsnr2d
 
 from pystack3d.utils import outputs_saving
@@ -47,7 +47,8 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
 
     stats = []
     for fname in fnames:
-        img = imread(fname)
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
 
         img_res = vsnr2d(img, filters,
                          maxit=maxit,
