@@ -37,7 +37,8 @@ dependencies = [
     "tifffile",
     "tomli",
     "tomlkit",
-    "parse"
+    "parse",
+    "lxml"
 ]
 
 
