@@ -2,7 +2,7 @@
 utilities functions
 """
 import numpy as np
-from tifffile import TiffFile, imwrite
+from tifffile import TiffFile, TiffWriter
 
 
 def mask_creation(arr, threshold_min=None, threshold_max=None):
@@ -16,14 +16,25 @@ def mask_creation(arr, threshold_min=None, threshold_max=None):
 
 
 def outputs_saving(output_dirname, fname, img, img_res, stats):
-    """ Append stats and Write img_res after reformatting """
+    """ Append stats and save img_res after reformatting """
     img_res2 = img_reformatting(img_res, img.dtype)
 
     stats.append([[img.min(), img.max(), img.mean()],
                   [img_res.min(), img_res.max(), img_res.mean()],
                   [img_res2.min(), img_res2.max(), img_res2.mean()]])
 
-    imwrite(output_dirname / fname.name, img_res2, dtype=img.dtype)
+    save_tif(img_res2, fname, output_dirname / fname.name)
+
+
+def save_tif(arr, fname, fname_out):
+    """ Save arr in a 'fname_out' .tif file preserving the 'fname' metadata """
+    with TiffFile(fname) as fid:
+        tags = fid.pages[0].tags
+        private_tag_codes = tuple(int(k) for k in tags.keys() if k > 32768)
+        extra_tags = tuple(tags[k].astuple() for k in private_tag_codes)
+
+    with TiffWriter(fname_out) as fid:
+        fid.write(arr, extratags=extra_tags, compression=tags[259].value)
 
 
 def img_reformatting(arr, dtype):

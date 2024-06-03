@@ -5,9 +5,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from parse import Parser
-from tifffile import TiffFile, imwrite
+from tifffile import TiffFile
 
-from pystack3d.utils import img_reformatting
+from pystack3d.utils import img_reformatting, save_tif
 from pystack3d.utils_multiprocessing import (send_shared_array,
                                              receive_shared_array)
 
@@ -126,7 +126,7 @@ def resampling(fnames=None, inds_partition=None, queue_incr=None,
             slice_nb = f'{list(zpos_out).index(z_int):04d}'
             z_coord = f'{z_int:.4f}'
             name = policy.format(slice_nb=slice_nb, z_coord=z_coord)
-            imwrite(output_dirname / name, img_int2)
+            save_tif(img_int2, fname, output_dirname / name)
 
         img_km1 = img_k
         z_km1 = z_k
