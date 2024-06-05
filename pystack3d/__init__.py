@@ -16,11 +16,11 @@ from multiprocessing import Pool, Queue
 
 import numpy as np
 import matplotlib.pyplot as plt
-from tifffile import imread
+from tifffile import TiffFile, TiffWriter
 from tomli import load
 from tomlkit import dump
 
-from pystack3d.utils import imread_3d_skipping
+from pystack3d.utils import imread_3d_skipping, get_tags
 from pystack3d.utils_multiprocessing import (worker_init, step_wrapper,
                                              initialize_args)
 
@@ -91,6 +91,21 @@ class Stack3d:
         msg = f"Pathdir = {self.pathdir}\n"
         msg += f"Channels = {self.params['channels']}"
         return msg
+
+    def channels(self, process_step):
+        """ Return the list of channels according to the 'process_step' """
+        channels = self.params["channels"]
+        if process_step == 'registration_calculation':
+            channels = [channels[0]]
+        return channels
+
+    def process_dirname(self, process_step, channel):
+        """ Return the process dirname wrt to 'process_step' and 'channel' """
+        if process_step == 'input':
+            process_dirname = self.pathdir / channel
+        else:
+            process_dirname = self.pathdir / 'process' / process_step / channel
+        return process_dirname
 
     def create_partition(self, input_dirname, nproc, overlay=0):
         """
@@ -174,7 +189,7 @@ class Stack3d:
             nproc = self.params['nproc']
         self.params['nproc'] = nproc
 
-        assert type(nproc) is int and nproc > 0, 'nproc not a positive int'
+        assert isinstance(nproc, int) and nproc > 0, 'nproc not a positive int'
 
         # process step calculation
         for process_step in process_steps:
@@ -193,30 +208,21 @@ class Stack3d:
                 elif len(history) > 1:
                     last_step_dir = dir_process / history[-2]
 
-            channels = self.params["channels"]
-            if process_step == 'registration_calculation':
-                channels = [channels[0]]
-
-            for channel in channels:
+            for channel in self.channels(process_step):
 
                 print(process_step, (channel != '.') * f"channel {channel}")
 
-                # process kwargs (to be overwritten)
-                kwargs = self.params[process_step].copy()
-
                 input_dirname = last_step_dir / channel
-
-                if process_step == 'registration_calculation':
-                    output_dirname = dir_process / process_step
-                else:
-                    output_dirname = dir_process / process_step / channel
-
-                kwargs.update({'output_dirname': output_dirname})
+                output_dirname = self.process_dirname(process_step, channel)
 
                 # ouput_dirname cleaning-up
                 os.makedirs(output_dirname, exist_ok=True)
                 shutil.rmtree(output_dirname)
                 os.makedirs(output_dirname / 'outputs')
+
+                # process kwargs (to be overwritten)
+                kwargs = self.params[process_step].copy()
+                kwargs.update({'output_dirname': output_dirname})
 
                 # create partition
                 overlay = 0
@@ -267,6 +273,79 @@ class Stack3d:
                 self.params['history'] = self.params['history'] + [process_step]
                 with open(self.fname_toml, 'w') as fid:
                     dump(self.params, fid)
+
+    def cleanup(self):
+        """ Remove the .tif files except the ones related to the last process"""
+        if len(self.params['history']) >= 2:
+            for process_step in self.params['history'][:-1]:
+                for channel in self.channels(process_step):
+                    dirname = self.process_dirname(process_step, channel)
+                    for fname in dirname.glob("*.tif"):
+                        fname.unlink()
+
+    def concatenate_tif(self, process_step=None, save_metadata=True,
+                        dirname_out=None, name_out='big.tif'):
+        """
+        Concatenate .tif files issued from a process step into a single one
+
+        Parameters
+        ----------
+        process_step: str, optional
+            Process step name to handle.
+            If 'input' concatenate the input .tif files
+            If None (default) concatenate the .tif files related to the last
+            process execution extracted from the 'history' in the .toml file
+        save_metadata: bool, optional
+            Activation key to save metadata in the .tif file
+        dirname_out: str or WindowsPath, optional
+            Dirname associated to the big .tif file saving.
+            If None, consider the same dirname as the input dirname related to
+            the 'process_step'
+        name_out: str, optional
+            Name of the big .tif file
+        """
+        if isinstance(dirname_out, str):
+            dirname_out = Path(dirname_out)
+
+        valid_process_step = [None, 'input'] + PROCESS_STEPS
+        assert process_step in valid_process_step, "process_step is not correct"
+
+        if process_step is None:
+            if len(self.params['history']) > 0:
+                process_step = self.params['history'][-1]
+            else:
+                raise IOError("No process step in the 'history'")
+
+        for channel in self.channels(process_step):
+
+            print(f"concatenate - {process_step}",
+                  (channel != '.') * f"channel {channel}")
+
+            dirname_in = self.process_dirname(process_step, channel)
+            dirname_out = dirname_out or dirname_in
+
+            fname_out = dirname_out / name_out
+            fnames_in = sorted(list(dirname_in.glob('*.tif')))
+            if fname_out in fnames_in:
+                fnames_in.remove(fname_out)
+
+            queue_incr = Queue()
+            pbar_args = (queue_incr, len(fnames_in), 1)
+            thread = Thread(target=pbar_update, args=pbar_args)
+            thread.start()
+
+            with TiffWriter(dirname_out / name_out, bigtiff=True) as tiff_out:
+                for fname in fnames_in:
+                    queue_incr.put(1)
+                    with TiffFile(fname) as tiff_in:
+                        arr = tiff_in.asarray()
+                        tags, extra_tags = get_tags(tiff_in)
+                        extra_tags = extra_tags if save_metadata else None
+                        tiff_out.write(arr, extratags=extra_tags,
+                                       compression=tags[259].value)
+                queue_incr.put('finished')
+
+            thread.join()
 
 
 def plot(process_step, output_dirname, input_dirname, kwargs):
