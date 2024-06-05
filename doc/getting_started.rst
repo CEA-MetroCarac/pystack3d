@@ -96,6 +96,8 @@ or for a multi-channels acquisition::
 
     For instance, in the case of a stack of 2000 images sized 2000x2000 encoded in 16 bits, each process step will require storing approximately 15GB of data.
 
+    To facilitate the cleaning of these large volumes of data, a ``cleanup()`` function was created (see the **Workflow execution** section below).
+
 Workflow initialization
 -----------------------
 
@@ -157,6 +159,14 @@ A **PyStack3D** workflow execution is obtained with the following instructions::
 
 Note that an additional boolean keyword named ``serial`` allows to realize non-serialized calculations when setting to ``False`` (said differently, with ``serial = False`` the workflow is executed using the original raw input data for each process step).
 
+At the end of a workflow execution, a cleaning up of all the .tif files (except the ones related to the last ``process_steps``) can be done easily as follows::
+
+    stack.cleanup()
+
+At least, to ease the full 3D-stack visualization, .tif files can be concatenated in a single one. See :class:`~pystack3d.Stack3d.concatenate_tif` for more details::
+
+    stack.concatenate_tif() # tif files concatenation related to the last process_step
+    stack.concatenate_tif('input') # tif files concatenation related to the input data
 
 Outputs
 -------
