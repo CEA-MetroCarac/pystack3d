@@ -26,12 +26,20 @@ def outputs_saving(output_dirname, fname, img, img_res, stats):
     save_tif(img_res2, fname, output_dirname / fname.name)
 
 
+def get_tags(fid, extract_extra_tags=True):
+    """ Return tags and extra_tags from a TiffFile """
+    tags = fid.pages[0].tags
+    extra_tags = None
+    if extract_extra_tags:
+        private_tag_codes = tuple(int(k) for k in tags.keys() if k > 32768)
+        extra_tags = tuple(tags[k].astuple() for k in private_tag_codes)
+    return tags, extra_tags
+
+
 def save_tif(arr, fname, fname_out):
     """ Save arr in a 'fname_out' .tif file preserving the 'fname' metadata """
     with TiffFile(fname) as fid:
-        tags = fid.pages[0].tags
-        private_tag_codes = tuple(int(k) for k in tags.keys() if k > 32768)
-        extra_tags = tuple(tags[k].astuple() for k in private_tag_codes)
+        tags, extra_tags = get_tags(fid)
 
     with TiffWriter(fname_out) as fid:
         fid.write(arr, extratags=extra_tags, compression=tags[259].value)
