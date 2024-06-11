@@ -8,11 +8,11 @@ from parse import Parser
 from tifffile import TiffFile
 
 from pystack3d.utils import img_reformatting, save_tif
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 
-def init_args(params, nslices):
+def init_args(params, shape):
     """
     Initialize arguments related to the current processing ('resampling')
 
@@ -21,15 +21,15 @@ def init_args(params, nslices):
     params: dict
         Dictionary related to the current process.
         See the related documentation for more details.
-    nslices: int
-        Number of the total slices to process
+    shape: tuple of 3 int
+        Shape of the stack to process
 
     Returns
     -------
     stats_out: numpy.ndarray((len(zpos_out), 2, 3))
         Statistics related to outputs (resampled frames)
     """
-    fnames = np.unique(sum(params['fnames'], []))
+    fnames = params['fnames']
     policy = params['policy']
     zpos_in = extract_z_from_filenames(fnames, policy)
 
@@ -137,14 +137,14 @@ def resampling(fnames=None, inds_partition=None, queue_incr=None,
 
     # stats sharing
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(stats, kmin, kmax, is_stats=True)
-    stats = receive_shared_array(is_stats=True)
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
 
     if len(z_out) > 0:
         kmin = list(zpos_out).index(z_out[0])
         kmax = list(zpos_out).index(z_out[-1])
-        send_shared_array(stats_out, kmin, kmax)
-    stats_out = receive_shared_array()
+        collect_shared_array_parts(stats_out, kmin, kmax)
+    stats_out = get_complete_shared_array()
 
     # extend and fuse stats arrays
     stats_in = stats[:, 0, :]

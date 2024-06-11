@@ -6,8 +6,8 @@ from tifffile import TiffFile
 from pyvsnr import vsnr2d
 
 from pystack3d.utils import outputs_saving
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 
 def destriping(fnames=None, inds_partition=None, queue_incr=None,
@@ -63,7 +63,7 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
 
     # stats sharing and saving
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(stats, kmin, kmax, is_stats=True)
-    stats = receive_shared_array(is_stats=True)
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
     if pid_0:
         np.save(output_dirname / 'outputs' / 'stats.npy', stats)

@@ -9,11 +9,11 @@ from tifffile import TiffFile
 
 from pystack3d.cropping import inds_from_area
 from pystack3d.utils import mask_creation, outputs_saving
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 
-def init_args(params, nslices):
+def init_args(params, shape):
     """
     Initialize arguments related to the current processing
     ('intensity_rescaling_area') and return a specific array to share (histo)
@@ -23,16 +23,16 @@ def init_args(params, nslices):
     params: dict
         Dictionary related to the current process.
         See the related documentation for more details.
-    nslices: int
-        Number of the total slices to process
+    shape: tuple of 3 int
+        Shape of the stack to process
 
     Returns
     -------
-    tmp: numpy.ndarray(nslices)
+    tmp: numpy.ndarray(shape[0])
         shared array (means or rescaling_factors) associated with the intensity
         rescaling processing
     """
-    tmp = np.zeros(nslices)
+    tmp = np.zeros(shape[0])
     return tmp
 
 
@@ -86,8 +86,8 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
 
     # arrays sharing and saving between multiproc
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(means, kmin, kmax)
-    means = receive_shared_array()
+    collect_shared_array_parts(means, kmin, kmax)
+    means = get_complete_shared_array()
     means_ref = means.median()
 
     with np.errstate(all='ignore'):
@@ -110,8 +110,8 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
 
     # stats sharing and saving
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(stats, kmin, kmax, is_stats=True)
-    stats = receive_shared_array(is_stats=True)
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
     if pid_0:
         np.save(output_dirname / 'outputs' / 'stats.npy', stats)
 

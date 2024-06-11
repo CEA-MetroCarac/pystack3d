@@ -8,11 +8,11 @@ from tifffile import TiffFile
 from scipy.ndimage import uniform_filter1d
 
 from pystack3d.utils import outputs_saving
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 
-def init_args(params, nslices):
+def init_args(params, shape):
     """
     Initialize arguments related to the current processing
     ('intensity_rescaling') and return a specific array to share (histo)
@@ -22,15 +22,15 @@ def init_args(params, nslices):
     params: dict
         Dictionary related to the current process.
         See the related documentation for more details.
-    nslices: int
-        Number of the total slices to process
+    shape: tuple of 3 int
+        Shape of the stack to process
 
     Returns
     -------
-    histo: numpy.ndarray((nslices, nbins))
+    histo: numpy.ndarray((shape[0], nbins))
         Histogram to be shared during the (multi)processing
     """
-    histo = np.zeros((nslices, params['nbins']), dtype=int)
+    histo = np.zeros((shape[0], params['nbins']), dtype=int)
     return histo
 
 
@@ -76,8 +76,8 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
             stats.append([[img.min(), img.max(), None],
                           [None, None, None], [None, None, None]])
         kmin, kmax = inds_partition[0], inds_partition[-1]
-        send_shared_array(stats, kmin, kmax, is_stats=True)
-        stats = receive_shared_array(is_stats=True)
+        collect_shared_array_parts(stats, kmin, kmax, key='stats')
+        stats = get_complete_shared_array(key='stats')
         range_bins = [np.nanmin(stats), np.nanmax(stats)]
 
     # histograms calculation
@@ -95,8 +95,8 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
 
     # array sharing and saving between multiproc
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(histos_orig, kmin, kmax)
-    histos_orig = receive_shared_array()
+    collect_shared_array_parts(histos_orig, kmin, kmax)
+    histos_orig = get_complete_shared_array()
     if pid_0:
         np.save(output_dirname / 'outputs' / 'histo_orig.npy', histos_orig)
 
@@ -131,10 +131,10 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
 
     # arrays sharing and saving
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(histos_final, kmin, kmax)
-    histos_final = receive_shared_array()
-    send_shared_array(stats, kmin, kmax, is_stats=True)
-    stats = receive_shared_array(is_stats=True)
+    collect_shared_array_parts(histos_final, kmin, kmax)
+    histos_final = get_complete_shared_array()
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
     if pid_0:
         np.save(output_dirname / 'outputs' / 'histos_final.npy', histos_final)
         np.save(output_dirname / 'outputs' / 'stats.npy', stats)

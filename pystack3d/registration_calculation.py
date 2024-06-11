@@ -11,11 +11,11 @@ from skimage.transform import AffineTransform
 
 from pystack3d.cropping import inds_from_area
 from pystack3d.utils import cumdot, division
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 
-def init_args(params, nslices):
+def init_args(params, shape):
     """
     Initialize arguments related to the current processing
     ('registration_calculation') and return a specific array to share (tmats)
@@ -25,12 +25,12 @@ def init_args(params, nslices):
     params: dict
         Dictionary related to the current process.
         See the related documentation for more details.
-    nslices: int
-        Number of the total slices to process
+    shape: tuple of 3 int
+        Shape of the stack to process
 
     Returns
     -------
-    tmats: numpy.ndarray((nslices, nblocks[0]*nblocks[1], 3, 3))
+    tmats: numpy.ndarray((shape[0], nblocks[0]*nblocks[1], 3, 3))
         Transformation matrices to be shared during the (multi)processing
     """
     global TRANSFORMATION, NB_BLOCKS  # pylint:disable=W0601
@@ -38,7 +38,7 @@ def init_args(params, nslices):
     TRANSFORMATION = params['transformation']
     NB_BLOCKS = params['nb_blocks']
 
-    shape = (nslices, NB_BLOCKS[0] * NB_BLOCKS[1], 3, 3)
+    shape = (shape[0], NB_BLOCKS[0] * NB_BLOCKS[1], 3, 3)
     tmats = np.zeros(shape, dtype=float)
     return tmats
 
@@ -109,8 +109,8 @@ def registration_calculation(fnames=None, inds_partition=None, queue_incr=None,
     # array sharing between multiproc
     k0 = 0 if pid_0 else 1  # to manage overlaid frames
     kmin, kmax = inds_partition[k0], inds_partition[-1]
-    send_shared_array(tmats[k0:], kmin, kmax)
-    tmats = receive_shared_array()
+    collect_shared_array_parts(tmats[k0:], kmin, kmax)
+    tmats = get_complete_shared_array()
     if pid_0:
         np.save(output_dirname / 'tmats.npy', tmats)
 

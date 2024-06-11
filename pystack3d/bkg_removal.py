@@ -15,13 +15,13 @@ from PIL import Image, ImageDraw
 
 from pystack3d.utils import (imread_3d_skipping, skipping, division,
                              outputs_saving, mask_creation)
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 WEIGHTS = [None, "HuberT", "Hampel"]
 
 
-def init_args(params, nslices):
+def init_args(params, shape):
     """
     Initialize arguments related to the current processing ('bkg_removal') and
     return a specific array to share (coefs)
@@ -31,12 +31,12 @@ def init_args(params, nslices):
     params: dict
         Dictionary related to the current process.
         See the related documentation for more details.
-    nslices: int
-        Number of the total slices to process
+    shape: tuple of 3 int
+        Shape of the stack to process
 
     Returns
     -------
-    coefs: numpy.ndarray((len(powers), nslices))
+    coefs: numpy.ndarray((shape[0], len(powers)))
         Coefficients of the polynom to be shared during the (multi)processing
     """
     if 'poly_basis' in params.keys():
@@ -72,8 +72,11 @@ def init_args(params, nslices):
         if key in params:
             params.pop(key)
 
-    coefs = np.zeros((nslices, len(powers)), dtype=float)
-    return coefs
+    coefs = np.zeros((shape[0], len(powers)), dtype=float)
+    powers_2d = get_powers_2d(powers)
+    poly_basis = np.zeros((shape[1] * shape[2], len(powers_2d)), dtype=float)
+
+    return tuple((coefs, poly_basis))
 
 
 def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
@@ -126,7 +129,7 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
     os.makedirs(bkg_dirname, exist_ok=True)
 
     with TiffFile(fnames[0]) as tiff:
-        shape = tiff.asarray().shape
+        shape = tiff.pages[0].shape
 
     # 3D Background coefficients calculation on a down sampled 3D stack
     if len(powers[0]) == 3:
@@ -156,18 +159,21 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
             np.savetxt(output_dirname / 'outputs' / 'coefs_3d.txt', coefs_3d)
 
             coefs_3d = np.tile(coefs_3d, nslices).reshape(nslices, len(powers))
-            send_shared_array(coefs_3d)
+            collect_shared_array_parts(coefs_3d)
 
-        coefs_3d = receive_shared_array()[0]
+        coefs_3d = get_complete_shared_array()[0]
         kwargs_3d = {'shape_3d': shape_3d, 'coefs_3d': coefs_3d}
     else:
         kwargs_3d = None
 
     # polynomial basis pre-calculation
-    powers_2d = list(dict.fromkeys([(x[0], x[1]) for x in powers]))
+    powers_2d = get_powers_2d(powers)
     args = (shape[:2], powers_2d, skip_factors[:2])
-    poly_basis = poly_basis_calculation(*args[:-1])
     poly_basis_skip = poly_basis_calculation(*args)
+    if pid_0:
+        poly_basis = poly_basis_calculation(*args[:-1])
+        collect_shared_array_parts(poly_basis, key='array2')
+    poly_basis = get_complete_shared_array(key='array2')
 
     # background calculation and removing
     stats, coefs = [], []
@@ -199,10 +205,10 @@ def bkg_removal(fnames=None, inds_partition=None, queue_incr=None,
 
     # arrays sharing and saving
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(coefs, kmin, kmax)
-    coefs = receive_shared_array()
-    send_shared_array(stats, kmin, kmax, is_stats=True)
-    stats = receive_shared_array(is_stats=True)
+    collect_shared_array_parts(coefs, kmin, kmax)
+    coefs = get_complete_shared_array()
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
     if pid_0:
         dirname = output_dirname / 'outputs'
         np.save(dirname / 'stats.npy', stats)
@@ -225,6 +231,11 @@ def bkg_saving(bkg_dirname, fname, bkg):
     img1 = ImageDraw.Draw(img, 'RGB')
     img1.text((1, 1), f"vmin={vmin:.1f}\nvmax={vmax:.1f}", fill=(255, 0, 0))
     img.save((bkg_dirname / fname.name).with_suffix('.png'), origin='lower')
+
+
+def get_powers_2d(powers):
+    """ Return the 2D powers related to the 'powers' 1rst and 2nd indices """
+    return list(dict.fromkeys([(x[0], x[1]) for x in powers]))
 
 
 def powers_from_orders(orders, cross_terms):

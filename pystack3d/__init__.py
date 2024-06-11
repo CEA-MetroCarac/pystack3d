@@ -107,14 +107,31 @@ class Stack3d:
             process_dirname = self.pathdir / 'process' / process_step / channel
         return process_dirname
 
-    def create_partition(self, input_dirname, nproc, overlay=0):
+    def fnames(self, input_dirname):
+        """ Return the .tif filenames related to the input_dirname """
+        fnames = sorted(input_dirname.glob('*.tif'))
+
+        # apply slices reduction to the 1rst process step
+        if len(self.params['history']) == 0:
+            ind_min, ind_max = self.params['ind_min'], self.params['ind_max']
+            fnames = fnames[ind_min:ind_max + 1]
+
+        return fnames
+
+    def shape(self, fnames):
+        """ Return the shape of the stack """
+        with TiffFile(fnames[0]) as tiff:
+            shape = tiff.pages[0].shape
+        return tuple((len(fnames), shape[0], shape[1]))
+
+    def create_partition(self, fnames, nproc, overlay=0):
         """
         Return a filenames partition related to a multiprocessing execution
 
         Parameters
         ----------
-        input_dirname: str or Path
-            Pathname of the input filenames to consider
+        fnames: list of str or list of Path
+            List of the input filenames to consider
         nproc: int
             Number of cpus to consider to create the partition
         overlay: int, optional
@@ -127,13 +144,6 @@ class Stack3d:
         ind_part: list of lists of int
             List of indexes partitions
         """
-        fnames = sorted(input_dirname.glob('*.tif'))
-
-        # apply slices reduction to the 1rst process step
-        if len(self.params['history']) == 0:
-            ind_min, ind_max = self.params['ind_min'], self.params['ind_max']
-            fnames = fnames[ind_min:ind_max + 1]
-
         nslices = len(fnames)
         msg = f'nproc ({nproc}) is not suited for ({nslices}) slices\n'
         assert nslices >= nproc, msg
@@ -151,7 +161,7 @@ class Stack3d:
         for inds in inds_part:
             fnames_part += [[fnames[ind] for ind in inds]]
 
-        return fnames_part, inds_part, nslices
+        return fnames_part, inds_part
 
     def eval(self, process_steps=None, nproc=None, serial=True, show_pbar=True):
         """
@@ -214,6 +224,8 @@ class Stack3d:
 
                 input_dirname = last_step_dir / channel
                 output_dirname = self.process_dirname(process_step, channel)
+                fnames = self.fnames(input_dirname)  # .tif filenames to handle
+                shape = self.shape(fnames)  # stack shape
 
                 # ouput_dirname cleaning-up
                 os.makedirs(output_dirname, exist_ok=True)
@@ -223,24 +235,25 @@ class Stack3d:
                 # process kwargs (to be overwritten)
                 kwargs = self.params[process_step].copy()
                 kwargs.update({'output_dirname': output_dirname})
+                kwargs.update({'fnames': fnames})  # req. for 'resampling' init
 
                 # create partition
                 overlay = 0
                 if process_step in ['registration_calculation', 'resampling']:
                     overlay = 1
-                out = self.create_partition(input_dirname, nproc, overlay)
-                fnames_part, inds_part, nslices = out
-                kwargs.update({'fnames': fnames_part})
+                fnames_parts, inds_parts = self.create_partition(fnames, nproc,
+                                                                 overlay)
 
                 queue_incr = Queue()
-                args = initialize_args(process_step, kwargs, nproc, nslices)
+                args = initialize_args(process_step, kwargs, nproc, shape)
                 worker_args = (queue_incr, *args)
-                pbar_args = (queue_incr, nslices + (nproc - 1) * overlay, nproc)
+                pbar_args = (queue_incr,
+                             len(fnames) + (nproc - 1) * overlay, nproc)
 
                 if nproc == 1:
 
-                    kwargs.update({'fnames': fnames_part[0]})
-                    kwargs.update({'inds_partition': inds_part[0]})
+                    kwargs.update({'fnames': fnames_parts[0]})
+                    kwargs.update({'inds_partition': inds_parts[0]})
 
                     worker_init(*worker_args)
 
@@ -252,7 +265,7 @@ class Stack3d:
                 else:
 
                     args = []
-                    for fnames, inds in zip(fnames_part, inds_part):
+                    for fnames, inds in zip(fnames_parts, inds_parts):
                         kwargs.update({'fnames': fnames})
                         kwargs.update({'inds_partition': inds})
                         args += [[process_step, {**kwargs}]]

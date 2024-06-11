@@ -13,11 +13,11 @@ from tifffile import TiffFile
 
 from pystack3d.registration_calculation import registration_plot
 from pystack3d.utils import cumdot, outputs_saving
-from pystack3d.utils_multiprocessing import (send_shared_array,
-                                             receive_shared_array)
+from pystack3d.utils_multiprocessing import (collect_shared_array_parts,
+                                             get_complete_shared_array)
 
 
-def init_args(params, nslices):
+def init_args(params, shape):
     """
     Initialize arguments related to the current processing
     ('registration_transformation')
@@ -27,8 +27,8 @@ def init_args(params, nslices):
     params: dict
         Dictionary related to the current process.
         See the related documentation for more details.
-    nslices: int
-        Number of the total slices to process
+    shape: tuple of 3 int
+        Shape of the stack to process
     """
     tmats = None
     for k in [0, 1]:
@@ -144,8 +144,8 @@ def registration_transformation(fnames=None,
 
     # stats sharing and saving
     kmin, kmax = inds_partition[0], inds_partition[-1]
-    send_shared_array(stats, kmin, kmax, is_stats=True)
-    stats = receive_shared_array(is_stats=True)
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
     if pid_0:
         np.save(output_dirname / 'outputs' / 'stats.npy', stats)
 
