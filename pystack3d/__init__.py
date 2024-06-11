@@ -102,6 +102,8 @@ class Stack3d:
         """ Return the process dirname wrt to 'process_step' and 'channel' """
         if process_step == 'input':
             process_dirname = self.pathdir / channel
+        elif process_step == 'registration_calculation':
+            process_dirname = self.pathdir / 'process' / process_step
         else:
             process_dirname = self.pathdir / 'process' / process_step / channel
         return process_dirname
@@ -428,10 +430,11 @@ def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
 
 def pbar_update(queue_incr, nslices, overlay, nproc):
     """ Progress bar """
-    ntot = nslices + (nproc - 1) * overlay
-    pbar = "\r[{:100}] {:.0f}% {}/{} {:.2f}s " + f"ncpus={nproc}"
-    if overlay != 0:
-        pbar += f" ({(nproc - 1) * overlay} overlays)"
+    overlays = (nproc - 1) * overlay
+    ntot = nslices + overlays
+    pbar = "\r[{:100}] {:.0f}% {:.0f}/{} {:.2f}s " + f"ncpus={nproc}"
+    if overlays != 0:
+        pbar += f" ({(nproc - 1) * overlay} overlay{(overlays > 1) * 's'})"
     count = 0
     finished = 0
     t0 = time.time()
