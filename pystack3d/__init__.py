@@ -69,10 +69,9 @@ class Stack3d:
             fnames = list(self.pathdir.glob("*.toml"))
             if len(fnames) == 0:
                 raise IOError(f"there is no '.toml' file in {input_name}")
-            elif len(fnames) > 1:
+            if len(fnames) > 1:
                 raise IOError(f"there is too much '.toml' file in {input_name}")
-            else:
-                self.fname_toml = fnames[0]
+            self.fname_toml = fnames[0]
 
             with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
@@ -146,16 +145,14 @@ class Stack3d:
         """
         nslices = len(fnames)
         msg = f'nproc ({nproc}) is not suited for ({nslices}) slices\n'
+        msg += '(should be strictly less)\n'
         assert nslices >= nproc, msg
 
-        # define pairs of start-end indexes for each thread
-        inds = list(range(nslices))
-        nbel = int(len(inds) / nproc)
-        pairs = [(i * nbel, (i + 1) * nbel - 1) for i in range(nproc)]
-        pairs[-1] = ((nproc - 1) * nbel, inds[-1])
-
-        inds_part = [inds[max(0, imin): min(inds[-1], imax + overlay) + 1]
-                     for (imin, imax) in pairs]
+        # define pairs of start and end indexes for each thread
+        nbel = nslices / nproc
+        ind_list = list(range(nslices))
+        pairs = [(int(i * nbel), int((i + 1) * nbel)) for i in range(nproc)]
+        inds_part = [ind_list[imin:imax + overlay] for (imin, imax) in pairs]
 
         fnames_part = []
         for inds in inds_part:
@@ -247,8 +244,7 @@ class Stack3d:
                 queue_incr = Queue()
                 args = initialize_args(process_step, kwargs, nproc, shape)
                 worker_args = (queue_incr, *args)
-                pbar_args = (queue_incr,
-                             len(fnames) + (nproc - 1) * overlay, nproc)
+                pbar_args = (queue_incr, len(fnames), overlay, nproc)
 
                 if nproc == 1:
 
@@ -430,18 +426,23 @@ def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
         fig.savefig(output_dirname / 'outputs' / f"stats_{axis_labels[i]}.png")
 
 
-def pbar_update(queue_incr, nslices, nproc):
+def pbar_update(queue_incr, nslices, overlay, nproc):
     """ Progress bar """
-    percent = 0
+    ntot = nslices + (nproc - 1) * overlay
+    pbar = "\r[{:100}] {:.0f}% {}/{} {:.2f}s " + f"ncpus={nproc}"
+    if overlay != 0:
+        pbar += f" ({(nproc - 1) * overlay} overlays)"
+    count = 0
     finished = 0
-    pbar = "\r[{:{}}] {:.0f}% {:.2f}s"
     t0 = time.time()
     while finished < nproc:
         val = queue_incr.get()
         if val == 'finished':
             finished += 1
         else:
-            percent += (val * 100 / nslices)
-            t1 = time.time()
-        sys.stdout.write(pbar.format("*" * int(percent), 100, percent, t1 - t0))
+            count += val
+            percent = 100 * count / ntot
+            cursor = "*" * int(percent)
+            exec_time = time.time() - t0
+        sys.stdout.write(pbar.format(cursor, percent, count, ntot, exec_time))
     print()
