@@ -190,9 +190,9 @@ class Stack3d:
         if isinstance(process_steps, str):
             process_steps = [process_steps]
 
-        for x in process_steps:
+        for k, x in enumerate(process_steps):
             assert x in PROCESS_STEPS, f"'{x}' is not a available process step"
-            assert x not in history, f"'{x}' has already been processed"
+            assert x not in process_steps[:k], f"'{x}' is called several times"
 
         if nproc is None:
             nproc = self.params['nproc']
@@ -203,11 +203,14 @@ class Stack3d:
         # process step calculation
         for process_step in process_steps:
 
+            history = self.params['history']
+            if process_step in history:
+                print(f"'{process_step}' has already been processed")
+                continue
+
             nproc = self.params['nproc']
             if process_step == 'destriping':
                 nproc = 1
-
-            history = self.params['history']
 
             # input directory
             last_step_dir = self.pathdir  # default input directory
