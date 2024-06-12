@@ -32,6 +32,8 @@ CMAP = plt.get_cmap("tab10")
 
 VERSION = "2024.1"
 
+plt.rcParams['savefig.dpi'] = 300
+
 
 class Stack3d:
     """
@@ -369,14 +371,15 @@ def plot(process_step, output_dirname, input_dirname, kwargs):
         stats = np.load(fname)
         labels = ['Min', 'Max', 'Mean']
         sfx = [' (input)', ' (output)', ' (reformatted output)']
-        fig, ax = plt.subplots(3, 1, figsize=(8, len(labels) * 2))
+        fig, ax = plt.subplots(3, 1, figsize=(8, len(labels) * 2.5),
+                               gridspec_kw={'hspace': 0.6})
         fig.canvas.manager.set_window_title(process_step)
-        fig.tight_layout()
         for k, label in enumerate(labels):
             ax[k].plot(stats[:, 0, k], c=CMAP(0), label=label + sfx[0])
             ax[k].plot(stats[:, 1, k], c=CMAP(1), label=label + sfx[1], ls='--')
             ax[k].plot(stats[:, 2, k], c=CMAP(1), label=label + sfx[2])
-            ax[k].legend(loc=9, ncols=3)
+            ax[k].legend(loc=9, ncols=3, bbox_to_anchor=(0.5, 1.3))
+
         ax[-1].set_xlabel('# Frames', labelpad=-1)
         plt.savefig(output_dirname / 'outputs' / 'stats.png')
 
@@ -403,9 +406,9 @@ def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
     figs = []
     axes = []
     for axis in axis_labels:
-        fig, ax = plt.subplots(3, 1, figsize=(8, len(labels) * 2))
+        fig, ax = plt.subplots(3, 1, figsize=(8, len(labels) * 2.5),
+                               gridspec_kw={'hspace': 0.6})
         fig.canvas.manager.set_window_title(f"stats_{axis}")
-        fig.tight_layout()
         figs.append(fig)
         axes.append(ax)
 
@@ -424,7 +427,7 @@ def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
             for k, label in enumerate(labels):
                 x = skip_factors[axis] * np.arange(len(stats[k]))
                 axes[axis][k].plot(x, stats[k], c=CMAP(i), label=label + sfx[i])
-                axes[axis][k].legend(loc=9, ncols=3)
+                axes[axis][k].legend(loc=9, ncols=3, bbox_to_anchor=(0.5, 1.05))
             axes[axis][-1].set_xlabel(axis_labels[axis], labelpad=-1)
 
     for i, fig in enumerate(figs):
