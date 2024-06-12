@@ -438,7 +438,7 @@ def pbar_update(queue_incr, nslices, overlay, nproc):
     """ Progress bar """
     overlays = (nproc - 1) * overlay
     ntot = nslices + overlays
-    pbar = "\r[{:100}] {:.0f}% {:.0f}/{} {:.2f}s " + f"ncpus={nproc}"
+    pbar = "\r[{:50}] {:.0f}% {:.0f}/{} {:.2f}s " + f"ncpus={nproc}"
     if overlays != 0:
         pbar += f" ({(nproc - 1) * overlay} overlay{(overlays > 1) * 's'})"
     count = 0
@@ -451,7 +451,7 @@ def pbar_update(queue_incr, nslices, overlay, nproc):
         else:
             count += val
             percent = 100 * count / ntot
-            cursor = "*" * int(percent)
+            cursor = "*" * int(percent / 2)
             exec_time = time.time() - t0
         sys.stdout.write(pbar.format(cursor, percent, count, ntot, exec_time))
     print()
