@@ -77,7 +77,7 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 ![](../doc/_static/workflow_1.png)
 
-![Cut-planes related to the different process steps issued from the Figure 1b stack correction.\label{fig:workflow}](../doc/_static/workflow_2.png)
+![Cut-planes related to the different process steps appied to the stack presented in the \autoref{fig:PyStack3D}.\label{fig:workflow}](../doc/_static/workflow_2.png)
 
 # Appendice
 
