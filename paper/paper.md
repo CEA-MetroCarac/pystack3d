@@ -35,7 +35,7 @@ bibliography: paper.bib
 
 # Summary
 
-Three-dimensional reconstruction from 2D image stacks is a crucial technique in various scientific domains. For instance, technics such as focused ion beam scanning electron microscopy (FIB-SEM) or time-of-flight secondary ion mass spectrometry (TOF-SIMS) leverage this approach to visualize complex structures at the nanoscale or analyze the distribution of chemical compounds with unprecedented precision. However, creating a "clean" 3D stack often requires image corrections to remove artifacts and inconsistencies, particularly for volume segmentation, a crucial process for 3D quantitative data analysis.
+Three-dimensional reconstruction from 2D image stacks is a crucial technique in various scientific domains. For instance, acquisition technic like focused ion beam scanning electron microscopy (FIB-SEM) leverage this approach to visualize complex structures at the nanoscale. However, creating a "clean" 3D stack often requires image corrections to remove artifacts and inconsistencies, particularly for volume segmentation, a crucial process for 3D quantitative data analysis.
 
 Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source library, that aimed at performing several image ‘cleaning’ tasks in the most integrated and efficient manner possible.
 
@@ -61,7 +61,7 @@ The workflow components currently offered by ``PyStack3D`` are:
 
 * **resampling** to correct non uniform spatial inter-slice distances and enable correct 3D volume reconstructions
 
-* **final cropping** to eliminate artefacts potentially produced near the edges during the image processing or select another ROI at the end.
+* **final cropping** to eliminate artefacts potentially produced near the edges during the image processing or to select another ROI at the end.
 
 Based on a ``.toml`` parameter file, these processing steps can be performed according to the user's desired order.
 
@@ -85,12 +85,12 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 | Process step        | Time (s) |
 |:--------------------|:--------:|
-| cropping            |    28    |
-| bkg_removal         |    33    |
-| destriping          |   314*   |
-| registration        |    17    |
-| intensity_rescaling |    20    |
-| resampling          |    9     |
+| cropping            |    43    |
+| bkg_removal         |    50    |
+| destriping          |   857*   |
+| registration        |    33    |
+| intensity_rescaling |    36    |
+| resampling          |    16    |
 
 **image size**: 4224 x 4224 before cropping / 2000 x 2000 after cropping.
 
