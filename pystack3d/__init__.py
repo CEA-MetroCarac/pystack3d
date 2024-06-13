@@ -184,7 +184,6 @@ class Stack3d:
             Activation key to display the progress bar during the processing
         """
         dir_process = self.pathdir / 'process'
-        history = self.params['history']
 
         if process_steps is None:
             process_steps = self.params['process_steps']
