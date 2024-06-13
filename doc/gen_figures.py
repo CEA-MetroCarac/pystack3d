@@ -33,7 +33,7 @@ def init_synthetic():
     dir_registration = dir_proj / 'process' / 'registration_transformation'
     fname = dir_registration / 'outputs' / 'inds_crop.txt'
     inds_crop = None
-    if os.path.exists(fname):
+    if 'registration_transformation' in process_steps:
         inds_crop = np.loadtxt(fname).astype(int)
 
     return dirnames, labels, inds_crop

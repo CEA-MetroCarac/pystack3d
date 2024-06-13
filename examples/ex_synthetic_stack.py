@@ -51,7 +51,7 @@ def ex_synthetic_stack(process_steps=None, dirfunc=None, nproc=None,
         dir_registration = dir_proj / 'process' / 'registration_transformation'
         fname = dir_registration / 'outputs' / 'inds_crop.txt'
         inds_crop = None
-        if os.path.exists(fname):
+        if 'registration_transformation' in process_steps:
             inds_crop = np.loadtxt(fname).astype(int)
 
         for dirname, label in zip(dirnames, labels):
@@ -66,7 +66,7 @@ def ex_synthetic_stack(process_steps=None, dirfunc=None, nproc=None,
 
             fig = plt.figure(figsize=(5, 4))
             ax = fig.add_subplot(111, projection='3d')
-            ax.set_title(labels[-2])
+            ax.set_title(label)
             plot_cube_faces(arr, ax, show_colorbar=True, vmin=0, vmax=255)
 
         if show_plots:
