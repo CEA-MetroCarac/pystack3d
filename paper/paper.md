@@ -57,17 +57,17 @@ The workflow components currently offered by ``PyStack3D`` are:
 
 * **registration** to correct the images misalignment due to shifting, drift, rotation, … during the images acquisition (based on the ``PyStackReg`` package [@PyStackReg])
 
-* **destriping** to minimize artefacts like stripes or curtains effects that can appear in some image acquisition technics (based on the ``PyVSNR`` package [@pyVSNR], [@VSNR])
+* **destriping** to minimize artefacts like stripes or curtains effects typicaly found in FIB-SEM images (based on the ``PyVSNR`` package [@pyVSNR], [@VSNR])
 
 * **resampling** to correct non uniform spatial inter-slice distances and enable correct 3D volume reconstructions
 
 * **final cropping** to eliminate artefacts potentially produced near the edges during the image processing or to select another ROI at the end.
 
-Based on a ``.toml`` parameter file, these processing steps can be performed according to the user's desired order.
+Based on a ``.toml`` parameter file, these processing steps can be executed according to the user's desired order.
 
 At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean gray values for each slice), along with relevant visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
 
-Note that in the context of FIB-SEM input data, the processing can be carried out on multiple channels corresponding to images from multiple detectors, and automatically incorporating some metadata issued from the equipment.
+Note that the processing can be carried out on multiple channels corresponding to images from multiple detectors, typicaly useful in the context of FIB-SEM input data, and some metadata issued from the equipment can be automatically incorporated when working with a Zeiss microscope.
 
 In conclusion, ``Pystak3D`` has been designed to evolve over time and accommodate new process steps. Its code structure has been crafted to seamlessly integrate new functionalities, leveraging multiprocessing capabilities.
 
