@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 from pystack3d import Stack3d
 from pystack3d.utils_metadata_fibics import params_from_metadata
 
-from examples.utils import init_dir, postpro, plot_results
-from examples.utils import UserTempDirectory  # pylint: disable=unused-import
+from utils import init_dir, postpro, plot_results
+from utils import UserTempDirectory  # pylint: disable=unused-import
 
 ASSETS = Path(__file__).parents[1] / 'assets'
 DATA = ASSETS / 'stacks' / 'stack_1'

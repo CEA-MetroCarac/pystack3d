@@ -8,8 +8,8 @@ from tempfile import TemporaryDirectory
 
 from pystack3d import Stack3d
 
-from examples.utils import init_dir
-from examples.utils import UserTempDirectory  # pylint: disable=unused-import
+from utils import init_dir
+from utils import UserTempDirectory  # pylint: disable=unused-import
 
 ASSETS = Path(__file__).parents[1] / 'assets'
 DATA = ASSETS / 'stacks' / 'stack_1'
