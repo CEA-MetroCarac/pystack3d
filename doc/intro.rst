@@ -58,17 +58,21 @@ Here is an example of processing times associated with the example provided `her
    * - Process
      - Time (s)
    * - cropping
-     - 28
+     - 30
    * - bkg_removal
-     - 33
+     - 40
    * - destriping
-     - 314*
+     - 480*
+   * - registration**
+     - 24
    * - intensity_rescaling
-     - 20
+     - 24
    * - resampling
-     - 9
+     - 11
 
 (*) **destriping** calculation performed on a GPU Nvidia A-100, with images processed one by one.
+
+(**) **registration_calculation** and **registration_transformation** cumulative time
 
 Install
 -------
