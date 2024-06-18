@@ -76,12 +76,7 @@ Here is an example of processing times associated with the example provided `her
 
 Install
 -------
-
-The ``pystack3d`` package install can be done via a git cloning::
-
-    git clone https://github.com/CEA-MetroCarac/pystack3d.git
-
-or by a pypi install::
+::
 
     pip install pystack3d
 
@@ -94,13 +89,23 @@ or by a pypi install::
 Tests and examples execution
 ----------------------------
 
-::
+For tests and examples execution, the full ``pystack3d`` project has to be installed via ``git``::
 
+    git clone https://github.com/CEA-MetroCarac/pystack3d.git
+    cd [path_to_your_pystack3d_project]
+
+Once the project has been cloned, the python environment has to be created and completed with the ``pytest`` package (for testing)::
+
+    pip install poetry
+    poetry install
     pip install pytest
-    cd pystack3d
+
+Then the tests and the examples can be executed as follows::
+
     pytest
-    python examples/ex_synthetic_stack.py
-    python examples/ex_real_stack.py
+    cd examples
+    python ex_synthetic_stack.py
+    python ex_real_stack.py
 
 
 Acknowledgements

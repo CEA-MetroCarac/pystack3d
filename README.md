@@ -45,13 +45,28 @@ pip install pystack3d
 
 ## Tests and examples execution
 
+For tests and examples execution, the full ``pystack3d`` project has to be installed via ``git``:
+
 ```
-pip install pytest
-git clone https://github.com/CEA-MetroCarac/pystack3d.git
-cd pystack3d
-pytest
-python examples/ex_synthetic_stack.py
-python examples/ex_real_stack.py
+    git clone https://github.com/CEA-MetroCarac/pystack3d.git
+    cd [path_to_your_pystack3d_project]
+```
+
+Once the project has been cloned, the python environment has to be created and completed with the ``pytest`` package (for testing):
+
+```
+    pip install poetry
+    poetry install
+    pip install pytest
+```
+
+Then the tests and the examples can be executed as follows:
+
+```
+    pytest
+    cd examples
+    python ex_synthetic_stack.py
+    python ex_real_stack.py
 ```
 
 ## Acknowledgements
