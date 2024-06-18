@@ -1,6 +1,6 @@
 #input_dirname = ""
-ind_min = 1
-ind_max = 9999
+ind_min = 0
+ind_max = 99999
 channels = ['.']
 nproc = 1
 process_steps = [
