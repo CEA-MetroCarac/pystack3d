@@ -83,21 +83,21 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 **Processing time for a stack composed of 2000 slices** (from [ex_real_stack_perf.py](https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py))
 
-| Process step        | Time (s) |
-|:--------------------|:--------:|
-| cropping            |    30    |
-| bkg_removal         |    40    |
-| destriping          |   480*   |
-| registration**      |    24    |
-| intensity_rescaling |    24    |
-| resampling          |    11    |
+| Process step               | Time (s) |
+|:---------------------------|:--------:|
+| cropping                   |    30    |
+| bkg_removal                |    40    |
+| destriping<sup>(1)</sup>   |   480    |
+| registration<sup>(2)</sup> |    24    |
+| intensity_rescaling        |    24    |
+| resampling                 |    11    |
 
 **image size**: 4224 x 4224 before cropping / 2000 x 2000 after cropping.
 
 **Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz.
 
-(*) **destriping** calculation performed on a GPU Nvidia A-100 with images processed one by one.
+<sup>(1)</sup> **destriping** calculation performed on a GPU Nvidia A-100 with images processed one by one.
 
-(**) **registration_calculation** and **registration_transformation** cumulative time
+<sup>(2)</sup> **registration_calculation** and **registration_transformation** cumulative time
 
 # References
