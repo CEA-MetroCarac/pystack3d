@@ -209,10 +209,6 @@ class Stack3d:
                 print(f"'{process_step}' has already been processed")
                 continue
 
-            nproc = self.params['nproc']
-            if process_step == 'destriping':
-                nproc = 1
-
             # input directory
             last_step_dir = self.pathdir  # default input directory
             if len(history) > 0:
