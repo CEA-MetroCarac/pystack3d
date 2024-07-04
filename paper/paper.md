@@ -87,8 +87,8 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 |:--------------------|:--------:|
 | cropping            |    30    |
 | bkg_removal         |    40    |
-| destriping[^1]      |   480    |
-| registration[^2]    |    24    |
+| destriping          |   700*   |
+| registration        |    24    |
 | intensity_rescaling |    24    |
 | resampling          |    11    |
 
@@ -96,8 +96,6 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 **Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz.
 
-[^1]: **destriping** calculation performed on a GPU Nvidia A-100 with images processed one by one.
-
-[^2]: **registration_calculation** and **registration_transformation** cumulative time
+(*) 120s with a GPU Nvidia A-100.
 
 # References
