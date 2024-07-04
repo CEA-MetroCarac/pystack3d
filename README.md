@@ -69,6 +69,17 @@ Then the tests and the examples can be executed as follows:
     python ex_real_stack.py
 ```
 
+## Usage
+
+Refer to the [PyStack3D documentation](https://cea-metrocarac.github.io/pystack3d/doc/getting_started.html).
+
+
+## Contributing / Reporting an issue
+
+Contributions and issue reporting are more than welcome!
+Please read through [our Developers notes](https://cea-metrocarac.github.io/pystack3d/doc/dev_notes.html).
+
+
 ## Acknowledgements
 
 This work, carried out on the CEA - Platform for Nanocharacterisation (PFNC), was supported by the “Recherche Technologique de Base” program of the French National Research Agency (ANR).
