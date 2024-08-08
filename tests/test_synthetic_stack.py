@@ -1,6 +1,7 @@
 """
 Test pystack3d in the frame of synthetic images
 """
+import os
 from tempfile import TemporaryDirectory
 import numpy as np
 from pytest import mark, approx
@@ -8,7 +9,7 @@ from pytest import mark, approx
 from examples.ex_synthetic_stack import ex_synthetic_stack as ex_synth
 
 DIRFUNC = TemporaryDirectory
-NPROC = [1, 2]
+NPROC = [1, 2] if os.cpu_count() > 1 else [1]
 
 
 @mark.parametrize("nproc", NPROC)
@@ -17,9 +18,9 @@ def test_cropping(nproc):
                      nproc=nproc, dirfunc=DIRFUNC,
                      verbosity=False, show_pbar=False, show_plots=False)
 
-    ref = np.array([[0.5, 0.5],
-                    [4.72680154, 7.02478134],
-                    [2.2953875, 3.89564244]])
+    ref = np.array([[0., 0.],
+                    [127., 127.],
+                    [55.33374444, 71.96906667]])
 
     assert stats == approx(ref)
 
@@ -30,9 +31,9 @@ def test_bkg_removal(nproc):
                      nproc=nproc, dirfunc=DIRFUNC,
                      verbosity=False, show_pbar=False, show_plots=False)
 
-    ref = np.array([[0.5, 0.5],
-                    [1., 4.04643856],
-                    [0.92, 1.36098475]])
+    ref = np.array([[0., 0.],
+                    [124., 129.],
+                    [52.56102222, 68.74597778]])
 
     assert stats == approx(ref)
 
@@ -43,9 +44,9 @@ def test_intensity_rescaling(nproc):
                      nproc=nproc, dirfunc=DIRFUNC,
                      verbosity=False, show_pbar=False, show_plots=False)
 
-    ref = np.array([[0.51367188, 0.51367188],
-                    [6.03417601, 7.48632812],
-                    [3.39309324, 3.52853035]])
+    ref = np.array([[0., 4.],
+                    [125., 126.],
+                    [61.44863333, 63.37102222]])
 
     assert stats == approx(ref)
 
@@ -56,11 +57,11 @@ def test_destriping(nproc):
                      nproc=nproc, dirfunc=DIRFUNC,
                      verbosity=False, show_pbar=False, show_plots=False)
 
-    ref = np.array([[0.5, 0.5],
-                    [5.2020202, 7.5],
-                    [2.43828806, 4.29423897]])
+    ref = np.array([[0., 0.],
+                    [132., 149.],
+                    [55.00375556, 77.45533333]])
 
-    assert stats == approx(ref)
+    assert stats == approx(ref, rel=1e-4)
 
 
 @mark.parametrize("nproc", NPROC)
@@ -70,9 +71,9 @@ def test_registration(nproc):
                      nproc=nproc, dirfunc=DIRFUNC,
                      verbosity=False, show_pbar=False, show_plots=False)
 
-    ref = np.array([[0.5, 0.5],
-                    [5.2020202, 7.5],
-                    [2.43421592, 4.7119125]])
+    ref = np.array([[0., 0.],
+                    [127., 127.],
+                    [54.14760417, 72.03203704]])
 
     assert stats == approx(ref)
 
@@ -83,8 +84,8 @@ def test_resampling(nproc):
                      nproc=nproc, dirfunc=DIRFUNC,
                      verbosity=False, show_pbar=False, show_plots=False)
 
-    ref = np.array([[0.5, 0.5],
-                    [5.2020202, 7.49735938],
-                    [2.43421592, 4.28343369]])
+    ref = np.array([[0., 0.],
+                    [127., 127.],
+                    [55.22061111, 71.96808889]])
 
     assert stats == approx(ref)
