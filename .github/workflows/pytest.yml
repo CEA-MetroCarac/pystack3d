@@ -31,4 +31,5 @@ jobs:
         run: |
           export DISPLAY=:99
           Xvfb :99 &
+          cd test
           python -m pytest tests/
