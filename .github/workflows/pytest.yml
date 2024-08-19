@@ -28,8 +28,6 @@ jobs:
           python -m pip install pytest
           python -m pip install .
       - name: Test with pytest
-        run: |
-          export DISPLAY=:99
-          Xvfb :99 &
-          cd tests
-          python -m pytest
+        env:
+          PYTHONPATH: ${{ github.workspace }}/examples:${PYTHONPATH}
+        run: python -m pytest tests/
