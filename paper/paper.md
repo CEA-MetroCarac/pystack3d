@@ -93,6 +93,8 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 ![Cut-planes related to the different process steps applied to the stack presented in the \autoref{fig:PyStack3D}.\label{fig:workflow}](../doc/_static/workflow_2.png)
 
+\newpage
+
 # Appendix
 
 **Processing time for a stack composed of 2000 slices** (from [ex_real_stack_perf.py](https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py))
