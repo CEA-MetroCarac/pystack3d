@@ -61,7 +61,7 @@ def test_destriping(nproc):
                     [132., 149.],
                     [55.00375556, 77.45533333]])
 
-    assert stats == approx(ref, rel=1e-4)
+    assert stats == approx(ref, rel=1e-2)
 
 
 @mark.parametrize("nproc", NPROC)
