@@ -35,7 +35,7 @@ bibliography: paper.bib
 
 # Summary
 
-Three-dimensional reconstruction from 2D image stacks is a crucial technique in various scientific domains. For instance, acquisition technic like focused ion beam scanning electron microscopy (FIB-SEM) leverage this approach to visualize complex structures at the nanoscale. However, creating a "clean" 3D stack often requires image corrections to remove artifacts and inconsistencies, particularly for volume segmentation, a crucial process for 3D quantitative data analysis.
+Three-dimensional reconstruction from 2D image stacks is a crucial technique in various scientific domains. For instance, acquisition techniques like Focused Ion Beam Scanning Electron Microscopy (FIB-SEM) leverage this approach to visualize complex structures at the nanoscale. However, creating a "clean" 3D stack often requires image corrections to remove artifacts and inconsistencies, particularly for volume segmentation, a crucial process for 3D quantitative data analysis.
 
 Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source library, that aimed at performing several image ‘cleaning’ tasks in the most integrated and efficient manner possible.
 
@@ -43,11 +43,27 @@ Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source li
 
 # Statement of need
 
+Accurate 3D reconstruction is crucial for extracting detailed features across various imaging techniques.
+In life sciences, for instance, this includes identifying cellular organelles, understanding tissue architecture, and studying protein localization.
+In energy materials, precise imaging is necessary for analyzing porous structures, mapping catalyst particles, and assessing battery electrode interfaces.
+Various imaging methods, such as confocal microscopy, light sheet microscopy, and electron tomography, often introduce distortions or misalignments due to factors like optical aberrations, sample movement, and inconsistent illumination.
+These issues become even more pronounced with FIB-SEM [@Hoflich], where artifacts from the milling process and variations in sample preparation can further complicate the 3D stack.
+Effective correction of these distortions is essential for reliable segmentation and accurate feature extraction [@Osenberg].
+
+# Statement of field
+
 Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in Java, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, most of these macros do not support multiprocessing, resulting in processing times that can span hours for stacks composed of several thousand images.
 
-As an alternative, ``PyStack3D`` has been developed to achieve processing times of just a few minutes through its full multiprocessing capabilities (see [Appendix](#appendix)), enabling easy workflow stopping, readjusting and restarting. In addition, slices are loaded and processed one by one, reducing the memory footprint even in the case of very large datasets. At last, it is a tool that can be easily used into a workflow using Python scripting.
+As an alternative, ``PyStack3D`` like other codes [@Kreinin], [@Napari] have been developed or are currently under development these last years to achieve processing times of just a few minutes thanks to multiprocessing capabilities (see [Appendix](#appendix)).
+This is intended to allow users to easily stop a workflow, adjust the parameters, and restart it if necessary.
 
-The workflow components currently offered by ``PyStack3D`` are:
+# Implementation
+
+In ``PyStack3D``, to reduce the memory footprint, slices are loaded and processed one by one either on a single processor or across multiple processors, depending on the user's machine capabilities.
+
+A ``PyStack3D`` processing consists of a workflow made up of multiple processing steps, specified in a ``.toml`` parameter file, which can be executed in the order desired by the user.
+
+The processing steps currently offered by ``PyStack3D`` are:
 
 * **cropping** to reduce the image field of view to the users ROI (Region Of Interest)
 
@@ -63,11 +79,9 @@ The workflow components currently offered by ``PyStack3D`` are:
 
 * **final cropping** to eliminate artefacts potentially produced near the edges during the image processing or to select another ROI at the end.
 
-Based on a ``.toml`` parameter file, these processing steps can be executed according to the user's desired order.
+At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean values for each slice), along with relevant visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
 
-At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean gray values for each slice), along with relevant visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
-
-Note that the processing can be carried out on multiple channels corresponding to images from multiple detectors, typically useful in the context of FIB-SEM input data, and some metadata issued from the equipment can be automatically incorporated when working with a Zeiss microscope.
+Note that the processing can be carried out on multiple channels corresponding to images issued from multiple detectors, typically useful in the context of FIB-SEM input data. Moreover, when working with a Zeiss microscope, some metadata issued from the equipment can be automatically incorporated in the input ``.toml`` parameter file.
 
 In conclusion, ``Pystak3D`` has been designed to evolve over time and accommodate new process steps. Its code structure has been crafted to seamlessly integrate new functionalities, leveraging multiprocessing capabilities.
 
