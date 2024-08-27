@@ -44,22 +44,22 @@ Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source li
 # Statement of need
 
 Accurate 3D reconstruction is crucial for extracting detailed features across various imaging techniques.
-In life sciences, for instance, this includes identifying cellular organelles, understanding tissue architecture, and studying protein localization.
-In energy materials, precise imaging is necessary for analyzing porous structures, mapping catalyst particles, and assessing battery electrode interfaces.
-Various imaging methods, such as confocal microscopy, light sheet microscopy, and electron tomography, often introduce distortions or misalignments due to factors like optical aberrations, sample movement, and inconsistent illumination.
+In **life sciences**, for instance, this includes identifying cellular organelles, understanding tissue architecture or studying protein localization.
+In **energy materials**, precise imaging is necessary for analyzing porous structures, mapping catalyst particles or assessing battery electrode interfaces.
+Various imaging methods, such as confocal microscopy, light sheet microscopy, and electron tomography, often introduce distortions or misalignments due to factors like optical aberrations, sample movement or inconsistent illumination.
 These issues become even more pronounced with FIB-SEM [@Hoflich], where artifacts from the milling process and variations in sample preparation can further complicate the 3D stack.
+
 Effective correction of these distortions is essential for reliable segmentation and accurate feature extraction [@Osenberg].
 
 # Statement of field
 
 Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in Java, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, most of these macros do not support multiprocessing, resulting in processing times that can span hours for stacks composed of several thousand images.
 
-As an alternative, ``PyStack3D`` like other codes [@Kreinin], [@Napari] have been developed or are currently under development these last years to achieve processing times of just a few minutes thanks to multiprocessing capabilities (see [Appendix](#appendix)).
-This is intended to allow users to easily stop a workflow, adjust the parameters, and restart it if necessary.
+As an alternative, ``PyStack3D``, like other codes [@Kreinin], [@Napari] has been developed in recent years to achieve processing times of just a few minutes thanks to multiprocessing capabilities (see [Appendix](#appendix)), allowing users to easily stop a workflow, adjust the parameters, and restart it if necessary.
 
 # Implementation
 
-In ``PyStack3D``, to reduce the memory footprint, slices are loaded and processed one by one either on a single processor or across multiple processors, depending on the user's machine capabilities.
+In ``PyStack3D``, to reduce the memory footprint, slices/frames are loaded and processed one by one either on a single processor or across multiple processors, depending on the user's machine capabilities.
 
 A ``PyStack3D`` processing consists of a workflow made up of multiple processing steps, specified in a ``.toml`` parameter file, which can be executed in the order desired by the user.
 
