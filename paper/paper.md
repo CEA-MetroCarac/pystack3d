@@ -53,33 +53,33 @@ Effective correction of these distortions is essential for reliable segmentation
 
 # Statement of field
 
-Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in Java, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, most of these macros do not support multiprocessing, resulting in processing times that can span hours for stacks composed of several thousand images.
+Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in **Java**, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, not all the macros needed to perform the stack corrections exist, and the existing macros do not all support multiprocessing, which can lead to processing times of several hours for stacks composed of thousands of images (see [Appendix](#appendix)).
 
-As an alternative, ``PyStack3D``, like other codes [@Kreinin], [@Napari] has been developed in recent years to achieve processing times of just a few minutes thanks to multiprocessing capabilities (see [Appendix](#appendix)), allowing users to easily stop a workflow, adjust the parameters, and restart it if necessary.
+As an alternative, codes written in **Python** like ``Hifiem`` [@Kreinin] or ``Napari`` [@Napari] have been developed in recent years to achieve processing times of just a few minutes thanks to multiprocessing capabilities. ``PyStack3D``, whose project started in 2020, is part of this trend. Designed to be executed as a workflow, ``PyStack3D`` aims to enable users to easily manage the automation of such workflows. With the quickly obtained results, users can easily readjust the parameters, and restart the processing if needed.
 
 # Implementation
 
-In ``PyStack3D``, to reduce the memory footprint, slices/frames are loaded and processed one by one either on a single processor or across multiple processors, depending on the user's machine capabilities.
+In ``PyStack3D``, to reduce the memory footprint, images (called "slices") are loaded and processed one by one either on a single processor or across multiple processors, depending on the user's machine capabilities.
 
-A ``PyStack3D`` processing consists of a workflow made up of multiple processing steps, specified in a ``.toml`` parameter file, which can be executed in the order desired by the user.
+The ``PyStack3D`` workflow is made up of multiple processing steps, specified in a ``.toml`` parameter file, and executed in the order desired by the user.
 
 The processing steps currently offered by ``PyStack3D`` are:
 
 * **cropping** to reduce the image field of view to the users ROI (Region Of Interest)
 
-* **background removal** to reduce, from polynomial approximations, large-scaled brightness and contrast variations issued for instance from shadowing or charging effects in FIB-SEM images acquisition
+* **background removal** to reduce, from 2D or 3D polynomial approximations, large-scaled brightness and contrast variations issued for instance from shadowing or charging effects in FIB-SEM images acquisition
 
-* **intensity rescaling** to homogenize the ‘gray’ intensity distribution between successive slices
+* **intensity rescaling** to homogenize the ‘gray’ intensity distribution between successive slices and smooth out abrupt intensity jumps that can occur due for instance to variations in the beam source.
 
 * **registration** to correct the images misalignment due to shifting, drift, rotation, … during the images acquisition (based on the ``PyStackReg`` package [@PyStackReg])
 
-* **destriping** to minimize artefacts like stripes or curtains effects typicaly found in FIB-SEM images (based on the ``PyVSNR`` package [@pyVSNR], [@VSNR])
+* **destriping** to minimize artefacts like stripes or curtains effects typically found in FIB-SEM images (based on the ``PyVSNR`` package [@pyVSNR], [@VSNR])
 
-* **resampling** to correct non uniform spatial inter-slice distances and enable correct 3D volume reconstructions
+* **resampling** to correct non-uniform spatial inter-slice distances and enable correct 3D volume reconstructions
 
 * **final cropping** to eliminate artefacts potentially produced near the edges during the image processing or to select another ROI at the end.
 
-At the end of each process step, statistical profiles are automatically generated (showing the evolution of minimum, maximum, and mean values for each slice), along with relevant visualizations specific to the processing performed. In addition, a 3D and 2D rendering (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
+At the end of each process step, ``PyStack3D`` provides statistical profiles like evolution of minimum, maximum, and mean values for each slice, and relevant visualizations specific to the processing performed. In addition, 3D and 2D plots (cut-planes) akin to those shown in (\autoref{fig:PyStack3D}) and (\autoref{fig:workflow}) respectively can be produced.
 
 Note that the processing can be carried out on multiple channels corresponding to images issued from multiple detectors, typically useful in the context of FIB-SEM input data. Moreover, when working with a Zeiss microscope, some metadata issued from the equipment can be automatically incorporated in the input ``.toml`` parameter file.
 
@@ -99,19 +99,21 @@ This work, carried out on the CEA-Platform for Nanocharacterisation (PFNC), was 
 
 **Processing time for a stack composed of 2000 slices** (from [ex_real_stack_perf.py](https://github.com/CEA-MetroCarac/pystack3d/blob/main/examples/ex_real_stack_perf.py))
 
-| Process step        | Time (s) |
-|:--------------------|:--------:|
-| cropping            |    30    |
-| bkg_removal         |    40    |
-| destriping          |   700*   |
-| registration        |    24    |
-| intensity_rescaling |    24    |
-| resampling          |    11    |
+| Process step          | Fiji (s) | PyStak3D (s) | 
+|:----------------------|:--------:|:------------:|
+| cropping              |   750    |      30      |  
+| bkg_removal (2D / 3D) | 250 / -  |   70 / 40*   | 
+| destriping            |  22400   |    700**     |  
+| registration          |   5400   |      25      |   
+| intensity_rescaling   |    -     |      25      |   
+| resampling            |    -     |      10      |    
 
 **image size**: 4224 x 4224 before cropping / 2000 x 2000 after cropping.
 
 **Machine**: Linux - **32 CPUs** Intel(R) Xeon(R) Platinum 8362 CPU @ 2.80GHz.
 
-(*) 120s with a GPU Nvidia A-100.
+(*) in 3D the polynomial coefficients are calculated only once, unlike in 2D, where the coefficients are recalculated for each slice.
+
+(**) 120s with a GPU Nvidia A-100.
 
 # References
