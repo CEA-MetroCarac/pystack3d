@@ -55,8 +55,7 @@ For tests and examples execution, the full ``pystack3d`` project has to be insta
 Once the project has been cloned, the python environment has to be created and completed with the ``pytest`` package (for testing):
 
 ```
-    pip install poetry
-    poetry install
+    pip install .
     pip install pytest
 ```
 
@@ -73,12 +72,10 @@ Then the tests and the examples can be executed as follows:
 
 Refer to the [PyStack3D documentation](https://cea-metrocarac.github.io/pystack3d/doc/getting_started.html).
 
-
 ## Contributing / Reporting an issue
 
 Contributions and issue reporting are more than welcome!
 Please read through [our Developers notes](https://cea-metrocarac.github.io/pystack3d/doc/dev_notes.html).
-
 
 ## Acknowledgements
 

@@ -94,8 +94,7 @@ For tests and examples execution, the full ``pystack3d`` project has to be insta
 
 Once the project has been cloned, the python environment has to be created and completed with the ``pytest`` package (for testing)::
 
-    pip install poetry
-    poetry install
+    pip install .
     pip install pytest
 
 Then the tests and the examples can be executed as follows::
