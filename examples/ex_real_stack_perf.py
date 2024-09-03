@@ -8,8 +8,12 @@ from tempfile import TemporaryDirectory
 
 from pystack3d import Stack3d
 
-from utils import init_dir
-from utils import UserTempDirectory  # pylint: disable=unused-import
+try:
+    from utils import init_dir
+    from utils import UserTempDirectory  # pylint: disable=unused-import
+except ModuleNotFoundError:
+    from examples.utils import init_dir
+    from examples.utils import UserTempDirectory
 
 ASSETS = Path(__file__).parents[1] / 'assets'
 DATA = ASSETS / 'stacks' / 'stack_1'

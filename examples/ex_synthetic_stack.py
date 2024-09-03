@@ -3,20 +3,22 @@ Examples with a synthetic stack
 """
 import os
 from pathlib import Path
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory  # pylint: disable=unused-import
 import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy.ndimage import shift
 from tifffile import imwrite, imread
-from skimage.draw import line
 from pyvsnr.utils import curtains_addition
 
 import pystack3d
 from pystack3d import Stack3d
 
-from examples.utils import init_dir, postpro, plot_results, plot_cube_faces
-from examples.utils import UserTempDirectory
+try:
+    from utils import init_dir, postpro, plot_results, plot_cube_faces
+    from utils import UserTempDirectory  # pylint: disable=unused-import
+except ModuleNotFoundError:
+    from examples.utils import init_dir, postpro, plot_results, plot_cube_faces
+    from examples.utils import UserTempDirectory
 
 POLICY = "slice_{slice_nb}_z={z_coord}um.tif"
 
