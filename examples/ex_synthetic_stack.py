@@ -15,8 +15,8 @@ from pyvsnr.utils import curtains_addition
 import pystack3d
 from pystack3d import Stack3d
 
-from utils import init_dir, postpro, plot_results, plot_cube_faces
-from utils import UserTempDirectory
+from examples.utils import init_dir, postpro, plot_results, plot_cube_faces
+from examples.utils import UserTempDirectory
 
 POLICY = "slice_{slice_nb}_z={z_coord}um.tif"
 
