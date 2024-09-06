@@ -41,8 +41,9 @@ def save_tif(arr, fname, fname_out):
     with TiffFile(fname) as fid:
         tags, extra_tags = get_tags(fid)
 
+    compression = tags[259].value if 259 in tags else None
     with TiffWriter(fname_out) as fid:
-        fid.write(arr, extratags=extra_tags, compression=tags[259].value)
+        fid.write(arr, extratags=extra_tags, compression=compression)
 
 
 def img_reformatting(arr, dtype):
