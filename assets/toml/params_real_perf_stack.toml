@@ -1,4 +1,4 @@
-#input_dirname = ""
+#dirname = "C:\\Users\\..."
 ind_min = 0
 ind_max = 99999
 channels = ['.']

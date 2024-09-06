@@ -60,7 +60,7 @@ class Stack3d:
             self.fname_toml = input_name
             with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
-                self.pathdir = self.pathdir["dirname"]
+                self.pathdir = Path(self.params["dirname"])
 
         elif os.path.isdir(input_name) or input_name is None:
             input_name = input_name or '.'
