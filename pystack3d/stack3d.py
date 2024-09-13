@@ -28,13 +28,14 @@ PROCESS_STEPS = ['cropping', 'bkg_removal',
                  'registration_calculation', 'registration_transformation',
                  'destriping', 'resampling', 'cropping_final']
 CMAP = plt.get_cmap("tab10")
+ASSETS = os.path.join(__file__, "..", "..", "assets")
 
 plt.rcParams['savefig.dpi'] = 300
 
 
 class Stack3d:
     """
-    Class dedicated to Stack3d workflow management
+    Class dedicated to the Stack3d workflow
 
     Attributes
     ----------
@@ -44,14 +45,19 @@ class Stack3d:
     last_step_dir: str
         Dirname related to the last step of the workflow execution.
         For the first step, 'last_step_dir' corresponds to 'pathdir'
+    fname_toml: str
+        Filename of the '.toml' file defining the workflow parameters
+    params: dict
+        Dictionary defining the workflow parameters
 
     Arguments
     ---------
-    pathdir: Path, optional
-        Path related to the dirname where the .tif images are stored with the
-        related metadata.
+    input_name: str, optional
+        Pathname related to the project dirname where the .tif images are stored
+         OR the filename related to the .toml file defining all the workflow
+         parameters (requiring to set the project 'dirname' parameter inside).
         If None, consider the directory where the python script has been
-        executed
+        launched and the .toml and .tif files located inside.
     """
 
     def __init__(self, input_name=None):
@@ -62,14 +68,27 @@ class Stack3d:
                 self.params = load(fid)
                 self.pathdir = Path(self.params["dirname"])
 
-        elif os.path.isdir(input_name) or input_name is None:
-            input_name = input_name or '.'
+        elif input_name is None or os.path.isdir(input_name):
+            input_name = input_name or os.getcwd()
             self.pathdir = Path(input_name)
             fnames = list(self.pathdir.glob("*.toml"))
             if len(fnames) == 0:
-                raise IOError(f"there is no '.toml' file in {input_name}")
+                src = Path(ASSETS) / 'toml' / 'params_synthetic_stack.toml'
+                dst = self.pathdir / 'params.toml'
+                shutil.copy2(src, dst)
+                msg = "\n***************************************************\n"
+                msg += "No '.toml' file has been found in {}\n"
+                msg += "A default '.toml' file has been put in your directory\n"
+                msg += "You have now to adapt the parameters values inside"
+                msg += "\n***************************************************\n"
+                raise IOError(msg.format(input_name))
             if len(fnames) > 1:
-                raise IOError(f"there is too much '.toml' file in {input_name}")
+                msg = "\n***************************************************\n"
+                msg += "More than 1 '.toml' file have been found in {}\n"
+                msg += "Please, select and pass to Stack3d(input_name='...') " \
+                       "the one you want to work with\n"
+                msg += "\n***************************************************\n"
+                raise IOError(msg.format(input_name))
             self.fname_toml = fnames[0]
 
             with open(self.fname_toml, 'rb') as fid:
@@ -447,3 +466,6 @@ def pbar_update(queue_incr, nslices, overlay, nproc):
             exec_time = time.time() - t0
         sys.stdout.write(pbar.format(cursor, percent, count, ntot, exec_time))
     print()
+
+
+Stack3d()
