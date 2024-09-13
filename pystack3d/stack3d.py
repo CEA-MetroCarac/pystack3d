@@ -466,6 +466,3 @@ def pbar_update(queue_incr, nslices, overlay, nproc):
             exec_time = time.time() - t0
         sys.stdout.write(pbar.format(cursor, percent, count, ntot, exec_time))
     print()
-
-
-Stack3d()
