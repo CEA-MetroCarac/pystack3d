@@ -9,7 +9,7 @@ dynamic = ["version"]
 authors = [{ name = "Patrick Quéméré", email = "patrick.quemere@cea.fr" }]
 description = "Pystack3D: A Python package for fast image stack correction"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10, <3.12"
 keywords = ["PyStack3D", "stack", "images", "FIB-SEM", "processing",
     "correction", "cropping", "background removal", "registration",
     "intensity rescaling", "destriping", "curtains", "resampling",
@@ -26,7 +26,7 @@ classifiers = [
     'Environment :: Console',
 ]
 dependencies = [
-    "numpy",
+    "numpy<2", # pystackreg does not support numpy.2.x
     "matplotlib",
     "scipy",
     "scikit-image",
