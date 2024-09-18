@@ -26,4 +26,5 @@ TODO List
 ---------
 
 * add a GUI
-* make a 'multi-framed' pyvsnr
+* (registration) consider a non-rigid transformation representing the drift during a frame scan
+* (intensity rescaling) take into account beam source variation
