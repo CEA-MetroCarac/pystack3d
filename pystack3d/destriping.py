@@ -49,10 +49,11 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
     """
     pid_0 = inds_partition[0] == 0  # first thread
 
-    wdec = wavelet_decomposition
-    wavelet = wdec['wavelet'] if 'wavelet' in wdec else None
-    level = wdec['level'] if 'level' in wdec else None
-    sigma = wdec['sigma'] if 'sigma' in wdec else None
+    if wavelet_decomposition is not None:
+        wdec = wavelet_decomposition
+        wavelet = wdec['wavelet'] if 'wavelet' in wdec else None
+        level = wdec['level'] if 'level' in wdec else None
+        sigma = wdec['sigma'] if 'sigma' in wdec else None
 
     stats = []
     for fname in fnames:
