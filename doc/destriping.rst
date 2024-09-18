@@ -3,7 +3,7 @@ Destriping
 
 The destriping process step aims at minimizing artefacts like stripes or curtaining effects that can appear in some image acquisition technics (typically FIB-SEM).
 
-The algorithm used for the destriping is issued from the `pyvnsr <https://github.com/CEA-MetroCarac/pyvsnr>`_ library.
+The main algorithm used for the destriping is issued from the `pyvnsr <https://github.com/CEA-MetroCarac/pyvsnr>`_ library. A second algorithm based on wavelet decomposition (from `Münch B. et al. <https://doi.org/10.1364/OE.17.008567>`_) is also available and may be suitable for fast removal of vertical stripes.
 
 
 .. figure:: _static/destriping_3D.png
@@ -31,3 +31,12 @@ The algorithm used for the destriping is issued from the `pyvnsr <https://github
 ``filters`` consists of a list of filters to be used during the destriping process and are related to the shape and intensity of the stripes to be removed.
 
 For each of these parameters, see the `pyvnsr <https://github.com/CEA-MetroCarac/pyvsnr>`_ documentation for more details.
+
+In the frame of **wavelet decomposition**::
+
+    [destriping]
+    wavelet_decomposition = {'wavelet':'coif3', 'level':4, 'sigma':4}
+
+``wavelet`` and  ``level`` refer respectively to the wavelet name family to use (see `pywt.wavelist <https://pywavelets.readthedocs.io/en/latest/ref/wavelets.html#pywt.wavelist>`_)  and the level of decomposition.
+
+``sigma`` is related to the standard deviation to be considered in the gaussian filter applied during the wavelet decomposition.

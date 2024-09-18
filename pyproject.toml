@@ -35,6 +35,7 @@ dependencies = [
     "statsmodels",
     "pystackreg",
     "pyvsnr",
+    "pywt",
     "Pillow",
     "tifffile",
     "tomli",

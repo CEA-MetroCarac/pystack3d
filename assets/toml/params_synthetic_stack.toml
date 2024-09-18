@@ -37,6 +37,7 @@ filter_size = -1
 maxit = 50
 cvg_threshold = 1e-2
 filters = [{ name = "Gabor", noise_level = 200, sigma = [2, 80], theta = 10 }]
+#wavelet_decomposition = {'wavelet':'coif3', 'level':4, 'sigma':4}
 
 [registration_calculation]
 #area = [5, 35, 5, 35]
