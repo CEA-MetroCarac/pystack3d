@@ -49,13 +49,13 @@ In **energy materials**, precise imaging is necessary for analyzing porous struc
 Various imaging methods, such as confocal microscopy, light sheet microscopy, and electron tomography, often introduce distortions or misalignments due to factors like optical aberrations, sample movement or inconsistent illumination.
 These issues become even more pronounced with FIB-SEM [@Hoflich], where artifacts from the milling process and variations in sample preparation can further complicate the 3D stack.
 
-Effective correction of these distortions is essential for reliable segmentation and accurate feature extraction [@Osenberg].
+Effective correction of these distortions is essential for reliable segmentation and accurate feature extraction [@Osenberg], [@SPEHNER].
 
 # Statement of field
 
 Certainly, one of the most widely used open-source software for performing image stack corrections is the Fiji software [@Fiji], a distribution of ImageJ. Written in **Java**, this software offers numerous macros for the analysis and processing of 2D and 3D images. Unfortunately, not all the macros needed to perform the stack corrections exist, and the existing macros do not all support multiprocessing, which can lead to processing times of several hours for stacks composed of thousands of images (see [Appendix](#appendix)).
 
-As an alternative, codes written in **Python** like ``Hifiem`` [@Kreinin] or ``Napari`` [@Napari] have been developed in recent years to achieve processing times of just a few minutes thanks to multiprocessing capabilities. ``PyStack3D``, whose project started in 2020, is part of this trend. Designed to be executed as a workflow, ``PyStack3D`` aims to enable users to easily manage the automation of such workflows. With the quickly obtained results, users can easily readjust the parameters, and restart the processing if needed.
+As an alternative, codes written in **Python** like ``Hifiem`` [@Kreinin], ``PolishEM`` [@polishEM] or ``Napari`` [@Napari] have been developed in recent years to achieve processing times of just a few minutes thanks to multiprocessing capabilities. ``PyStack3D``, whose project started in 2020, is part of this trend. Designed to be executed as a workflow, ``PyStack3D`` aims to enable users to easily manage the automation of such workflows. With the quickly obtained results, users can easily readjust the parameters, and restart the processing if needed.
 
 # Implementation
 
@@ -73,7 +73,7 @@ The processing steps currently offered by ``PyStack3D`` are:
 
 * **registration** to correct the images misalignment due to shifting, drift, rotation, … during the images acquisition (based on the ``PyStackReg`` package [@PyStackReg])
 
-* **destriping** to minimize artefacts like stripes or curtains effects typically found in FIB-SEM images (based on the ``PyVSNR`` package [@pyVSNR], [@VSNR])
+* **destriping** to minimize artefacts like stripes or curtains effects typically found in FIB-SEM images (based on the ``PyVSNR`` package [@pyVSNR], [@VSNR] or wavelet decomposition [@Munch])
 
 * **resampling** to correct non-uniform spatial inter-slice distances and enable correct 3D volume reconstructions
 
