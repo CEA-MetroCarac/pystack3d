@@ -81,6 +81,8 @@ Please read through [our Developers notes](https://cea-metrocarac.github.io/pyst
 
 This work, carried out on the CEA - Platform for Nanocharacterisation (PFNC), was supported by the “Recherche Technologique de Base” program of the French National Research Agency (ANR).
 
+Warm thanks to the [JOSS](https://joss.theoj.org/) reviewers ([@kasasxav](https://github.com/kasasxav), [@sklumpe](https://github.com/sklumpe) and [@xiuliren](https://github.com/xiuliren)) and editor ([@mstimberg](https://github.com/mstimberg)) for their contributions to enhancing PyStack3D.
+
 ## Citations
 
 In case you use the results of this code in an article, please cite:
