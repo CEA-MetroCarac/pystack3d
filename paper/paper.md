@@ -37,9 +37,9 @@ bibliography: paper.bib
 
 Three-dimensional reconstruction from 2D image stacks is a crucial technique in various scientific domains. For instance, acquisition techniques like Focused Ion Beam Scanning Electron Microscopy (FIB-SEM) leverage this approach to visualize complex structures at the nanoscale. However, creating a "clean" 3D stack often requires image corrections to remove artifacts and inconsistencies, particularly for volume segmentation, a crucial process for 3D quantitative data analysis.
 
-Here we present ``PyStack3D`` (\autoref{fig:PyStack3D}), a Python open-source library, that aims at performing several image ‘cleaning’ tasks in the most integrated and efficient manner possible.
+Here we present ``PyStack3D``, a Python open-source library, that aims at performing several image ‘cleaning’ tasks (\autoref{fig:PyStack3D}) in the most integrated and efficient manner possible.
 
-![a) Synthetic stack with different types of defects. b) Corrected stack. c) Ground truth.\label{fig:PyStack3D}](../doc/_static/pystack3d.png){width=85%}
+![a) Synthetic stack with different types of defects and related processing. b) Corrected stack with ``PyStack3D``. c) Ground truth.\label{fig:PyStack3D}](../doc/_static/pystack3d.png){width=85%}
 
 # Statement of need
 
