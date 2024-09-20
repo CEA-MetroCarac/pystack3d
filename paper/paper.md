@@ -25,9 +25,9 @@ authors:
     orcid: 0000-0002-6796-220X
     affiliation: "2"
 affiliations:
-  - name: Univ. Grenoble Alpes, CEA, Leti, F-38000 Grenoble, France
+  - name: Univ. Grenoble Alpes, CEA, Leti, Grenoble, France
     index: 1
-  - name: Univ. Grenoble Alpes, CEA, LITEN, F-38000 Grenoble, France
+  - name: Univ. Grenoble Alpes, CEA, LITEN, Grenoble, France
     index: 2
 date: 19 March 2024
 bibliography: paper.bib
