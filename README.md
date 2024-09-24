@@ -1,6 +1,8 @@
 [![PyPI](https://img.shields.io/pypi/v/pystack3d?label=pypi%20package)](https://pypi.org/project/pystack3d/)
 [![Github](https://img.shields.io/badge/GitHub-GPL--3.0-informational)](https://github.com/CEA-MetroCarac/pystack3d)
 [![Doc](https://img.shields.io/badge/%F0%9F%95%AE-docs-green.svg)](https://cea-metrocarac.github.io/pystack3d/doc/index.html)
+[![status](https://joss.theoj.org/papers/c36b7ddeeff591052c0068d3b7ad66c0/status.svg)](https://joss.theoj.org/papers/c36b7ddeeff591052c0068d3b7ad66c0)
+
 
 
 <p align="center" width="100%">
@@ -87,14 +89,14 @@ Warm thanks to the [JOSS](https://joss.theoj.org/) reviewers ([@kasasxav](https:
 
 In case you use the results of this code in an article, please cite:
 
-- Quéméré P., David T. (2024). PyStack3D: A Python package for fast image stack correction. *Journal of Open Source Software. (submitted)*
+- Quéméré P., David T. (2024). PyStack3D: A Python package for fast image stack correction. *Journal of Open Source Software.* https://joss.theoj.org/papers/10.21105/joss.07079. *(See the About section)*.
 
 additional citations for the <b>destriping</b>:
 
-- Pavy K., Quéméré P. (2024). Pyvsnr 2.0.0. Zenodo. https://doi.org/10.5281/zenodo.10623640
+- Pavy K., Quéméré P. (2024). Pyvsnr 2.0.0. Zenodo. https://doi.org/10.5281/zenodo.10623640.
 
 - Fehrenbach J., Weiss P., Lorenzo C. (2012). Variational algorithms to remove stationary noise: applications to microscopy imaging. *IEEE Transactions on Image Processing 21.10 (2012): 4420-4430.*
 
 additional citation for the <b>registration</b>:
 
-- Thévenaz P., Ruttimann U.E., Unser M. (1998), A Pyramid Approach to Subpixel Registration Based on Intensity, *IEEE Transactions on Image Processing, vol. 7, no. 1, pp. 27-41, January 1998*
+- Thévenaz P., Ruttimann U.E., Unser M. (1998), A Pyramid Approach to Subpixel Registration Based on Intensity, *IEEE Transactions on Image Processing, vol. 7, no. 1, pp. 27-41, January 1998.*
