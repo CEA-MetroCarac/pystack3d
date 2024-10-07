@@ -28,7 +28,7 @@ classifiers = [
     'Environment :: Console',
 ]
 dependencies = [
-    "numpy<2", # pystackreg.0.2.7 does not support numpy.2.x
+    "numpy",
     "matplotlib",
     "scipy",
     "scikit-image",
