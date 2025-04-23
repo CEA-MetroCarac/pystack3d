@@ -1,4 +1,4 @@
-[![PyPI](https://img.shields.io/pypi/v/pystack3d?label=pypi%20package)](https://pypi.org/project/pystack3d/)
+[![PyPI](https://img.shields.io/pypi/v/pystack3d.svg)](https://pypi.org/project/pystack3d/)
 [![Github](https://img.shields.io/badge/GitHub-GPL--3.0-informational)](https://github.com/CEA-MetroCarac/pystack3d)
 [![Doc](https://img.shields.io/badge/%F0%9F%95%AE-docs-green.svg)](https://cea-metrocarac.github.io/pystack3d/index.html)
 [![status](https://joss.theoj.org/papers/c36b7ddeeff591052c0068d3b7ad66c0/status.svg)](https://joss.theoj.org/papers/c36b7ddeeff591052c0068d3b7ad66c0)
