@@ -39,7 +39,6 @@ jobs:
           repository: CEA-MetroCarac/pystack3d-doc
           ref: refs/heads/main
           token: ${{ secrets.PYSTACK3D_PAGES_ACTIONS_TOKEN }}
-          persist-credentials: false
       - name: Download doc artifact
         uses: actions/download-artifact@v4
         with:
@@ -67,7 +66,6 @@ jobs:
           repository: CEA-MetroCarac/CEA-MetroCarac.github.io
           ref: refs/heads/main
           token: ${{ secrets.PYSTACK3D_PAGES_ACTIONS_TOKEN }}
-          persist-credentials: false
           submodules: true
       - name: Pull & update submodules recursively
         run: |
