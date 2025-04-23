@@ -62,5 +62,5 @@ testpaths = ["tests"]
 
 [project.urls]
 Homepage = "https://github.dev/CEA-MetroCarac/pystack3d"
-Documentation = "https://cea-metrocarac.github.io/pystack3d/doc/index.html"
+Documentation = "https://cea-metrocarac.github.io/pystack3d/index.html"
 

@@ -2,14 +2,14 @@ Getting started
 ===============
 
 **PyStack3D** was originally designed to process hundreds or even thousands of .tif files forming a 3D stack, stored according to a specific folder structure (see below).
-Since version **2025.1**, it is also possible to process a single (large) multi-frame .tif file. Refer to the section `Single .tif File Processing <https://cea-metrocarac.github.io/pystack3d/doc/getting_started.html#single-tif-file-processing>`_ for more details.
+Since version **2025.1**, it is also possible to process a single (large) multi-frame .tif file. Refer to the section `Single .tif File Processing <https://cea-metrocarac.github.io/pystack3d/getting_started.html#single-tif-file-processing>`_ for more details.
 
 Project directory organization
 ------------------------------
 
 To be executed, a **PyStack3D** workflow requires both:
 
-* a ``params.toml`` file defining all the process steps parameters (see the `parameters settings <file:///C:/Users/PQ177701/PycharmProjects/pystack3d/doc/_build/html/params.html>`_ section)
+* a ``params.toml`` file defining all the process steps parameters (see the `parameters settings <https://cea-metrocarac.github.io/pystack3d/params.html>`_ section)
 
 
 * a **project directory** including the ``.tif`` images named with their respective **slice numbers** and their **z-positions** either in the root directory:

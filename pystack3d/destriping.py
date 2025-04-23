@@ -31,7 +31,7 @@ def destriping(fnames=None, inds_partition=None, queue_incr=None,
         Queue passed to the function to interact with the progress bar
     wavelet_decomposition: dict, optional
         Parameters provided for destriping using wavelet decomposition.
-        See `here <https://cea-metrocarac.github.io/pystack3d/doc/api/pystack3d.destriping.html#pystack3d.destriping.destriping_from_wavelets>`_
+        See `here <https://cea-metrocarac.github.io/pystack3d/api/pystack3d.destriping.html#pystack3d.destriping.destriping_from_wavelets>`_
         Example:
             wavelet_decomposition = {'wavelet':'coif3', 'level':4, 'sigma':4}
     maxit: int, optional
