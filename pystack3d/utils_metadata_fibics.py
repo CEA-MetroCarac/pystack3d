@@ -9,7 +9,7 @@ from tomlkit import load, dump
 import tifffile
 from lxml.etree import tostring, fromstring, parse, XMLPullParser
 
-ASSETS = Path(__file__).parent / "assets"
+ASSETS = Path(__file__) / "assets"
 
 PARAMS = {
     'JobName': 'JobName',

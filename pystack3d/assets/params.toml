@@ -1,0 +1,66 @@
+#input_dirname = ""
+ind_min = 0
+ind_max = 99999
+channels = ["."]
+nproc = 1
+process_steps = [
+    "cropping",
+    "bkg_removal",
+    "intensity_rescaling",
+    #"intensity_rescaling_area",
+    "registration_calculation", "registration_transformation",
+    "destriping",
+    "resampling",
+    "cropping_final"
+]
+history = []
+
+[cropping]
+area = [0, 99999, 0, 99999]
+
+[bkg_removal]
+dim = 3
+#poly_basis = "1 + x + y + x*y + x**2 + z"
+orders = [1, 2, 1]
+cross_terms = true
+skip_factors = [10, 10, 10]
+threshold_min = 2
+#threshold_max = 99999
+#weight_func = "HuberT"
+preserve_avg = true
+
+[intensity_rescaling]
+nbins = 256
+#range_bins = [0, 99999]
+filter_size = -1
+
+#[intensity_rescaling_area]
+#area = [0, 99999, 0, 99999]
+#threshold_min = 0
+#threshold_max = 99999
+#factors_range = [0.8, 1.2]
+
+[destriping]
+#maxit = 200
+cvg_threshold = 1e-2
+filters = [{ name = "Gabor", noise_level = 20, sigma = [0.5, 200], theta = 0 }]
+
+[registration_calculation]
+#area = [0, 99999, 0, 99999]
+#threshold = 0
+nb_blocks = [1, 1]
+transformation = "TRANSLATION"
+
+[registration_transformation]
+#constant_drift = [-0.3, 1.2]
+#box_size_averaging = 100
+#subpixel = true
+mode = "edge"
+#cropping = false
+
+[resampling]
+policy = "slice_{slice_nb}_z={z_coord}um.tif"
+dz = 0.01
+
+[cropping_final]
+area = [0, 99999, 0, 99999]
