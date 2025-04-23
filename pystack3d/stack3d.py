@@ -15,7 +15,7 @@ from multiprocessing import Pool, Queue
 
 import numpy as np
 import matplotlib.pyplot as plt
-from tifffile import TiffFile, TiffWriter
+from tifffile import TiffFile, TiffWriter, imwrite
 from tomli import load
 from tomlkit import dump
 
@@ -62,7 +62,24 @@ class Stack3d:
 
     def __init__(self, input_name=None):
 
-        if str(input_name).endswith('.toml'):
+        self.fname_toml = None
+        self.params = {'history': '', 'ind_min': 0, 'ind_max': 9999}
+
+        # Single big .tif file processing
+        if str(input_name).endswith('.tif'):
+            fname = Path(input_name)
+            dirname_out = fname.parent / 'images'
+            os.makedirs(dirname_out, exist_ok=True)
+            with TiffFile(fname) as tif:
+                for i, page in enumerate(tif.pages):
+                    img = page.asarray()
+                    imwrite(dirname_out / f"img_{i:03d}.tif", img)
+            self.pathdir = fname.parent
+            self.params["channels"] = ['images']
+            self.last_step_dir = self.pathdir
+            return
+
+        elif str(input_name).endswith('.toml'):
             self.fname_toml = input_name
             with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
@@ -97,6 +114,7 @@ class Stack3d:
                 print("\n***************************************************")
                 print(f"WARNING: 'dirname' from {fname} is NOT USED")
                 print("***************************************************\n")
+
         else:
             raise IOError(f"'input_name' {input_name} is not a valid input")
 
@@ -296,7 +314,7 @@ class Stack3d:
                 plot(process_step, output_dirname, input_dirname, kwargs)
 
             # 'history' parameter updating and saving
-            if serial:
+            if serial and self.fname_toml:
                 self.params['history'] = self.params['history'] + [process_step]
                 with open(self.fname_toml, 'w') as fid:
                     dump(self.params, fid)

@@ -1,6 +1,8 @@
 Getting started
 ===============
 
+**PyStack3D** was originally designed to process hundreds or even thousands of .tif files forming a 3D stack, stored according to a specific folder structure (see below).
+Since version **2025.1**, it is also possible to process a single (large) multi-frame .tif file. Refer to the section `Single .tif File Processing <https://cea-metrocarac.github.io/pystack3d/doc/getting_started.html#single-tif-file-processing>`_ for more details.
 
 Project directory organization
 ------------------------------
@@ -167,6 +169,26 @@ At least, to ease the full 3D-stack visualization, .tif files can be concatenate
 
     stack.concatenate_tif() # tif files concatenation related to the last process_step
     stack.concatenate_tif('input') # tif files concatenation related to the input data
+
+Single .tif File Processing
+---------------------------
+
+Processing a single large .tif file without using a .toml file is also supported.
+
+Here is an example of a step-by-step registration processing on a single processor applied to a .tif file named *fname*  ::
+
+    from pystack3d import Stack3d
+
+    stack = Stack3d(fname)
+
+    stack.params['registration_calculation'] = {'transformation': 'TRANSLATION', 'nb_blocks': (1, 1)}
+    stack.eval(process_steps='registration_calculation', nproc=1)
+
+    stack.params['registration_transformation'] = {'subpixel': True, 'cropping': True}
+    stack.eval(process_steps='registration_transformation', nproc=1)
+
+    stack.concatenate_tif(process_step='registration_transformation')
+
 
 Outputs
 -------
