@@ -2,7 +2,7 @@ Getting started
 ===============
 
 **PyStack3D** was originally designed to process hundreds or even thousands of .tif files forming a 3D stack, stored according to a specific folder structure (see below).
-Since version **2025.1**, it is also possible to process a single (large) multi-frame .tif file. Refer to the section `Single .tif File Processing <https://cea-metrocarac.github.io/pystack3d/getting_started.html#id3>`_ for more details.
+Since version **2025.1**, it is also possible to process a single (large) multi-frame .tif file. Refer to the section `Single .tif file processing <https://cea-metrocarac.github.io/pystack3d/getting_started.html#id3>`_ for more details.
 
 Project directory organization
 ------------------------------
@@ -146,7 +146,7 @@ A **PyStack3D** workflow execution is obtained with the following instructions::
 
 ``input_name`` corresponds either to the **project directory pathname** or to the ``params.toml`` in which the project directory pathname has to be defined via the ``input_dirname`` parameter.
 
-``process_steps`` refers either to a single process step or to a list of process steps or can be omitted leading to the execution of the full process steps defined in the ``params.toml`::
+``process_steps`` refers either to a single process step or to a list of process steps or can be omitted leading to the execution of the full process steps defined in the ``params.toml``::
 
     # execute only the 'cropping' process step
     stack.eval(process_steps="cropping", nproc=16)
@@ -171,7 +171,7 @@ At least, to ease the full 3D-stack visualization, .tif files can be concatenate
     stack.concatenate_tif('input') # tif files concatenation related to the input data
 
 
-Single .tif File Processing
+Single .tif file processing
 ---------------------------
 
 Processing a single large .tif file without using a .toml file is also supported.
