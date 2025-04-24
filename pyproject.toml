@@ -9,7 +9,7 @@ dynamic = ["version"]
 authors = [{ name = "Patrick Quéméré", email = "patrick.quemere@cea.fr" }]
 description = "Pystack3D: A Python package for fast image stack correction"
 readme = "README.md"
-requires-python = ">=3.8, <3.13"
+requires-python = ">=3.8"
 keywords = ["PyStack3D", "stack", "images", "FIB-SEM", "processing",
     "correction", "cropping", "background removal", "registration",
     "intensity rescaling", "destriping", "curtains", "resampling",
