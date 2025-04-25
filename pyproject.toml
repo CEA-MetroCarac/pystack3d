@@ -57,6 +57,9 @@ where = ["."]
 include = ["pystack3d*"]
 namespaces = false
 
+[tool.setuptools.package-data]
+"pystack3d" = ["assets/*.toml"]
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = ["tests"]
