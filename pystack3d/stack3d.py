@@ -28,7 +28,7 @@ PROCESS_STEPS = ['cropping', 'bkg_removal',
                  'registration_calculation', 'registration_transformation',
                  'destriping', 'resampling', 'cropping_final']
 CMAP = plt.get_cmap("tab10")
-ASSETS = os.path.join(__file__, "..", "..", "assets")
+ASSETS = os.path.join(__file__, "..", "assets")
 
 plt.rcParams['savefig.dpi'] = 300
 
@@ -90,7 +90,7 @@ class Stack3d:
             self.pathdir = Path(input_name)
             fnames = list(self.pathdir.glob("*.toml"))
             if len(fnames) == 0:
-                src = Path(ASSETS) / 'toml' / 'params_synthetic_stack.toml'
+                src = Path(ASSETS) / 'params.toml'
                 dst = self.pathdir / 'params.toml'
                 shutil.copy2(src, dst)
                 msg = "\n***************************************************\n"
@@ -375,7 +375,7 @@ class Stack3d:
                 fnames_in.remove(fname_out)
 
             queue_incr = Queue()
-            pbar_args = (queue_incr, len(fnames_in), 1)
+            pbar_args = (queue_incr, len(fnames_in))
             thread = Thread(target=pbar_update, args=pbar_args)
             thread.start()
 
