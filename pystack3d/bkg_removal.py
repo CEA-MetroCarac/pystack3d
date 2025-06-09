@@ -39,7 +39,7 @@ def init_args(params, shape):
     coefs: numpy.ndarray((shape[0], len(powers)))
         Coefficients of the polynom to be shared during the (multi)processing
     """
-    if 'poly_basis' in params.keys():
+    if 'poly_basis' in params.keys() and params['poly_basis']:
         powers = powers_from_expr(params['poly_basis'], params['dim'],
                                   force_cst_term=True)
 
@@ -52,8 +52,9 @@ def init_args(params, shape):
         raise IOError("'poly_basis' or 'orders' should be defined")
 
     if 'threshold_min' in params.keys() and 'threshold_max' in params.keys():
-        msg = "threshold_min must be strictly less than threshold_max"
-        assert params['threshold_min'] < params['threshold_max'], msg
+        if params['threshold_min'] and params['threshold_max']:
+            msg = "threshold_min must be strictly less than threshold_max"
+            assert params['threshold_min'] < params['threshold_max'], msg
 
     if 'weight_func' in params.keys():
         msg = "'weight_func'] should be 'HuberT', 'Hampel', or 'None'"
