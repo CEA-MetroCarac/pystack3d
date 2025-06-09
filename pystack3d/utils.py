@@ -3,6 +3,31 @@ utilities functions
 """
 import numpy as np
 from tifffile import TiffFile, TiffWriter
+from tomlkit import table, document, inline_table, array
+
+
+def reformat_params(params):
+    """ Return tomlkit.document from 'params' dict """
+    doc = document()
+    for section_name, section_data in params.items():
+        if isinstance(section_data, dict):
+            section = table()
+            for key, value in section_data.items():
+                value = '' if value is None else value
+                if section_name == "destriping" and key == "filters":
+                    inline_array = array()
+                    inline_array.multiline(False)
+                    for filt in value:
+                        t = inline_table()
+                        t.update(filt)
+                        inline_array.append(t)
+                    section[key] = inline_array
+                else:
+                    section[key] = value
+            doc[section_name] = section
+        else:
+            doc[section_name] = section_data
+    return doc
 
 
 def mask_creation(arr, threshold_min=None, threshold_max=None):

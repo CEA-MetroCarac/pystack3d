@@ -17,9 +17,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tifffile import TiffFile, TiffWriter, imwrite
 from tomli import load
-from tomlkit import dump
+from tomlkit import dumps
 
-from pystack3d.utils import imread_3d_skipping, get_tags
+from pystack3d.utils import reformat_params, imread_3d_skipping, get_tags
 from pystack3d.utils_multiprocessing import (worker_init, step_wrapper,
                                              initialize_args)
 
@@ -317,7 +317,7 @@ class Stack3d:
             if serial and self.fname_toml:
                 self.params['history'] = self.params['history'] + [process_step]
                 with open(self.fname_toml, 'w') as fid:
-                    dump(self.params, fid)
+                    fid.write(dumps(reformat_params(self.params)))
 
     def cleanup(self):
         """ Remove the .tif files except the ones related to the last process"""
