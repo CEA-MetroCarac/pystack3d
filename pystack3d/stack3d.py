@@ -19,9 +19,8 @@ from tifffile import TiffFile, TiffWriter, imwrite
 from tomli import load
 from tomlkit import dumps
 
-from pystack3d.utils import reformat_params, imread_3d_skipping, get_tags
-from pystack3d.utils_multiprocessing import (worker_init, step_wrapper,
-                                             initialize_args)
+from pystack3d.utils import imread_3d_skipping, get_tags, reformat_params
+from pystack3d.utils_multiprocessing import worker_init, step_wrapper, initialize_args
 
 PROCESS_STEPS = ['cropping', 'bkg_removal',
                  'intensity_rescaling', 'intensity_rescaling_area',
@@ -49,6 +48,8 @@ class Stack3d:
         Filename of the '.toml' file defining the workflow parameters
     params: dict
         Dictionary defining the workflow parameters
+    queue_incr: Queue object
+        Queue used to increment the progress bar during the workflow execution
 
     Arguments
     ---------
@@ -58,12 +59,17 @@ class Stack3d:
          parameters (requiring to set the project 'dirname' parameter inside).
         If None, consider the directory where the python script has been
         launched and the .toml and .tif files located inside.
+    ignore_error: bool, optional
+        Ignore IOError in some case associated with the pystack3d-napari appli launching
+    queue_incr: Queue object, optional
+        Possibility to pass the Queue used by the progress bar
     """
 
-    def __init__(self, input_name=None):
+    def __init__(self, input_name=None, ignore_error=False, queue_incr=None):
 
         self.fname_toml = None
-        self.params = {'history': '', 'ind_min': 0, 'ind_max': 9999}
+        self.params = {'history': '', 'ind_min': 0, 'ind_max': 99999}
+        self.queue_incr = queue_incr or Queue()
 
         # Single big .tif file processing
         if str(input_name).endswith('.tif'):
@@ -98,7 +104,10 @@ class Stack3d:
                 msg += "A default '.toml' file has been put in your directory\n"
                 msg += "You have now to adapt the parameters values inside"
                 msg += "\n***************************************************\n"
-                raise IOError(msg.format(input_name))
+                if ignore_error:
+                    fnames = [dst]
+                else:
+                    raise IOError(msg.format(input_name))
             if len(fnames) > 1:
                 msg = "\n***************************************************\n"
                 msg += "More than 1 '.toml' file have been found in {}\n"
@@ -161,6 +170,10 @@ class Stack3d:
             shape = tiff.pages[0].shape
         return tuple((len(fnames), shape[0], shape[1]))
 
+    def overlay(self, process_step):
+        """ Return the overlay related to 'process_step'"""
+        return 1 if process_step in ['registration_calculation', 'resampling'] else 0
+
     def create_partition(self, fnames, nproc, overlay=0):
         """
         Return a filenames partition related to a multiprocessing execution
@@ -198,7 +211,7 @@ class Stack3d:
 
         return fnames_part, inds_part
 
-    def eval(self, process_steps=None, nproc=None, serial=True, show_pbar=True):
+    def eval(self, process_steps=None, nproc=None, serial=True, show_pbar=True, pbar_init=False):
         """
         Method to apply a process step to the stack object
 
@@ -216,6 +229,9 @@ class Stack3d:
             process takes data located in the 'input' data folder
         show_pbar: bool, optional
             Activation key to display the progress bar during the processing
+        pbar_init: bool; optional
+            Activation key to pass 'ntot' as 1rst queue_incr.put().
+            (tricky mode for the appli to catch this data via the Queue)
         """
         dir_process = self.pathdir / 'process'
 
@@ -271,16 +287,16 @@ class Stack3d:
                 kwargs.update({'fnames': fnames})  # req. for 'resampling' init
 
                 # create partition
-                overlay = 0
-                if process_step in ['registration_calculation', 'resampling']:
-                    overlay = 1
-                fnames_parts, inds_parts = self.create_partition(fnames, nproc,
-                                                                 overlay)
+                overlay = self.overlay(process_step)
+                fnames_parts, inds_parts = self.create_partition(fnames, nproc, overlay)
 
-                queue_incr = Queue()
                 args = initialize_args(process_step, kwargs, nproc, shape)
-                worker_args = (queue_incr, *args)
-                pbar_args = (queue_incr, len(fnames), overlay, nproc)
+                worker_args = (self.queue_incr, *args)
+                pbar_args = (self.queue_incr, len(fnames), overlay, nproc)
+
+                if pbar_init:
+                    ntot = len(fnames) + (nproc - 1) * overlay
+                    self.queue_incr.put(ntot)
 
                 if nproc == 1:
 
@@ -374,21 +390,20 @@ class Stack3d:
             if fname_out in fnames_in:
                 fnames_in.remove(fname_out)
 
-            queue_incr = Queue()
-            pbar_args = (queue_incr, len(fnames_in))
+            pbar_args = (self.queue_incr, len(fnames_in))
             thread = Thread(target=pbar_update, args=pbar_args)
             thread.start()
 
             with TiffWriter(dirname_out / name_out, bigtiff=True) as tiff_out:
                 for fname in fnames_in:
-                    queue_incr.put(1)
+                    self.queue_incr.put(1)
                     with TiffFile(fname) as tiff_in:
                         arr = tiff_in.asarray()
                         tags, extra_tags = get_tags(tiff_in)
                         extra_tags = extra_tags if save_metadata else None
                         tiff_out.write(arr, extratags=extra_tags,
                                        compression=tags[259].value)
-                queue_incr.put('finished')
+                self.queue_incr.put('finished')
 
             thread.join()
 
