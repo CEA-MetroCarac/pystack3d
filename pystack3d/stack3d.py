@@ -426,6 +426,7 @@ def plot(process_step, output_dirname, input_dirname, kwargs):
 
         ax[-1].set_xlabel('# Frames', labelpad=-1)
         plt.savefig(output_dirname / 'outputs' / 'stats.png')
+        plt.close(fig)
 
     if process_step == 'bkg_removal':
         plot_stats_xy(input_dirname, output_dirname,
@@ -476,6 +477,7 @@ def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
 
     for i, fig in enumerate(figs):
         fig.savefig(output_dirname / 'outputs' / f"stats_{axis_labels[i]}.png")
+        plt.close(fig)
 
 
 def pbar_update(queue_incr, nslices, overlay, nproc):
