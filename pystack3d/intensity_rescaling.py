@@ -237,6 +237,7 @@ def plot(output_dirname):
     plt.colorbar()
     plt.axis("auto")
     plt.savefig(output_dirname / 'outputs' / 'intensity_rescaling_maps.png')
+    plt.close(fig)
 
     fig = plt.figure(figsize=(12, 4))
     fig.canvas.manager.set_window_title('intensity_rescaling (profiles)')
@@ -253,3 +254,4 @@ def plot(output_dirname):
     plt.title("Final histograms")
     plt.plot(histos_final.T[:])
     plt.savefig(output_dirname / 'outputs' / 'intensity_rescaling_profiles.png')
+    plt.close(fig)

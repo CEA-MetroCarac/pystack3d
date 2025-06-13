@@ -131,6 +131,7 @@ def plot(output_dirname):
     ax.set_xlabel("# Frames")
     ax.set_ylabel("Means")
     plt.savefig(output_dirname / 'outputs' / 'means.png')
+    plt.close(fig)
 
     fig, ax = plt.subplots()
     fig.canvas.manager.set_window_title('intensity_rescaling_area (factors)')
@@ -138,3 +139,4 @@ def plot(output_dirname):
     ax.set_xlabel("# Frames")
     ax.set_ylabel("Rescaling factors")
     plt.savefig(output_dirname / 'outputs' / 'factors.png')
+    plt.close(fig)

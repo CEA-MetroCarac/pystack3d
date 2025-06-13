@@ -157,8 +157,9 @@ def plot(output_dirname):
         return
 
     tmats_cumul = np.load(output_dirname / 'outputs' / 'tmats_cumul.npy')
-    registration_plot(tmats_cumul, title='Registration (cumul.)')
+    fig = registration_plot(tmats_cumul, title='Registration (cumul.)')
     plt.savefig(output_dirname / 'outputs' / 'tmats_cumul_evol.png')
+    plt.close(fig)
 
     if os.path.exists(output_dirname / 'outputs' / 'inds_crop.txt'):
         inds_crop = np.loadtxt(output_dirname / 'outputs' / 'inds_crop.txt')
@@ -173,6 +174,7 @@ def plot(output_dirname):
         ax.imshow(img_crop, cmap='gray', origin='lower')
         ax.add_patch(rect)
         plt.savefig(output_dirname / 'outputs' / 'registration_area.png')
+        plt.close(fig)
 
 
 def img_transformation(img, tmats, nb_blocks=None,

@@ -672,3 +672,4 @@ def plot(output_dirname):
         else:
             plt.xlabel('# Frames')
     plt.savefig(output_dirname / 'outputs' / 'coefs.png')
+    plt.close(fig)

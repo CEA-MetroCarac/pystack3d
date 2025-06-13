@@ -185,6 +185,7 @@ def plot(output_dirname):
     ax.set_ylabel("Z")
     ax.legend()
     plt.savefig(output_dirname / 'outputs' / 'z_positions.png')
+    plt.close(fig)
 
     fig, ax = plt.subplots()
     fig.canvas.manager.set_window_title('resampling (z-increments)')
@@ -195,6 +196,7 @@ def plot(output_dirname):
     ax.set_ylabel("dz")
     ax.legend()
     plt.savefig(output_dirname / 'outputs' / 'z_increments.png')
+    plt.close(fig)
 
 
 def extract_z_from_filenames(fnames, policy, verbosity=False):

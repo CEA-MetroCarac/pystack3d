@@ -174,12 +174,13 @@ def plot(output_dirname):
 
     tmats = np.load(output_dirname / 'tmats.npy')
 
-    registration_plot(tmats, nb_blocks=NB_BLOCKS, transformation=TRANSFORMATION)
+    fig = registration_plot(tmats, nb_blocks=NB_BLOCKS, transformation=TRANSFORMATION)
     plt.savefig(output_dirname / 'outputs' / 'tmats_evol.png')
+    plt.close(fig)
 
-    registration_plot(tmats, nb_blocks=NB_BLOCKS, transformation=TRANSFORMATION,
-                      cumul=True)
+    fig = registration_plot(tmats, nb_blocks=NB_BLOCKS, transformation=TRANSFORMATION, cumul=True)
     plt.savefig(output_dirname / 'outputs' / 'tmats_cumul_evol.png')
+    plt.close(fig)
 
 
 def registration_plot(tmats, nb_blocks=None, transformation='RIGID_BODY',
