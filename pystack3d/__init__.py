@@ -1,3 +1,3 @@
-from .stack3d import Stack3d
+from .stack3d import Stack3d, ASSETS
 
 VERSION = "2025.2"
