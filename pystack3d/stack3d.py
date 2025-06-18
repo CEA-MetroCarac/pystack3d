@@ -19,7 +19,7 @@ from tifffile import TiffFile, TiffWriter, imwrite
 from tomli import load
 from tomlkit import dumps
 
-from pystack3d.utils import imread_3d_skipping, get_tags, reformat_params
+from pystack3d.utils import imread_3d_skipping, get_tags, reformat_params, check_cupy
 from pystack3d.utils_multiprocessing import worker_init, step_wrapper, initialize_args
 
 PROCESS_STEPS = ['cropping', 'bkg_removal',
@@ -66,6 +66,8 @@ class Stack3d:
     """
 
     def __init__(self, input_name=None, ignore_error=False, queue_incr=None):
+
+        check_cupy()  # to remove
 
         self.fname_toml = None
         self.params = {'history': '', 'ind_min': 0, 'ind_max': 99999}
