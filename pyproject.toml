@@ -45,6 +45,9 @@ dependencies = [
     "lxml"
 ]
 
+[project.optional-dependencies]
+gui = ["pystack3d-napari @ git+https://github.com/CEA-MetroCarac/pystack3d_napari.git"]
+
 [tool.setuptools.dynamic]
 version = { attr = "pystack3d.VERSION" }
 
