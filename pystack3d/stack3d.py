@@ -19,7 +19,7 @@ from tifffile import TiffFile, TiffWriter, imwrite
 from tomli import load
 from tomlkit import dumps
 
-from pystack3d.utils import imread_3d_skipping, get_tags, reformat_params, check_cupy
+from pystack3d.utils import imread_3d_skipping, get_tags, dumps_params, check_cupy
 from pystack3d.utils_multiprocessing import worker_init, step_wrapper, initialize_args
 
 PROCESS_STEPS = ['cropping', 'bkg_removal',
@@ -334,8 +334,7 @@ class Stack3d:
             # 'history' parameter updating and saving
             if serial and self.fname_toml:
                 self.params['history'] = self.params['history'] + [process_step]
-                with open(self.fname_toml, 'w') as fid:
-                    fid.write(dumps(reformat_params(self.params)))
+                self.fname_toml.write_text(dumps_params(params), encoding='utf-8')
 
     def cleanup(self):
         """ Remove the .tif files except the ones related to the last process"""

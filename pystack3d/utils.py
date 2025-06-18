@@ -11,7 +11,7 @@ from tkinter import ttk
 
 import numpy as np
 from tifffile import TiffFile, TiffWriter
-from tomlkit import table, document, inline_table, array
+from tomlkit import dumps, table, document, inline_table, array
 
 show_warning_qt = None
 
@@ -86,6 +86,20 @@ def reformat_params(params):
         else:
             doc[section_name] = section_data
     return doc
+
+
+def dumps_params(params):
+    """ Return cleaned dumps 'params' """
+
+    text = dumps(reformat_params(params))
+
+    lines = text.splitlines(keepends=True)
+    while lines and lines[-1].strip() == "":
+        lines[-1] = lines[-1].replace('\r', '')
+        if lines[-1].strip() == "" and not lines[-1].endswith('\n'):
+            lines.pop()
+
+    return ''.join(lines)
 
 
 def mask_creation(arr, threshold_min=None, threshold_max=None):
@@ -182,3 +196,25 @@ def cumdot(mat):
     for i in range(1, mat.shape[0]):
         cum_mat[i] = cum_mat[i - 1] @ mat[i]
     return cum_mat
+
+
+if __name__ == "__main__":
+    import tempfile
+    from tomli import load
+    from pystack3d import ASSETS
+
+    fname_toml = Path(ASSETS) / "params.toml"
+    fname_toml_out = Path(tempfile.gettempdir()) / "params_out.toml"
+
+    with open(fname_toml, 'rb') as fid:
+        params = load(fid)
+
+    filters = params['destriping']['filters']
+    filters.append(filters[0])
+    print(params['destriping']['filters'])
+
+    fname_toml_out.write_text(dumps_params(params), encoding='utf-8')
+
+    with open(fname_toml_out, 'rb') as fid:
+        params = load(fid)
+    print(params['destriping']['filters'])
