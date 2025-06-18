@@ -29,6 +29,9 @@ The ``pystack3d`` workflow includes the following process steps which can be act
 
 An additional step named `cropping_final` can be used to eliminate artefacts produced near the edges during the image processing or to select another ROI at the end.
 
+**Pystack3d** can be launched in scripting mode using `.toml` configuration files (see documentation), or through a dedicated GUI designed with [Napari](https://napari.org/).
+
+
 <p align="center" width="100%">
     <img align="center" width=80%" src=https://cea-metrocarac.github.io/pystack3d/pystack3d.png> <br>
     <em>a) Synthetic case illustrating the defects to be removed by <b>PyStack3D</b>. b) Corrected stack. c) Ground truth.</em>
@@ -39,11 +42,24 @@ An additional step named `cropping_final` can be used to eliminate artefacts pro
     <em>Illustration of a FIB-SEM image correction using some of the <b>PyStack3D</b> process steps.</em>
 </p>
 
+![Demo](https://cea-metrocarac.github.io/pystack3d/pystack3d_napari.gif)
+
 ## Installation
+
+For a simple install (execution by scripts):
 
 ```
 pip install pystack3d
 ```
+
+For a GUI install and execution:
+
+```
+pip install pystack3d[gui]
+pystack3d
+```
+
+(The GUI install required ~900MB free space on disk)
 
 ## Tests and examples execution
 
