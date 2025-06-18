@@ -42,7 +42,9 @@ An additional step named `cropping_final` can be used to eliminate artefacts pro
     <em>Illustration of a FIB-SEM image correction using some of the <b>PyStack3D</b> process steps.</em>
 </p>
 
-![Demo](https://cea-metrocarac.github.io/pystack3d/pystack3d_napari.gif)
+<p align="center">
+    <img src="https://cea-metrocarac.github.io/pystack3d/pystack3d_napari.gif" width="100%">
+</p>
 
 ## Installation
 
