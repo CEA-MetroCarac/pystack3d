@@ -3,8 +3,6 @@
 [![Doc](https://img.shields.io/badge/%F0%9F%95%AE-docs-green.svg)](https://cea-metrocarac.github.io/pystack3d/index.html)
 [![status](https://joss.theoj.org/papers/c36b7ddeeff591052c0068d3b7ad66c0/status.svg)](https://joss.theoj.org/papers/c36b7ddeeff591052c0068d3b7ad66c0)
 
-
-
 <p align="center" width="100%">
     <img align="center" width=400 src=https://cea-metrocarac.github.io/pystack3d/logo.png>
 </p>
@@ -16,21 +14,15 @@
 The ``pystack3d`` workflow includes the following process steps which can be activated or not and executed in any order:
 
 - ``cropping`` to reduce the image field of view to a ROI (Region Of Interest)
-
 - ``background removal`` to reduce from polynomial approximations artefacts issued for instance from shadowing, charging, ...
-
 - ``intensity rescaling`` to homogenize the 'gray' intensity distribution between successive frames/slices
-
 - ``registration`` to correct the images misalignment due to shifting, drift, rotation, ... during the images acquisition
-
-- ``destriping`` to minimize artefacts like stripes that can appear in some image acquisition technics
-
+- ``destriping`` to minimize artefacts like stripes that can appear in some image acquisition techniques
 - ``resampling`` to correct non uniform spatial steps
 
 An additional step named `cropping_final` can be used to eliminate artefacts produced near the edges during the image processing or to select another ROI at the end.
 
 **Pystack3d** can be launched in scripting mode using `.toml` configuration files (see documentation), or through a dedicated GUI designed with [Napari](https://napari.org/).
-
 
 <p align="center" width="100%">
     <img align="center" width=80%" src=https://cea-metrocarac.github.io/pystack3d/pystack3d.png> <br>
