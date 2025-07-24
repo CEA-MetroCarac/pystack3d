@@ -1,67 +1,9 @@
 """
 utilities functions
 """
-import subprocess
-import re
-from shutil import which
-from pathlib import Path
-import tempfile
-import tkinter as tk
-from tkinter import ttk
-
 import numpy as np
 from tifffile import TiffFile, TiffWriter
 from tomlkit import dumps, table, document, inline_table, array
-
-show_warning_qt = None
-
-
-def check_cupy():
-    if which("nvidia-smi") is not None:
-        output = subprocess.check_output(["nvidia-smi"], stderr=subprocess.STDOUT)
-        cuda_version = re.search(r"CUDA Version: (\d+\.\d+)", output.decode()).group(1)
-        id = cuda_version.split('.')[0]
-        if False:
-            import cupy
-        else:
-            text = ("A GPU has been detected on your system. Computational performance for "
-                    "destriping with the pyvsnr algorithm can be significantly improved by "
-                    f"installing 'CuPy'. (>> pip install cupy-cuda{id}x )")
-            display_path = Path(tempfile.gettempdir()) / ".check_cupy"
-            if not display_path.is_file():
-                if show_warning_qt:
-                    show_warning_qt(text, display_path)
-                else:
-                    show_warning_tkinter(text, display_path)
-
-
-def show_warning_tkinter(text, display_path):
-    root = tk.Tk()
-    root.title("CuPy not detected")
-    root.resizable(False, False)
-    screen_w = root.winfo_screenwidth()
-    screen_h = root.winfo_screenheight()
-    width, height = 400, 150
-    x = (screen_w - width) // 2
-    y = (screen_h - height) // 2
-    root.geometry(f"{width}x{height}+{x}+{y}")
-    root.attributes("-topmost", True)
-
-    def on_ok():
-        if var_dont_display.get():
-            display_path.touch()
-        root.destroy()
-
-    label = tk.Label(root, text=text, wraplength=380, justify="left")
-    label.pack(padx=10, pady=10)
-    var_dont_display = tk.BooleanVar()
-    btn = ttk.Button(root, text="OK", command=on_ok)
-    btn.pack(pady=5)
-    chk = ttk.Checkbutton(root, text="Do not display this message later",
-                          variable=var_dont_display)
-    chk.pack(pady=5)
-
-    root.mainloop()
 
 
 def reformat_params(params):

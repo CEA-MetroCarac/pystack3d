@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from tifffile import TiffFile, TiffWriter, imwrite
 from tomli import load
 
-from pystack3d.utils import imread_3d_skipping, get_tags, dumps_params, check_cupy
+from pystack3d.utils import imread_3d_skipping, get_tags, dumps_params
 from pystack3d.utils_multiprocessing import worker_init, step_wrapper, initialize_args
 
 PROCESS_STEPS = ['cropping', 'bkg_removal',
