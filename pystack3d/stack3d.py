@@ -66,8 +66,6 @@ class Stack3d:
 
     def __init__(self, input_name=None, ignore_error=False, queue_incr=None):
 
-        check_cupy()  # to remove
-
         self.fname_toml = None
         self.params = {'history': '', 'ind_min': 0, 'ind_max': 99999}
         self.queue_incr = queue_incr or Queue()
