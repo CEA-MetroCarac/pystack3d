@@ -48,3 +48,4 @@ jobs:
           repository-url: ${{ env.REPOSITORY_URL }}
           user: __token__
           password: ${{ env.PYPI_API_TOKEN }}
+          verbose: true
