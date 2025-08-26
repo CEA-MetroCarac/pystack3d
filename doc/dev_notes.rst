@@ -25,6 +25,6 @@ If you want to contribute to improve the Pystack3D source code, you can send us 
 TODO List
 ---------
 
-* add a GUI
-* (registration) consider a non-rigid transformation representing the drift during a frame scan
-* (intensity rescaling) take into account beam source variation
+* registration: consider a non-rigid transformation representing the drift during a frame scan
+* registration: add other models, algorithms (SIFT, Diplib, ...)
+* intensity rescaling: take into account beam source variations

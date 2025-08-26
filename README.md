@@ -40,20 +40,29 @@ An additional step named `cropping_final` can be used to eliminate artefacts pro
 
 ## Installation
 
-For a simple install (execution by scripts):
+**For a simple install (execution by scripts):**
 
 ```
 pip install pystack3d
 ```
 
-For a GUI install and execution:
+**For a GUI install and execution:**
 
 ```
 pip install pystack3d[gui]
+pip install PyQt5           # or PyQt6, PySide2, PySide6, if no Qt backend have been already installed in your env.
 pystack3d
 ```
 
 (The GUI install required ~900MB free space on disk)
+
+**For a GPU acceleration during the destriping process:**
+
+```
+python -m pyvsnr.install_cupy
+```
+
+Refer to  [pyvsnr](https://github.com/CEA-MetroCarac/pyvsnr?tab=readme-ov-file#gpu-acceleration) for more details.
 
 ## Tests and examples execution
 

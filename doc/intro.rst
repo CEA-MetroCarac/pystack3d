@@ -42,6 +42,9 @@ The ``pystack3d`` workflow can be applied to multiple channels (image stacks cor
 
     Illustration of a FIB-SEM image correction using some of the **PyStack3D** process steps.
 
+.. note::
+
+    Since version **2025.3**, PyStack3d includes a GUI for workflow execution. Each process parameter can be (re)defined manually (by clicking on '►'), and the execution order between processes can be modified by moving the widgets around (drag and drop mode). Processes can be run either in sequence ('RUN ALL') or individually ('RUN').
 
 Performance
 -----------
@@ -78,10 +81,14 @@ Install
 
     pip install pystack3d
 
+For an install with the GUI::
+
+    pip install pystack3d[GUI]
+    pip install PyQt5           # or PyQt6, PySide2, PySide6, if no Qt backend have been already installed in your env.
 
 .. note::
 
-    Note that to be executed with GPU, the **pyvsnr** library used by the **destriping** process requires a specific installation. Refer to the **pyvsnr** `requirements section <https://github.com/CEA-MetroCarac/pyvsnr?tab=readme-ov-file#requirements>`_ for further details.
+    Note that to be executed with GPU, the **pyvsnr** library used by the **destriping** process requires a specific installation. Refer to the **pyvsnr** `GPU accelaration section <https://github.com/CEA-MetroCarac/pyvsnr?tab=readme-ov-file#gpu-acceleration>`_ for further details.
 
 
 Tests and examples execution
