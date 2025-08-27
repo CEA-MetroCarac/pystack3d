@@ -46,7 +46,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-gui = ["pystack3d-napari @ https://github.com/CEA-MetroCarac/pystack3d_napari/releases/download/2025.1/pystack3d_napari-2025.1-py3-none-any.whl"]
+gui = ["pystack3d-napari"]
 
 [tool.setuptools.dynamic]
 version = { attr = "pystack3d.VERSION" }
