@@ -88,7 +88,7 @@ def intensity_rescaling_area(fnames=None, inds_partition=None, queue_incr=None,
     kmin, kmax = inds_partition[0], inds_partition[-1]
     collect_shared_array_parts(means, kmin, kmax)
     means = get_complete_shared_array()
-    means_ref = means.median()
+    means_ref = np.median(means)
 
     with np.errstate(all='ignore'):
         factors = np.divide(means_ref, means)
