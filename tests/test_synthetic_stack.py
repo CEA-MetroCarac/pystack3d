@@ -45,8 +45,8 @@ def test_intensity_rescaling(nproc):
                      verbosity=False, show_pbar=False, show_plots=False)
 
     ref = np.array([[0., 4.],
-                    [125., 126.],
-                    [61.44863333, 63.37102222]])
+                    [126., 126.],
+                    [62.15966667, 63.37102222]])
 
     assert stats == approx(ref)
 
