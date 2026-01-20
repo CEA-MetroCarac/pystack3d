@@ -7,7 +7,7 @@ process_steps = [
     "cropping",
     "bkg_removal",
     "intensity_rescaling",
-    #"intensity_rescaling_area",
+    "intensity_rescaling_area",
     "registration_calculation", "registration_transformation",
     "destriping",
     "resampling",
@@ -34,11 +34,11 @@ nbins = 256
 #range_bins = [0, 99999]
 filter_size = -1
 
-#[intensity_rescaling_area]
-#area = [0, 99999, 0, 99999]
+[intensity_rescaling_area]
+area = [0, 99999, 0, 99999]
 #threshold_min = 0
 #threshold_max = 99999
-#factors_range = [0.8, 1.2]
+factors_range = [0.8, 1.2]
 
 [destriping]
 #maxit = 200
@@ -46,7 +46,7 @@ cvg_threshold = 1e-2
 filters = [{ name = "Gabor", noise_level = 20, sigma = [0.5, 200], theta = 0 }]
 
 [registration_calculation]
-#area = [0, 99999, 0, 99999]
+area = [0, 99999, 0, 99999]
 #threshold = 0
 nb_blocks = [1, 1]
 transformation = "TRANSLATION"
