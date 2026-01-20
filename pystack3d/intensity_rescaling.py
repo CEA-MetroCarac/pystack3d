@@ -173,7 +173,8 @@ def eval(img, cdf_target, x_target, nbins, range_bins):
     # intensity rescaling
     shape = img.shape
     vmin, vmax = range_bins
-    img_norm = (nbins - 1) * (img - vmin) / (vmax - vmin)
+    img_norm = np.floor((img - vmin) / (vmax - vmin) * nbins).astype(int)
+    img_norm = np.clip(img_norm, 0, nbins - 1)
     new_pixels = np.interp(cdf_img, cdf_target, x_target)
     img_rescaled = np.reshape(new_pixels[img_norm.ravel().astype(int)], shape)
 
