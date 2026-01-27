@@ -1,7 +1,7 @@
 Developers Notes
 ================
 
-Pystack3D is a new project (started in 2021).
+Pystack3D is a project started in 2021.
 
 Developers are warmly encouraged to collaborate and contribute to the ongoing improvement of Pystack3D. Contributions are welcome in the form of bug reports, documentation, code , feature requests, and more...
 
