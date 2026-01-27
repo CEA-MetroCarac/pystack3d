@@ -144,7 +144,7 @@ A **PyStack3D** workflow execution is obtained with the following instructions::
     stack = Stack3d(input_name)
     stack.eval(process_steps, nproc=16)
 
-``input_name`` corresponds either to the **project directory pathname** or to the ``params.toml`` in which the project directory pathname has to be defined via the ``input_dirname`` parameter.
+``input_name`` corresponds either to the **project directory pathname** or to the ``params.toml`` in which the project directory pathname has to be defined via the ``project_dir`` parameter.
 
 ``process_steps`` refers either to a single process step or to a list of process steps or can be omitted leading to the execution of the full process steps defined in the ``params.toml``::
 

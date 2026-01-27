@@ -1,6 +1,6 @@
 """
 Class 'Stack3d' used to process stacks from FIB-SEM images.
-The class has 'pathdir' attribute wich is the path to the directory where the
+The class has 'project_dir' attribute which is the path to the directory where the
 data is stored and 'params' attribute which is a dictionary of processing
 parameters
 """
@@ -8,6 +8,7 @@ import os
 import shutil
 import sys
 import time
+import warnings
 from importlib import import_module
 from pathlib import Path
 from threading import Thread
@@ -27,6 +28,8 @@ PROCESS_STEPS = ['cropping', 'bkg_removal',
                  'destriping', 'resampling', 'cropping_final']
 CMAP = plt.get_cmap("tab10")
 ASSETS = os.path.join(__file__, "..", "assets")
+MSG_DEPRECATED = "{} is deprecated and will be removed in a future version.\n" \
+                 "Use 'project_dir' instead."
 
 plt.rcParams['savefig.dpi'] = 300
 
@@ -37,12 +40,12 @@ class Stack3d:
 
     Attributes
     ----------
-    pathdir: Path
+    project_dir: Path
         Path related to the dirname where the .tif images are stored with the
         related metadata
     last_step_dir: str
         Dirname related to the last step of the workflow execution.
-        For the first step, 'last_step_dir' corresponds to 'pathdir'
+        For the first step, 'last_step_dir' corresponds to 'project_dir'
     fname_toml: str
         Filename of the '.toml' file defining the workflow parameters
     params: dict
@@ -79,24 +82,37 @@ class Stack3d:
                 for i, page in enumerate(tif.pages):
                     img = page.asarray()
                     imwrite(dirname_out / f"img_{i:03d}.tif", img)
-            self.pathdir = fname.parent
+            self.project_dir = fname.parent
             self.params["channels"] = ['images']
-            self.last_step_dir = self.pathdir
+            self.last_step_dir = self.project_dir
             return
 
         elif str(input_name).endswith('.toml'):
             self.fname_toml = input_name
             with open(self.fname_toml, 'rb') as fid:
                 self.params = load(fid)
-                self.pathdir = Path(self.params["dirname"])
+
+                if "project_dir" in params:
+                    self.project_dir = Path(self.params["project_dir"])
+
+                # Deprecated parameters
+                elif "dirname" in params:
+                    warnings.warn(MSG_DEPRECATED.format("dirname"), DeprecationWarning)
+                    self.project_dir = Path(self.params["dirname"])
+                elif "input_dirname" in params:
+                    warnings.warn(MSG_DEPRECATED.format("input_dirname"), DeprecationWarning)
+                    self.project_dir = Path(self.params["input_dirname"])
+
+                else:
+                    self.project_dir = Path(self.fname_toml).parent
 
         elif input_name is None or os.path.isdir(input_name):
             input_name = input_name or os.getcwd()
-            self.pathdir = Path(input_name)
-            fnames = list(self.pathdir.glob("*.toml"))
+            self.project_dir = Path(input_name)
+            fnames = list(self.project_dir.glob("*.toml"))
             if len(fnames) == 0:
                 src = Path(ASSETS) / 'params.toml'
-                dst = self.pathdir / 'params.toml'
+                dst = self.project_dir / 'params.toml'
                 shutil.copy2(src, dst)
                 msg = "\n***************************************************\n"
                 msg += "No '.toml' file has been found in {}\n"
@@ -120,7 +136,7 @@ class Stack3d:
                 self.params = load(fid)
                 fname = self.fname_toml.name
                 print("\n***************************************************")
-                print(f"WARNING: 'dirname' from {fname} is NOT USED")
+                print(f"WARNING: 'project_dir' from {fname} is NOT USED")
                 print("***************************************************\n")
 
         else:
@@ -128,10 +144,10 @@ class Stack3d:
 
         if self.params["channels"] in [None, '']:
             self.params["channels"] = ['.']
-        self.last_step_dir = self.pathdir
+        self.last_step_dir = self.project_dir
 
     def __str__(self):
-        msg = f"Pathdir = {self.pathdir}\n"
+        msg = f"Project_dir = {self.project_dir}\n"
         msg += f"Channels = {self.params['channels']}"
         return msg
 
@@ -145,11 +161,11 @@ class Stack3d:
     def process_dirname(self, process_step, channel):
         """ Return the process dirname wrt to 'process_step' and 'channel' """
         if process_step == 'input':
-            process_dirname = self.pathdir / channel
+            process_dirname = self.project_dir / channel
         elif process_step == 'registration_calculation':
-            process_dirname = self.pathdir / 'process' / process_step
+            process_dirname = self.project_dir / 'process' / process_step
         else:
-            process_dirname = self.pathdir / 'process' / process_step / channel
+            process_dirname = self.project_dir / 'process' / process_step / channel
         return process_dirname
 
     def fnames(self, input_dirname):
@@ -232,7 +248,7 @@ class Stack3d:
             Activation key to pass 'ntot' as 1rst queue_incr.put().
             (tricky mode for the appli to catch this data via the Queue)
         """
-        dir_process = self.pathdir / 'process'
+        dir_process = self.project_dir / 'process'
 
         if process_steps is None:
             process_steps = self.params['process_steps']
@@ -259,7 +275,7 @@ class Stack3d:
                 continue
 
             # input directory
-            last_step_dir = self.pathdir  # default input directory
+            last_step_dir = self.project_dir  # default input directory
             if len(history) > 0:
                 if history[-1] != 'registration_calculation':
                     last_step_dir = dir_process / history[-1]

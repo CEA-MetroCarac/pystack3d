@@ -75,16 +75,25 @@ Here is an example of processing times associated with the example provided `her
 
 (*) 120s with a GPU Nvidia A-100.
 
-Install
--------
+Install and Launching
+---------------------
 ::
 
     pip install pystack3d
 
-For an install with the GUI::
+For an install with the napari GUI::
 
-    pip install pystack3d[GUI]
+    pip install pystack3d[gui]
     pip install PyQt5           # or PyQt6, PySide2, PySide6, if no Qt backend have been already installed in your env.
+
+(The GUI install required ~900MB free space on disk)
+
+To launch the GUI::
+
+    pystack3d
+
+
+To run ``PyStack3D`` in python script mode, refers to the `Workflow execution section <https://https://cea-metrocarac.github.io/pystack3d/getting_started.html#workflow-execution>`_
 
 .. note::
 

@@ -1,4 +1,4 @@
-#dirname = "C:\\Users\\..."
+#project_dir = "C:\\Users\\..."
 ind_min = 1
 ind_max = 8
 channels = ["SE2"]

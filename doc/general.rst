@@ -3,7 +3,7 @@ General Parameters
 
 ::
 
-    input_dirname = "C:\Users\..."
+    project_dir = "C:\Users\..."
     ind_min = 150
     ind_max = 1500
     channels = ["ESB", "SE2"]
@@ -19,7 +19,7 @@ General Parameters
     ]
     history = ["cropping", "bkg_removal"]
 
-``input_dirname`` specifies where the input `.tif` files are stored (to be defined if not passed in pystack3d.Stack3d(``input_name``)).
+``project_dir`` specifies where the input `.tif` files or channel inuput files are stored (to be defined if not passed in pystack3d.Stack3d(``input_name``)).
 
 ``ind_min`` and ``ind_max`` are related to the frames (slices) indices where to start and end the workflow processing. (If not specified, consider the first and the last frame).
 
