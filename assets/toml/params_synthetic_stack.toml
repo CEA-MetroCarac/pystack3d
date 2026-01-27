@@ -31,7 +31,6 @@ threshold_min = 5
 
 [intensity_rescaling]
 nbins = 256
-#range_bins = [0, 127]
 filter_size = -1
 
 [intensity_rescaling_area]

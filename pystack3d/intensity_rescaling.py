@@ -35,7 +35,7 @@ def init_args(params, shape):
 
 
 def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
-                        nbins=256, range_bins=None, filter_size=10,
+                        nbins=256, filter_size=10,
                         output_dirname=None):
     """
     Function for image intensity rescaling
@@ -51,9 +51,6 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
         Queue passed to the function to interact with the progress bar
     nbins: int, optional
         Number of bins in the histograms
-    range_bins: list of 2 floats, optional
-        Range used in the histograms.
-        If None, do a preliminary loop on all files to extract [vmin, vmax]
     filter_size: int, optional
         Filter size for the histograms filtering operation (transverse 1d
         uniform filter) used as target for the image intensity rescaling.
@@ -68,17 +65,16 @@ def intensity_rescaling(fnames=None, inds_partition=None, queue_incr=None,
     assert filter_size > 0 or filter_size == -1
 
     # bins range evaluation
-    if range_bins is None:
-        stats = []
-        for fname in fnames:
-            with TiffFile(fname) as tiff:
-                img = tiff.asarray()
-            stats.append([[img.min(), img.max(), None],
-                          [None, None, None], [None, None, None]])
-        kmin, kmax = inds_partition[0], inds_partition[-1]
-        collect_shared_array_parts(stats, kmin, kmax, key='stats')
-        stats = get_complete_shared_array(key='stats')
-        range_bins = [np.nanmin(stats), np.nanmax(stats)]
+    stats = []
+    for fname in fnames:
+        with TiffFile(fname) as tiff:
+            img = tiff.asarray()
+        stats.append([[img.min(), img.max(), None],
+                      [None, None, None], [None, None, None]])
+    kmin, kmax = inds_partition[0], inds_partition[-1]
+    collect_shared_array_parts(stats, kmin, kmax, key='stats')
+    stats = get_complete_shared_array(key='stats')
+    range_bins = [np.nanmin(stats), np.nanmax(stats)]
 
     # histograms calculation
     histos_orig = []

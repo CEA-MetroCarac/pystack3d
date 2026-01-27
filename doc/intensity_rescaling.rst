@@ -20,13 +20,9 @@ To achieve this, a reference histogram is defined, corresponding either to the a
 
     [intensity_rescaling]
     nbins = 256
-    #range_bins = [0, 127]
     filter_size = -1
 
 ``nbins`` corresponds to the number of bins associated to the histograms.
-
-``range_bins`` defines the range of the gray values to be considered for the binning.
-If this parameter is not specified, then a preliminary loop on all the slices are performed to determine the **min** and **max** values associated to the full stack, leading to **range_bins = [min, max]**.
 
 ``filter_size`` is related to the running averaging for determining the reference histograms.
 A positive integer value is associated to the number of slices/frames to consider in the running average.

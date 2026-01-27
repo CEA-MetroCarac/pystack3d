@@ -26,7 +26,6 @@ threshold_min = 64
 
 [intensity_rescaling]
 nbins = 256
-#range_bins = [0, 255]
 filter_size = 100
 
 [destriping]
