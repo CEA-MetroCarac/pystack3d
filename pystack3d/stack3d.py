@@ -494,7 +494,7 @@ def plot_stats_xy(input_dirname, output_dirname, skip_factors=(10, 10, 10)):
         plt.close(fig)
 
 
-def pbar_update(queue_incr, nslices, overlay, nproc):
+def pbar_update(queue_incr, nslices, overlay=0, nproc=1):
     """ Progress bar """
     overlays = (nproc - 1) * overlay
     ntot = nslices + overlays
