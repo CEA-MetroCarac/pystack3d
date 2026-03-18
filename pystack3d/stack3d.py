@@ -397,10 +397,11 @@ class Stack3d:
                   (channel != '.') * f"channel {channel}")
 
             dirname_in = self.process_dirname(process_step, channel)
-            dirname_out = dirname_out or dirname_in
+            dirname_out_ = dirname_out or dirname_in
 
-            fname_out = dirname_out / name_out
             fnames_in = sorted(list(dirname_in.glob('*.tif')))
+            fname_out = dirname_out_ / name_out
+
             if fname_out in fnames_in:
                 fnames_in.remove(fname_out)
 
@@ -408,7 +409,7 @@ class Stack3d:
             thread = Thread(target=pbar_update, args=pbar_args)
             thread.start()
 
-            with TiffWriter(dirname_out / name_out, bigtiff=True) as tiff_out:
+            with TiffWriter(fname_out, bigtiff=True) as tiff_out:
                 for fname in fnames_in:
                     self.queue_incr.put(1)
                     with TiffFile(fname) as tiff_in:
